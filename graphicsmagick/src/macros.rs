@@ -1,0 +1,40 @@
+macro_rules! c_enum_block {
+    (
+        $(#[$enum_docs:meta])*
+        $name:ident;
+        $(
+            $(#[$docs:meta])*
+            ($num:expr, $item:ident);
+        )+
+    ) => {
+        $(#[$enum_docs])*
+        #[derive(Debug, Clone, Copy, PartialEq)]
+        pub enum $name {
+            $(
+                $(#[$docs])*
+                $item,
+            )+
+        }
+
+        impl From<u32> for $name {
+            fn from(x: u32) -> Self {
+                $(
+                    if x == $num {
+                        return $name::$item;
+                    }
+                )+
+                unreachable!()
+            }
+        }
+
+        impl From<$name> for u32 {
+            fn from(i: $name) -> u32 {
+                match i {
+                $(
+                    $name::$item => $num,
+                )+
+                }
+            }
+        }
+    }
+}

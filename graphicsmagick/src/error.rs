@@ -1,20 +1,29 @@
-use std::{io, str::Utf8Error};
+use std::str::Utf8Error;
 use thiserror::Error as ThisError;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(ThisError, Debug)]
 pub enum Error {
-    //    #[error(transparent)]
-    //    Io(#[from] io::Error),
     #[error(transparent)]
     Utf8(#[from] Utf8Error),
 
     #[error(transparent)]
-    Image(#[from] Exception),
+    Exception(#[from] Exception),
 }
 
-#[derive(ThisError, Debug)]
+#[cfg(test)]
+impl Error {
+    pub(crate) fn to_exception(&self) -> Option<&Exception> {
+        if let Error::Exception(exception) = &self {
+            Some(exception)
+        } else {
+            None
+        }
+    }
+}
+
+#[derive(ThisError, Debug, PartialEq)]
 #[error("kind: {kind:?}, description: {description}")]
 pub struct Exception {
     kind: ExceptionType,
@@ -27,9 +36,10 @@ impl Exception {
     }
 }
 
-c_enum_block! {
+types_enum_block! {
     /// Wrapper of [ExceptionType](http://www.graphicsmagick.org/api/types.html#exceptiontype).
     ExceptionType;
+
     (graphicsmagick_sys::ExceptionType_UndefinedException, UndefinedException);
     (graphicsmagick_sys::ExceptionType_EventException, EventException);
     (graphicsmagick_sys::ExceptionType_ExceptionEvent, ExceptionEvent);

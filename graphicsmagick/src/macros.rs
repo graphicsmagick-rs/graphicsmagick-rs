@@ -1,4 +1,4 @@
-macro_rules! c_enum_block {
+macro_rules! types_enum_block {
     (
         $(#[$enum_docs:meta])*
         $name:ident;

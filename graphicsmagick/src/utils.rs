@@ -1,8 +1,9 @@
 use graphicsmagick_sys::InitializeMagick;
-use once_cell::sync::OnceCell;
 use std::{
-    ffi::CString,
+    ffi::{CStr, CString},
+    os::raw::{c_char, c_double, c_uint, c_void},
     ptr::null,
+    str::Utf8Error,
     sync::{
         atomic::{AtomicBool, Ordering},
         Once,
@@ -47,13 +48,13 @@ pub trait MaxRGB {
     fn max_rgb() -> Self;
 }
 
-impl MaxRGB for u32 {
+impl MaxRGB for c_uint {
     fn max_rgb() -> Self {
         graphicsmagick_sys::MaxRGB
     }
 }
 
-impl MaxRGB for f64 {
+impl MaxRGB for c_double {
     fn max_rgb() -> Self {
         graphicsmagick_sys::MaxRGBDouble
     }
@@ -66,4 +67,41 @@ pub fn max_rgb<T: MaxRGB>() -> T {
 pub(crate) fn str_to_c_string(s: &str) -> CString {
     let buf = s.bytes().chain(0..1).collect::<Vec<_>>();
     unsafe { CString::from_vec_unchecked(buf) }
+}
+
+pub(crate) fn c_str_to_string(c: *const c_char) -> Result<String, Utf8Error> {
+    if c.is_null() {
+        return Ok("".to_string());
+    }
+    let s = unsafe { CStr::from_ptr(c) }.to_str()?.to_string();
+    unsafe {
+        graphicsmagick_sys::MagickFree(c as *mut c_void);
+    }
+    Ok(s)
+}
+
+pub(crate) fn c_str_to_string_no_free(c: *const c_char) -> Result<String, Utf8Error> {
+    if c.is_null() {
+        return Ok("".to_string());
+    }
+    let s = unsafe { CStr::from_ptr(c) }.to_str()?.to_string();
+    Ok(s)
+}
+
+pub(crate) fn c_arr_to_vec<T, U, F>(a: *const T, len: usize, f: F) -> Option<Vec<U>>
+where
+    F: Fn(*const T) -> U,
+{
+    if a.is_null() {
+        return None;
+    }
+    let mut v = Vec::with_capacity(len);
+    for i in 0..len {
+        let p = unsafe { a.add(i) };
+        v.push(f(p));
+    }
+    unsafe {
+        graphicsmagick_sys::MagickFree(a as *mut c_void);
+    }
+    Some(v)
 }

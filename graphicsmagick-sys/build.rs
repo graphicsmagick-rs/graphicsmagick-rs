@@ -1,5 +1,11 @@
 use anyhow::{anyhow, bail, Context};
-use std::{env, path::PathBuf, process::Command};
+use std::{
+    env,
+    fs::File,
+    io::{BufRead, BufReader},
+    path::PathBuf,
+    process::Command,
+};
 
 struct GraphicsMagickConfig {
     include_flags: Vec<String>,
@@ -8,11 +14,12 @@ struct GraphicsMagickConfig {
 }
 
 fn new_graphicsmagick_config() -> anyhow::Result<GraphicsMagickConfig> {
-    // TODO Take a environment variable
-    let mut cmd = Command::new("GraphicsMagickWand-config");
+    let cmd_path =
+        env::var("GRAPHICS_MAGICK_WAND_CONFIG").unwrap_or("GraphicsMagickWand-config".to_string());
+    let mut cmd = Command::new(&cmd_path);
     let output = cmd.args(&["--cppflags", "--ldflags", "--libs"]).output()?;
     if !output.status.success() {
-        bail!("failed to run command `GraphicsMagick-config`");
+        bail!("failed to run command `{}`", &cmd_path);
     }
 
     let mut gmc = GraphicsMagickConfig {
@@ -78,9 +85,34 @@ fn main() -> anyhow::Result<()> {
         .map_err(|_| anyhow!("Unable to generate bindings"))?;
 
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    let binding_path = out_path.join("bindings.rs");
     bindings
-        .write_to_file(out_path.join("bindings.rs"))
+        .write_to_file(&binding_path)
         .context("Couldn't write bindings!")?;
+
+    let lib_version_prefix = "pub const MagickLibVersion: u32 = ";
+    let file = File::open(&binding_path)?;
+    let reader = BufReader::new(file);
+
+    let _lib_version = reader
+        .lines()
+        .find(|line| {
+            line.as_ref()
+                .ok()
+                .map(|line| line.starts_with(lib_version_prefix))
+                .unwrap_or_default()
+        })
+        .and_then(|line| {
+            line.ok()
+                .map(|line| {
+                    line.chars()
+                        .skip(lib_version_prefix.len())
+                        .take_while(|c| *c != ';')
+                        .collect::<String>()
+                })
+                .and_then(|version| version.parse::<u32>().ok())
+        })
+        .context("Unable to know lib version")?;
 
     Ok(())
 }

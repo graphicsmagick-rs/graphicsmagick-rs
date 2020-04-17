@@ -9,7 +9,7 @@ use std::{
 
 struct GraphicsMagickConfig {
     include_flags: Vec<String>,
-    search_flags: Vec<String>,
+    searches: Vec<String>,
     libs: Vec<String>,
 }
 
@@ -24,7 +24,7 @@ fn new_graphicsmagick_config() -> anyhow::Result<GraphicsMagickConfig> {
 
     let mut gmc = GraphicsMagickConfig {
         include_flags: Vec::new(),
-        search_flags: Vec::new(),
+        searches: Vec::new(),
         libs: Vec::new(),
     };
 
@@ -33,7 +33,11 @@ fn new_graphicsmagick_config() -> anyhow::Result<GraphicsMagickConfig> {
         if line.starts_with("-I") {
             gmc.include_flags.push(line.to_string());
         } else if line.starts_with("-L") {
-            gmc.search_flags.push(line.to_string());
+            gmc.searches.extend(
+                line.split(' ')
+                    .filter(|item| item.starts_with("-L"))
+                    .map(|item| String::from(&item[2..])),
+            )
         } else if line.starts_with("-l") {
             gmc.libs
                 .extend(line.split(' ').map(|item| String::from(&item[2..])));
@@ -49,26 +53,19 @@ fn main() -> anyhow::Result<()> {
 
     let gmc = new_graphicsmagick_config()?;
 
-    for flag in gmc.search_flags {
-        println!("cargo:rustc-flags={}", flag);
+    for flag in gmc.searches {
+        println!("cargo:rustc-link-search={}", flag);
     }
-    //    println!("cargo:rustc-flags=-L/usr/lib/x86_64-linux-gnu");
+
+    let link_kind = if cfg!(feature = "static") {
+        "static"
+    } else {
+        "dylib"
+    };
 
     for lib in gmc.libs {
-        //        let kind = match &*lib {
-        //            "lcms2" | "m" | "z" | "pthread" | "gomp" => "dylib",
-        //            _ => "static",
-        //        };
-        println!("cargo:rustc-link-lib={}", lib);
+        println!("cargo:rustc-link-lib={}={}", link_kind, lib);
     }
-
-    //    let mut clang_args = Vec::new();
-    //    let pkg = pkg_config::probe_library("GraphicsMagick")?;
-    //    for include_path in pkg.include_paths {
-    //        let include_path = include_path.to_str().context("invalid path")?;
-    //        println!("cargo:include={}", include_path);
-    //        clang_args.push(format!("-I{}", include_path));
-    //    }
 
     let bindings = bindgen::Builder::default()
         .header("wrapper.h")

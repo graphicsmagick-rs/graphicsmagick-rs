@@ -1,0 +1,62 @@
+name: Rust
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - "**"
+
+env:
+  RUST_BACKTRACE: 1
+  RUST_LOG: debug
+  RUSTFLAGS: "-D warnings"
+
+jobs:
+  All:
+    name: Build & Test & Fmt & Doc
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+        # - macos-latest
+        # - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Rustup
+        run: |
+          rustup toolchain install nightly
+          rustup component add rustfmt
+          rustup component add rustfmt --toolchain nightly-x86_64-unknown-linux-gnu
+
+      - name: Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -f graphicsmagick libgraphicsmagick1-dev
+          sudo apt-get install -f llvm-dev libclang-dev clang
+
+      - name: Info
+        run: |
+          /usr/bin/gm version
+          echo "=================================================="
+          GraphicsMagick-config --cppflags --ldflags --libs
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: cargo build --verbose
+
+      - name: Test
+        run: cargo test --verbose -- --test-threads=1 --nocapture
+
+      - name: Fmt
+        run: cargo +nightly fmt --all -- --check
+
+      - name: Doc
+        run: cargo doc

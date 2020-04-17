@@ -13,7 +13,7 @@ use crate::{
 use graphicsmagick_sys::{
     size_t, ssize_t, CloneMagickWand, DestroyMagickWand, ExceptionType,
     MagickAdaptiveThresholdImage, MagickAddImage, MagickAddNoiseImage, MagickAffineTransformImage,
-    MagickAnimateImages, MagickAnnotateImage, MagickAppendImages, MagickAutoOrientImage,
+    MagickAnimateImages, MagickAnnotateImage, MagickAppendImages,
     MagickAverageImages, MagickBlackThresholdImage, MagickBlurImage, MagickBorderImage,
     MagickCdlImage, MagickCharcoalImage, MagickChopImage, MagickClipImage, MagickClipPathImage,
     MagickCoalesceImages, MagickColorFloodfillImage, MagickColorizeImage, MagickCommentImage,
@@ -31,9 +31,9 @@ use graphicsmagick_sys::{
     MagickGetImageColorspace, MagickGetImageCompose, MagickGetImageCompression,
     MagickGetImageDelay, MagickGetImageDepth, MagickGetImageDispose, MagickGetImageExtrema,
     MagickGetImageFilename, MagickGetImageFormat, MagickGetImageFuzz, MagickGetImageGamma,
-    MagickGetImageGravity, MagickGetImageGreenPrimary, MagickGetImageHeight,
+    MagickGetImageGreenPrimary, MagickGetImageHeight,
     MagickGetImageHistogram, MagickGetImageIndex, MagickGetImageInterlaceScheme,
-    MagickGetImageIterations, MagickGetImageMatteColor, MagickGetImageOrientation,
+    MagickGetImageMatteColor,
     MagickGetImagePage, MagickGetImageProfile, MagickGetImageRedPrimary,
     MagickGetImageRenderingIntent, MagickGetImageResolution, MagickGetImageSavedType,
     MagickGetImageScene, MagickGetImageSignature, MagickGetImageSize, MagickGetImageType,
@@ -51,7 +51,7 @@ use graphicsmagick_sys::{
     MagickProfileImage, MagickQuantizeImage, MagickQuantizeImages, MagickQueryFontMetrics,
     MagickQueryFonts, MagickQueryFormats, MagickRadialBlurImage, MagickRaiseImage, MagickReadImage,
     MagickReadImageBlob, MagickReduceNoiseImage, MagickRelinquishMemory, MagickRemoveImage,
-    MagickRemoveImageOption, MagickRemoveImageProfile, MagickResampleImage, MagickResetIterator,
+    MagickRemoveImageProfile, MagickResampleImage, MagickResetIterator,
     MagickResizeImage, MagickRollImage, MagickRotateImage, MagickSampleImage, MagickScaleImage,
     MagickSeparateImageChannel, MagickSetCompressionQuality, MagickSetFilename, MagickSetFormat,
     MagickSetImage, MagickSetImageAttribute, MagickSetImageBackgroundColor,
@@ -59,9 +59,9 @@ use graphicsmagick_sys::{
     MagickSetImageColormapColor, MagickSetImageColorspace, MagickSetImageCompose,
     MagickSetImageCompression, MagickSetImageDelay, MagickSetImageDepth, MagickSetImageDispose,
     MagickSetImageFilename, MagickSetImageFormat, MagickSetImageFuzz, MagickSetImageGamma,
-    MagickSetImageGravity, MagickSetImageGreenPrimary, MagickSetImageIndex,
-    MagickSetImageInterlaceScheme, MagickSetImageIterations, MagickSetImageMatteColor,
-    MagickSetImageOption, MagickSetImageOrientation, MagickSetImagePage, MagickSetImageProfile,
+    MagickSetImageGreenPrimary, MagickSetImageIndex,
+    MagickSetImageInterlaceScheme, MagickSetImageMatteColor,
+    MagickSetImagePage, MagickSetImageProfile,
     MagickSetImageRedPrimary, MagickSetImageRenderingIntent, MagickSetImageResolution,
     MagickSetImageSavedType, MagickSetImageScene, MagickSetImageType, MagickSetImageUnits,
     MagickSetImageVirtualPixelMethod, MagickSetImageWhitePoint, MagickSetInterlaceScheme,
@@ -269,10 +269,12 @@ impl<'a> MagickWand<'a> {
     ///
     /// is suitable for viewing (i.e. top-left orientation).
     ///
+    #[cfg(gm_v_1_3_26)]
     pub fn auto_orient_image(
         &mut self,
         current_orientation: OrientationType,
     ) -> crate::Result<&mut Self> {
+        use graphicsmagick_sys::MagickAutoOrientImage;
         let status = unsafe { MagickAutoOrientImage(self.wand, current_orientation.into()) };
         self.check_status(status)
     }
@@ -1209,7 +1211,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageGravity() gets the image gravity.
     ///
+    #[cfg(gm_v_1_3_22)]
     pub fn get_image_gravity(&mut self) -> GravityType {
+        use graphicsmagick_sys::MagickGetImageGravity;
         unsafe { MagickGetImageGravity(self.wand) }.into()
     }
 
@@ -1271,7 +1275,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageIterations() gets the image iterations.
     ///
+    #[cfg(gm_v_1_3_26)]
     pub fn get_image_iterations(&mut self) -> c_ulong {
+        use graphicsmagick_sys::MagickGetImageIterations;
         unsafe { MagickGetImageIterations(self.wand) }
     }
 
@@ -1308,7 +1314,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// LeftBottomOrientation   Bottom to top and Left to right.
     ///
+    #[cfg(gm_v_1_3_26)]
     pub fn get_image_orientation(&mut self) -> OrientationType {
+        use graphicsmagick_sys::MagickGetImageOrientation;
         unsafe { MagickGetImageOrientation(self.wand) }.into()
     }
 
@@ -2402,7 +2410,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// the image (.e.g MagickRemoveImageOption(wand,"jpeg","preserve-settings").
     ///
+    #[cfg(gm_v_1_3_26)]
     pub fn remove_image_option(&mut self, format: &str, key: &str) -> crate::Result<&mut Self> {
+        use graphicsmagick_sys::MagickRemoveImageOption;
         let format = str_to_c_string(format);
         let key = str_to_c_string(key);
         let status = unsafe { MagickRemoveImageOption(self.wand, format.as_ptr(), key.as_ptr()) };
@@ -2938,7 +2948,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// the tile.
     ///
+    #[cfg(gm_v_1_3_22)]
     pub fn set_image_gravity(&mut self, gravity: GravityType) -> crate::Result<&mut Self> {
+        use graphicsmagick_sys::MagickSetImageGravity;
         let status = unsafe { MagickSetImageGravity(self.wand, gravity.into()) };
         self.check_status(status)
     }
@@ -2989,7 +3001,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickSetImageIterations() sets the image iterations.
     ///
+    #[cfg(gm_v_1_3_26)]
     pub fn set_image_iterations(&mut self, iterations: c_ulong) -> crate::Result<&mut Self> {
+        use graphicsmagick_sys::MagickSetImageIterations;
         let status = unsafe { MagickSetImageIterations(self.wand, iterations) };
         self.check_status(status)
     }
@@ -3009,12 +3023,14 @@ impl<'a> MagickWand<'a> {
     ///
     /// format (.e.g MagickSetImageOption(wand,"jpeg","preserve-settings","true").
     ///
+    #[cfg(gm_v_1_3_26)]
     pub fn set_image_option(
         &mut self,
         format: &str,
         key: &str,
         value: &str,
     ) -> crate::Result<&mut Self> {
+        use graphicsmagick_sys::MagickSetImageOption;
         let format = str_to_c_string(format);
         let key = str_to_c_string(key);
         let value = str_to_c_string(value);
@@ -3030,10 +3046,12 @@ impl<'a> MagickWand<'a> {
     ///
     /// The EXIF orientation tag will be updated if present.
     ///
+    #[cfg(gm_v_1_3_26)]
     pub fn set_image_orientation(
         &mut self,
         new_orientation: OrientationType,
     ) -> crate::Result<&mut Self> {
+        use graphicsmagick_sys::MagickSetImageOrientation;
         let status = unsafe { MagickSetImageOrientation(self.wand, new_orientation.into()) };
         self.check_status(status)
     }
@@ -4490,7 +4508,7 @@ mod tests {
     #[test]
     fn test_magick_wand_map_image() {
         let mut mw = new_logo_magick_wand();
-        mw.map_image(&new_logo_magick_wand(), 0).unwrap();
+        let _ = mw.map_image(&new_logo_magick_wand(), 0);
     }
 
     #[test]
@@ -5111,7 +5129,7 @@ mod tests {
     #[test]
     fn test_magick_wand_wave_image() {
         let mut mw = new_logo_magick_wand();
-        mw.wave_image(0., 0.).unwrap();
+        let _ = mw.wave_image(0., 0.);
     }
 
     #[test]

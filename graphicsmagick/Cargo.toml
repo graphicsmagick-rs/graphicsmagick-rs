@@ -22,3 +22,7 @@ thiserror = "1.0.14"
 [dev-dependencies]
 anyhow = "1.0.28"
 env_logger = "0.7.1"
+
+[build-dependencies]
+anyhow = "1.0.28"
+graphicsmagick-sys = { version = "0.1.0", path = "../graphicsmagick-sys" }

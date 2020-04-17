@@ -1,11 +1,5 @@
 use anyhow::{anyhow, bail, Context};
-use std::{
-    env,
-    fs::File,
-    io::{BufRead, BufReader},
-    path::PathBuf,
-    process::Command,
-};
+use std::{env, path::PathBuf, process::Command};
 
 struct GraphicsMagickConfig {
     include_flags: Vec<String>,
@@ -14,10 +8,19 @@ struct GraphicsMagickConfig {
 }
 
 fn new_graphicsmagick_config() -> anyhow::Result<GraphicsMagickConfig> {
-    let cmd_path =
-        env::var("GRAPHICS_MAGICK_WAND_CONFIG").unwrap_or("GraphicsMagickWand-config".to_string());
+    let gmw_config_env = "GRAPHICS_MAGICK_WAND_CONFIG";
+    println!("cargo:rerun-if-env-changed={}", gmw_config_env);
+
+    let cmd_path = env::var(gmw_config_env).unwrap_or("GraphicsMagickWand-config".to_string());
     let mut cmd = Command::new(&cmd_path);
-    let output = cmd.args(&["--cppflags", "--ldflags", "--libs"]).output()?;
+    let output = cmd
+        .args(&["--cppflags", "--ldflags", "--libs"])
+        .output()
+        .context(format!(
+            "Run command `{}` failed, please check the `GraphicsMagickWand-config` \
+                is executable, or specify the environment variable `{}` correctly.",
+            &cmd_path, gmw_config_env
+        ))?;
     if !output.status.success() {
         bail!("failed to run command `{}`", &cmd_path);
     }
@@ -48,7 +51,6 @@ fn new_graphicsmagick_config() -> anyhow::Result<GraphicsMagickConfig> {
 }
 
 fn main() -> anyhow::Result<()> {
-    //    println!("cargo:rustc-link-lib=GraphicsMagick");
     println!("cargo:rerun-if-changed=wrapper.h");
 
     let gmc = new_graphicsmagick_config()?;
@@ -86,30 +88,6 @@ fn main() -> anyhow::Result<()> {
     bindings
         .write_to_file(&binding_path)
         .context("Couldn't write bindings!")?;
-
-    let lib_version_prefix = "pub const MagickLibVersion: u32 = ";
-    let file = File::open(&binding_path)?;
-    let reader = BufReader::new(file);
-
-    let _lib_version = reader
-        .lines()
-        .find(|line| {
-            line.as_ref()
-                .ok()
-                .map(|line| line.starts_with(lib_version_prefix))
-                .unwrap_or_default()
-        })
-        .and_then(|line| {
-            line.ok()
-                .map(|line| {
-                    line.chars()
-                        .skip(lib_version_prefix.len())
-                        .take_while(|c| *c != ';')
-                        .collect::<String>()
-                })
-                .and_then(|version| version.parse::<u32>().ok())
-        })
-        .context("Unable to know lib version")?;
 
     Ok(())
 }

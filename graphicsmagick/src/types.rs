@@ -510,8 +510,10 @@ types_enum_block! {
     (graphicsmagick_sys::ResourceType_PixelsResource, PixelsResource);
     /// Maximum number of worker threads
     (graphicsmagick_sys::ResourceType_ThreadsResource, ThreadsResource);
+    #[cfg(gm_v_1_3_21)]
     /// Maximum pixel width of an image (Pixels)
     (graphicsmagick_sys::ResourceType_WidthResource, WidthResource);
+    #[cfg(gm_v_1_3_21)]
     /// Maximum pixel height of an image (Pixels)
     (graphicsmagick_sys::ResourceType_HeightResource, HeightResource);
 }

@@ -1,8 +1,12 @@
+//! Crate level errors.
+
 use std::str::Utf8Error;
 use thiserror::Error as ThisError;
 
+/// Crate result.
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// Crate error.
 #[derive(ThisError, Debug)]
 pub enum Error {
     #[error(transparent)]
@@ -23,6 +27,7 @@ impl Error {
     }
 }
 
+/// Wrapper of `graphicsmagick_sys::ExceptionType` and ExceptionInfo.
 #[derive(ThisError, Debug, PartialEq)]
 #[error("kind: {kind:?}, description: {description}")]
 pub struct Exception {

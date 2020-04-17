@@ -1,3 +1,7 @@
+//! [http://www.graphicsmagick.org/wand/drawing_wand.html](http://www.graphicsmagick.org/wand/drawing_wand.html)
+//!
+//! Binding of drawing_wand, Wand vector drawing interfaces.
+
 use crate::{
     types::{
         ClipPathUnits, DecorationType, FillRule, GravityType, LineCap, LineJoin, PaintMethod,
@@ -49,6 +53,7 @@ use std::{
     str::Utf8Error,
 };
 
+/// Wrapper of `graphicsmagick_sys::DrawingWand`.
 pub struct DrawingWand {
     wand: *mut graphicsmagick_sys::DrawingWand,
 }
@@ -80,7 +85,12 @@ impl DrawingWand {
     }
 
     #[inline]
-    pub(crate) fn wand(&self) -> *const graphicsmagick_sys::DrawingWand {
+    pub fn wand(&self) -> *const graphicsmagick_sys::DrawingWand {
+        self.wand
+    }
+
+    #[inline]
+    pub fn wand_mut(&mut self) -> *mut graphicsmagick_sys::DrawingWand {
         self.wand
     }
 }

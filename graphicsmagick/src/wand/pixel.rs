@@ -1,3 +1,7 @@
+//! [http://www.graphicsmagick.org/wand/pixel_wand.html](http://www.graphicsmagick.org/wand/pixel_wand.html)
+//!
+//! Binding of pixel_wand, Wand pixel access interfaces.
+
 use crate::utils::{assert_initialized, c_str_to_string, str_to_c_string};
 use graphicsmagick_sys::{
     ClonePixelWand, DestroyPixelWand, NewPixelWand, PixelGetBlack, PixelGetBlackQuantum,
@@ -16,6 +20,7 @@ use std::{
     str::Utf8Error,
 };
 
+/// Wrapper of `graphicsmagick_sys::PixelWand`.
 pub struct PixelWand {
     wand: *mut graphicsmagick_sys::PixelWand,
 }

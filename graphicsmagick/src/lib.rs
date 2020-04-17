@@ -1,3 +1,5 @@
+//! GraphicsMagick binding for Rust.
+
 #[macro_use]
 mod macros;
 pub mod error;

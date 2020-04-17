@@ -13,6 +13,7 @@ use std::{
 
 static HAS_INITIALIZED: AtomicBool = AtomicBool::new(false);
 
+/// Wrapper of `graphicsmagick_sys::InitializeMagick`, call it before any `graphicsmagick` action.
 pub fn initialize() {
     static START: Once = Once::new();
 
@@ -31,6 +32,7 @@ pub fn initialize() {
     });
 }
 
+/// Check if [`initialized`] has called.
 #[inline]
 pub fn has_initialized() -> bool {
     HAS_INITIALIZED.load(Ordering::SeqCst)
@@ -44,6 +46,7 @@ pub(crate) fn assert_initialized() {
     )
 }
 
+/// For [`max_rgb`] to return max RGB value.
 pub trait MaxRGB {
     fn max_rgb() -> Self;
 }
@@ -60,6 +63,7 @@ impl MaxRGB for c_double {
     }
 }
 
+/// Wrapper of `graphicsmagick_sys::MaxRGB` and `graphicsmagick_sys::MaxRGBDouble`.
 pub fn max_rgb<T: MaxRGB>() -> T {
     <T>::max_rgb()
 }

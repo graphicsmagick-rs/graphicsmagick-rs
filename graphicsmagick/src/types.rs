@@ -1,3 +1,7 @@
+//! [http://www.graphicsmagick.org/api/types.html](http://www.graphicsmagick.org/api/types.html)
+//!
+//! Binding of GraphicsMagick Types.
+
 types_enum_block! {
     /// [http://www.graphicsmagick.org/api/types.html#channeltype](http://www.graphicsmagick.org/api/types.html#channeltype)
     ChannelType;

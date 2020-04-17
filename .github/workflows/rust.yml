@@ -25,9 +25,30 @@ jobs:
         # - macos-latest
         # - windows-latest
 
+        gm-version:
+          - GraphicsMagick-1_3_35
+          - GraphicsMagick-1_3_34
+          - GraphicsMagick-1_3_33
+          - GraphicsMagick-1_3_32
+          - GraphicsMagick-1_3_31
+          - GraphicsMagick-1_3_30
+          - GraphicsMagick-1_3_29
+          - GraphicsMagick-1_3_28
+          - GraphicsMagick-1_3_27
+          - GraphicsMagick-1_3_26
+          - GraphicsMagick-1_3_25
+          - GraphicsMagick-1_3_24
+          - GraphicsMagick-1_3_23
+          - GraphicsMagick-1_3_22
+          - GraphicsMagick-1_3_21
+          - GraphicsMagick-1_3_20
+
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: System info
+        run: cat /etc/apt/sources.list
+
       - name: Rustup
         run: |
           rustup toolchain install nightly
@@ -36,13 +57,24 @@ jobs:
 
       - name: Dependencies
         run: |
+          sudo sed -i '/^#\sdeb-src /s/^#//' "/etc/apt/sources.list"
           sudo apt-get update
-          sudo apt-get install -f graphicsmagick libgraphicsmagick1-dev
+          sudo apt-get build-dep -f graphicsmagick
           sudo apt-get install -f llvm-dev libclang-dev clang
+          sudo apt-get install -f mercurial
+
+      - name: Install GraphicsMagick
+        run: |
+          hg clone http://hg.code.sf.net/p/graphicsmagick/code /tmp/graphicsmagick
+          cd /tmp/graphicsmagick
+          hg update -r ${{ matrix.gm-version }}
+          ./configure
+          make -j $(grep -c proc /proc/cpuinfo)
+          sudo make install
 
       - name: Info
         run: |
-          /usr/bin/gm version
+          gm version
           echo "=================================================="
           GraphicsMagick-config --cppflags --ldflags --libs
 

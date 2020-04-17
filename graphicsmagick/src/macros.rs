@@ -19,8 +19,11 @@ macro_rules! types_enum_block {
         impl From<u32> for $name {
             fn from(x: u32) -> Self {
                 $(
-                    if x == $num {
-                        return $name::$item;
+                    $(#[$docs])*
+                    {
+                        if x == $num {
+                            return $name::$item;
+                        }
                     }
                 )+
                 unreachable!()
@@ -31,6 +34,7 @@ macro_rules! types_enum_block {
             fn from(i: $name) -> u32 {
                 match i {
                 $(
+                    $(#[$docs])*
                     $name::$item => $num,
                 )+
                 }

@@ -6,8 +6,8 @@ use crate::{
     error::Exception,
     types::{
         ChannelType, ColorspaceType, CompositeOperator, CompressionType, DisposeType, FilterTypes,
-        GravityType, ImageType, InterlaceType, MetricType, MontageMode, NoiseType, OrientationType,
-        PreviewType, RenderingIntent, ResolutionType, ResourceType, VirtualPixelMethod,
+        ImageType, InterlaceType, MetricType, MontageMode, NoiseType, PreviewType, RenderingIntent,
+        ResolutionType, ResourceType, VirtualPixelMethod,
     },
     utils::{
         assert_initialized, c_arr_to_vec, c_str_to_string, c_str_to_string_no_free, str_to_c_string,
@@ -23,29 +23,27 @@ use graphicsmagick_sys::{
     MagickCoalesceImages, MagickColorFloodfillImage, MagickColorizeImage, MagickCommentImage,
     MagickCompareImageChannels, MagickCompareImages, MagickCompositeImage, MagickContrastImage,
     MagickConvolveImage, MagickCropImage, MagickCycleColormapImage, MagickDeconstructImages,
-    MagickDescribeImage, MagickDespeckleImage, MagickDisplayImage, MagickDisplayImages,
-    MagickDrawImage, MagickEdgeImage, MagickEmbossImage, MagickEnhanceImage, MagickEqualizeImage,
-    MagickExtentImage, MagickFail, MagickFlattenImages, MagickFlipImage, MagickFlopImage,
-    MagickFrameImage, MagickFree, MagickFxImage, MagickFxImageChannel, MagickGammaImage,
-    MagickGammaImageChannel, MagickGetConfigureInfo, MagickGetCopyright, MagickGetException,
-    MagickGetFilename, MagickGetHomeURL, MagickGetImage, MagickGetImageAttribute,
-    MagickGetImageBackgroundColor, MagickGetImageBluePrimary, MagickGetImageBorderColor,
-    MagickGetImageBoundingBox, MagickGetImageChannelDepth, MagickGetImageChannelExtrema,
-    MagickGetImageChannelMean, MagickGetImageColormapColor, MagickGetImageColors,
-    MagickGetImageColorspace, MagickGetImageCompose, MagickGetImageCompression,
-    MagickGetImageDelay, MagickGetImageDepth, MagickGetImageDispose, MagickGetImageExtrema,
-    MagickGetImageFilename, MagickGetImageFormat, MagickGetImageFuzz, MagickGetImageGamma,
-    MagickGetImageGreenPrimary, MagickGetImageHeight, MagickGetImageHistogram, MagickGetImageIndex,
-    MagickGetImageInterlaceScheme, MagickGetImageMatteColor, MagickGetImagePage,
-    MagickGetImageProfile, MagickGetImageRedPrimary, MagickGetImageRenderingIntent,
-    MagickGetImageResolution, MagickGetImageSavedType, MagickGetImageScene,
-    MagickGetImageSignature, MagickGetImageSize, MagickGetImageType, MagickGetImageUnits,
-    MagickGetImageVirtualPixelMethod, MagickGetImageWhitePoint, MagickGetImageWidth,
-    MagickGetNumberImages, MagickGetPackageName, MagickGetQuantumDepth, MagickGetReleaseDate,
-    MagickGetResourceLimit, MagickGetSamplingFactors, MagickGetSize, MagickGetVersion,
-    MagickHaldClutImage, MagickHasColormap, MagickHasNextImage, MagickHasPreviousImage,
-    MagickImplodeImage, MagickIsGrayImage, MagickIsMonochromeImage, MagickIsOpaqueImage,
-    MagickIsPaletteImage, MagickLabelImage, MagickLevelImage, MagickLevelImageChannel,
+    MagickDescribeImage, MagickDespeckleImage, MagickDisplayImage, MagickDrawImage,
+    MagickEdgeImage, MagickEmbossImage, MagickEnhanceImage, MagickEqualizeImage, MagickExtentImage,
+    MagickFail, MagickFlattenImages, MagickFlipImage, MagickFlopImage, MagickFrameImage,
+    MagickFree, MagickFxImage, MagickFxImageChannel, MagickGammaImage, MagickGammaImageChannel,
+    MagickGetConfigureInfo, MagickGetCopyright, MagickGetException, MagickGetFilename,
+    MagickGetHomeURL, MagickGetImage, MagickGetImageAttribute, MagickGetImageBackgroundColor,
+    MagickGetImageBluePrimary, MagickGetImageBorderColor, MagickGetImageBoundingBox,
+    MagickGetImageChannelDepth, MagickGetImageChannelExtrema, MagickGetImageChannelMean,
+    MagickGetImageColormapColor, MagickGetImageColors, MagickGetImageColorspace,
+    MagickGetImageCompose, MagickGetImageCompression, MagickGetImageDelay, MagickGetImageDepth,
+    MagickGetImageDispose, MagickGetImageExtrema, MagickGetImageFilename, MagickGetImageFormat,
+    MagickGetImageFuzz, MagickGetImageGamma, MagickGetImageGreenPrimary, MagickGetImageHeight,
+    MagickGetImageHistogram, MagickGetImageIndex, MagickGetImageInterlaceScheme,
+    MagickGetImageMatteColor, MagickGetImagePage, MagickGetImageProfile, MagickGetImageRedPrimary,
+    MagickGetImageRenderingIntent, MagickGetImageResolution, MagickGetImageSavedType,
+    MagickGetImageScene, MagickGetImageSignature, MagickGetImageSize, MagickGetImageType,
+    MagickGetImageUnits, MagickGetImageVirtualPixelMethod, MagickGetImageWhitePoint,
+    MagickGetImageWidth, MagickGetNumberImages, MagickGetPackageName, MagickGetQuantumDepth,
+    MagickGetReleaseDate, MagickGetResourceLimit, MagickGetSamplingFactors, MagickGetSize,
+    MagickGetVersion, MagickHaldClutImage, MagickHasNextImage, MagickHasPreviousImage,
+    MagickImplodeImage, MagickLabelImage, MagickLevelImage, MagickLevelImageChannel,
     MagickMagnifyImage, MagickMapImage, MagickMatteFloodfillImage, MagickMedianFilterImage,
     MagickMinifyImage, MagickModulateImage, MagickMontageImage, MagickMorphImages,
     MagickMosaicImages, MagickMotionBlurImage, MagickNegateImage, MagickNegateImageChannel,
@@ -81,6 +79,12 @@ use std::{
     slice,
     str::Utf8Error,
 };
+
+#[cfg(gm_v_1_3_26)]
+use crate::types::OrientationType;
+
+#[cfg(gm_v_1_3_22)]
+use crate::types::GravityType;
 
 /// Wrapper of `graphicsmagick_sys::MagickWand`.
 pub struct MagickWand<'a> {
@@ -665,7 +669,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickDisplayImages() displays an image or image sequence.
     ///
+    #[cfg(gm_v_1_3_29)]
     pub fn display_images(&mut self, server_name: &str) -> crate::Result<&mut Self> {
+        use graphicsmagick_sys::MagickDisplayImages;
         let server_name = str_to_c_string(server_name);
         let status = unsafe { MagickDisplayImages(self.wand, server_name.as_ptr()) };
         self.check_status(status)
@@ -1656,7 +1662,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// images available.
     ///
+    #[cfg(gm_v_1_3_29)]
     pub fn has_colormap(&mut self) -> crate::Result<bool> {
+        use graphicsmagick_sys::MagickHasColormap;
         let mut colormap = 0;
         let status = unsafe { MagickHasColormap(self.wand, &mut colormap) };
         self.check_status(status)?;
@@ -1708,7 +1716,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// an error.
     ///
+    #[cfg(gm_v_1_3_29)]
     pub fn is_gray_image(&mut self) -> crate::Result<bool> {
+        use graphicsmagick_sys::MagickIsGrayImage;
         let mut gray_image = 0;
         let status = unsafe { MagickIsGrayImage(self.wand, &mut gray_image) };
         self.check_status(status)?;
@@ -1725,7 +1735,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// an error.
     ///
+    #[cfg(gm_v_1_3_29)]
     pub fn is_monochrome_image(&mut self) -> crate::Result<bool> {
+        use graphicsmagick_sys::MagickIsMonochromeImage;
         let mut monochrome = 0;
         let status = unsafe { MagickIsMonochromeImage(self.wand, &mut monochrome) };
         self.check_status(status)?;
@@ -1742,7 +1754,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// an error.
     ///
+    #[cfg(gm_v_1_3_29)]
     pub fn is_opaque_image(&mut self) -> crate::Result<bool> {
+        use graphicsmagick_sys::MagickIsOpaqueImage;
         let mut opaque = 0;
         let status = unsafe { MagickIsOpaqueImage(self.wand, &mut opaque) };
         self.check_status(status)?;
@@ -1763,7 +1777,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// colormap is in use.
     ///
+    #[cfg(gm_v_1_3_29)]
     pub fn is_palette_image(&mut self) -> crate::Result<bool> {
+        use graphicsmagick_sys::MagickIsPaletteImage;
         let mut palette = 0;
         let status = unsafe { MagickIsPaletteImage(self.wand, &mut palette) };
         self.check_status(status)?;
@@ -3692,7 +3708,6 @@ impl<'a> MagickWand<'a> {
 mod tests {
     use super::*;
     use crate::{
-        error::ExceptionType,
         initialize,
         tests::{logo_path, logo_unicode_path},
     };
@@ -3735,17 +3750,8 @@ mod tests {
     #[test]
     fn test_magick_wand_read_image_blob_failed() {
         let content = b"....";
-
         let mut mw = new_magick_wand();
-        let e = mw.read_image_blob(content).err().unwrap();
-        let exception = e.to_exception().unwrap();
-        assert_eq!(
-            exception,
-            &Exception::new(
-                ExceptionType::BlobError,
-                "Unable to deduce image format ()".to_string()
-            )
-        );
+        assert!(mw.read_image_blob(content).is_err());
     }
 
     #[test]
@@ -3809,6 +3815,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(gm_v_1_3_26)]
     fn test_magick_wand_auto_orient_image() {
         let mut mw = new_logo_magick_wand();
         mw.auto_orient_image(OrientationType::BottomLeftOrientation)
@@ -3985,6 +3992,7 @@ mod tests {
 
     #[test]
     #[ignore] // Ignore because it is a gui method.
+    #[cfg(gm_v_1_3_29)]
     fn test_magick_wand_display_images() {
         let mut mw = new_logo_magick_wand();
         mw.display_images("").unwrap();
@@ -4235,6 +4243,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(gm_v_1_3_22)]
     fn test_magick_wand_get_image_gravity() {
         let mut mw = new_logo_magick_wand();
         mw.get_image_gravity();
@@ -4271,6 +4280,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(gm_v_1_3_26)]
     fn test_magick_wand_get_image_iterations() {
         let mut mw = new_logo_magick_wand();
         mw.get_image_iterations();
@@ -4283,6 +4293,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(gm_v_1_3_26)]
     fn test_magick_wand_get_image_orientation() {
         let mut mw = new_logo_magick_wand();
         mw.get_image_orientation();
@@ -4435,6 +4446,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(gm_v_1_3_29)]
     fn test_magick_wand_has_colormap() {
         let mut mw = new_logo_magick_wand();
         mw.has_colormap().unwrap();
@@ -4459,24 +4471,28 @@ mod tests {
     }
 
     #[test]
+    #[cfg(gm_v_1_3_29)]
     fn test_magick_wand_is_gray_image() {
         let mut mw = new_logo_magick_wand();
         mw.is_gray_image().unwrap();
     }
 
     #[test]
+    #[cfg(gm_v_1_3_29)]
     fn test_magick_wand_is_monochrome_image() {
         let mut mw = new_logo_magick_wand();
         mw.is_monochrome_image().unwrap();
     }
 
     #[test]
+    #[cfg(gm_v_1_3_29)]
     fn test_magick_wand_is_opaque_image() {
         let mut mw = new_logo_magick_wand();
         mw.is_opaque_image().unwrap();
     }
 
     #[test]
+    #[cfg(gm_v_1_3_29)]
     fn test_magick_wand_is_palette_image() {
         let mut mw = new_logo_magick_wand();
         mw.is_palette_image().unwrap();
@@ -4674,6 +4690,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(gm_v_1_3_26)]
     fn test_magick_wand_remove_image_option() {
         let mut mw = new_logo_magick_wand();
         assert!(mw.remove_image_option("", "").is_err());
@@ -4871,6 +4888,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(gm_v_1_3_22)]
     fn test_magick_wand_set_image_gravity() {
         let mut mw = new_logo_magick_wand();
         mw.set_image_gravity(GravityType::ForgetGravity).unwrap();
@@ -4896,6 +4914,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(gm_v_1_3_26)]
     fn test_magick_wand_set_image_iterations() {
         let mut mw = new_logo_magick_wand();
         mw.set_image_iterations(0).unwrap();
@@ -4908,6 +4927,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(gm_v_1_3_26)]
     fn test_magick_wand_set_image_option() {
         let mut mw = new_logo_magick_wand();
         mw.set_image_option("", "", "").unwrap();

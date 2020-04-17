@@ -16,17 +16,6 @@ pub enum Error {
     Exception(#[from] Exception),
 }
 
-#[cfg(test)]
-impl Error {
-    pub(crate) fn to_exception(&self) -> Option<&Exception> {
-        if let Error::Exception(exception) = &self {
-            Some(exception)
-        } else {
-            None
-        }
-    }
-}
-
 /// Wrapper of `graphicsmagick_sys::ExceptionType` and ExceptionInfo.
 #[derive(ThisError, Debug, PartialEq)]
 #[error("kind: {kind:?}, description: {description}")]

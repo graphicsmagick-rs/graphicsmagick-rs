@@ -74,6 +74,12 @@ impl Clone for DrawingWand {
     }
 }
 
+impl Default for DrawingWand {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl DrawingWand {
     pub fn new() -> Self {
         assert_initialized();

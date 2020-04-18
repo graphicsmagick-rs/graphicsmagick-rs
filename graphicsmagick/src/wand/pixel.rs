@@ -76,6 +76,12 @@ impl Clone for PixelWand {
     }
 }
 
+impl Default for PixelWand {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PixelWand {
     /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetblack](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetblack)
     ///

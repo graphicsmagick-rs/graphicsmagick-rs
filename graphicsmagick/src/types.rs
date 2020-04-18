@@ -125,6 +125,7 @@ types_enum_block! {
     /// The result of abs(composite image - image). This is useful for comparing two very
     /// similar images.
     (graphicsmagick_sys::CompositeOperator_DifferenceCompositeOp, DifferenceCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_MultiplyCompositeOp, MultiplyCompositeOp);
     /// The result image shaded by composite image.
     (graphicsmagick_sys::CompositeOperator_BumpmapCompositeOp, BumpmapCompositeOp);
@@ -145,14 +146,18 @@ types_enum_block! {
     (graphicsmagick_sys::CompositeOperator_CopyOpacityCompositeOp, CopyOpacityCompositeOp);
     /// Pixels in the region are set to Transparent.
     (graphicsmagick_sys::CompositeOperator_ClearCompositeOp, ClearCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_DissolveCompositeOp, DissolveCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_DisplaceCompositeOp, DisplaceCompositeOp);
     /// Modulate brightness in HSL space.
     (graphicsmagick_sys::CompositeOperator_ModulateCompositeOp, ModulateCompositeOp);
     (graphicsmagick_sys::CompositeOperator_ThresholdCompositeOp, ThresholdCompositeOp);
     /// Do nothing at all.
     (graphicsmagick_sys::CompositeOperator_NoCompositeOp, NoCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_DarkenCompositeOp, DarkenCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_LightenCompositeOp, LightenCompositeOp);
     /// Copy Hue channel (from HSL colorspace).
     (graphicsmagick_sys::CompositeOperator_HueCompositeOp, HueCompositeOp);
@@ -174,17 +179,29 @@ types_enum_block! {
     (graphicsmagick_sys::CompositeOperator_CopyYellowCompositeOp, CopyYellowCompositeOp);
     /// Copy the Black channel.
     (graphicsmagick_sys::CompositeOperator_CopyBlackCompositeOp, CopyBlackCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_DivideCompositeOp, DivideCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_HardLightCompositeOp, HardLightCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_ExclusionCompositeOp, ExclusionCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_ColorDodgeCompositeOp, ColorDodgeCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_ColorBurnCompositeOp, ColorBurnCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_SoftLightCompositeOp, SoftLightCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_LinearBurnCompositeOp, LinearBurnCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_LinearDodgeCompositeOp, LinearDodgeCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_LinearLightCompositeOp, LinearLightCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_VividLightCompositeOp, VividLightCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_PinLightCompositeOp, PinLightCompositeOp);
+    ///
     (graphicsmagick_sys::CompositeOperator_HardMixCompositeOp, HardMixCompositeOp);
 }
 
@@ -218,14 +235,23 @@ types_enum_block! {
     /// OrientationType specifies the orientation of the image. Useful for when the image is produced via a different ordinate system, the camera was turned on its side, or the page was scanned sideways.
     OrientationType;
 
+    ///
     (graphicsmagick_sys::OrientationType_UndefinedOrientation, UndefinedOrientation);
+    ///
     (graphicsmagick_sys::OrientationType_TopLeftOrientation, TopLeftOrientation);
+    ///
     (graphicsmagick_sys::OrientationType_TopRightOrientation, TopRightOrientation);
+    ///
     (graphicsmagick_sys::OrientationType_BottomRightOrientation, BottomRightOrientation);
+    ///
     (graphicsmagick_sys::OrientationType_BottomLeftOrientation, BottomLeftOrientation);
+    ///
     (graphicsmagick_sys::OrientationType_LeftTopOrientation, LeftTopOrientation);
+    ///
     (graphicsmagick_sys::OrientationType_RightTopOrientation, RightTopOrientation);
+    ///
     (graphicsmagick_sys::OrientationType_RightBottomOrientation, RightBottomOrientation);
+    ///
     (graphicsmagick_sys::OrientationType_LeftBottomOrientation, LeftBottomOrientation);
 }
 
@@ -233,10 +259,15 @@ types_enum_block! {
     /// Pixel error metrics
     MetricType;
 
+    ///
     (graphicsmagick_sys::MetricType_MeanAbsoluteErrorMetric, MeanAbsoluteErrorMetric);
+    ///
     (graphicsmagick_sys::MetricType_MeanSquaredErrorMetric, MeanSquaredErrorMetric);
+    ///
     (graphicsmagick_sys::MetricType_PeakAbsoluteErrorMetric, PeakAbsoluteErrorMetric);
+    ///
     (graphicsmagick_sys::MetricType_PeakSignalToNoiseRatioMetric, PeakSignalToNoiseRatioMetric);
+    ///
     (graphicsmagick_sys::MetricType_RootMeanSquaredErrorMetric, RootMeanSquaredErrorMetric);
 }
 
@@ -262,12 +293,15 @@ types_enum_block! {
     (graphicsmagick_sys::ColorspaceType_GRAYColorspace, GRAYColorspace);
     /// Similar to Luma (Y) according to ITU-R 601
     (graphicsmagick_sys::ColorspaceType_TransparentColorspace, TransparentColorspace);
+    ///
     (graphicsmagick_sys::ColorspaceType_OHTAColorspace, OHTAColorspace);
     /// CIE XYZ
     (graphicsmagick_sys::ColorspaceType_XYZColorspace, XYZColorspace);
     /// Kodak PhotoCD PhotoYCC
     (graphicsmagick_sys::ColorspaceType_YCCColorspace, YCCColorspace);
+    ///
     (graphicsmagick_sys::ColorspaceType_YIQColorspace, YIQColorspace);
+    ///
     (graphicsmagick_sys::ColorspaceType_YPbPrColorspace, YPbPrColorspace);
     /// YUV colorspace as used for computer video.
     (graphicsmagick_sys::ColorspaceType_YUVColorspace, YUVColorspace);
@@ -336,9 +370,13 @@ types_enum_block! {
     /// DisposeType
     DisposeType;
 
+    ///
     (graphicsmagick_sys::DisposeType_UndefinedDispose, UndefinedDispose);
+    ///
     (graphicsmagick_sys::DisposeType_NoneDispose, NoneDispose);
+    ///
     (graphicsmagick_sys::DisposeType_BackgroundDispose, BackgroundDispose);
+    ///
     (graphicsmagick_sys::DisposeType_PreviousDispose, PreviousDispose);
 }
 
@@ -404,11 +442,17 @@ types_enum_block! {
     /// [http://www.graphicsmagick.org/api/types.html#storagetype](http://www.graphicsmagick.org/api/types.html#storagetype)
     StorageType;
 
+    ///
     (graphicsmagick_sys::StorageType_CharPixel, CharPixel);
+    ///
     (graphicsmagick_sys::StorageType_ShortPixel, ShortPixel);
+    ///
     (graphicsmagick_sys::StorageType_IntegerPixel, IntegerPixel);
+    ///
     (graphicsmagick_sys::StorageType_LongPixel, LongPixel);
+    ///
     (graphicsmagick_sys::StorageType_FloatPixel, FloatPixel);
+    ///
     (graphicsmagick_sys::StorageType_DoublePixel, DoublePixel);
 }
 
@@ -463,7 +507,9 @@ types_enum_block! {
     (graphicsmagick_sys::ImageType_TrueColorMatteType, TrueColorMatteType);
     /// Cyan/Yellow/Magenta/Black (CYMK) image
     (graphicsmagick_sys::ImageType_ColorSeparationType, ColorSeparationType);
+    ///
     (graphicsmagick_sys::ImageType_ColorSeparationMatteType, ColorSeparationMatteType);
+    ///
     (graphicsmagick_sys::ImageType_OptimizeType, OptimizeType);
 }
 
@@ -487,10 +533,15 @@ types_enum_block! {
     /// Enum declaractions.
     VirtualPixelMethod;
 
+    ///
     (graphicsmagick_sys::VirtualPixelMethod_UndefinedVirtualPixelMethod, UndefinedVirtualPixelMethod);
+    ///
     (graphicsmagick_sys::VirtualPixelMethod_ConstantVirtualPixelMethod, ConstantVirtualPixelMethod);
+    ///
     (graphicsmagick_sys::VirtualPixelMethod_EdgeVirtualPixelMethod, EdgeVirtualPixelMethod);
+    ///
     (graphicsmagick_sys::VirtualPixelMethod_MirrorVirtualPixelMethod, MirrorVirtualPixelMethod);
+    ///
     (graphicsmagick_sys::VirtualPixelMethod_TileVirtualPixelMethod, TileVirtualPixelMethod);
 }
 
@@ -516,9 +567,11 @@ types_enum_block! {
     (graphicsmagick_sys::ResourceType_ThreadsResource, ThreadsResource);
     /// Maximum pixel width of an image (Pixels)
     #[cfg(gm_v_1_3_21)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_21)))]
     (graphicsmagick_sys::ResourceType_WidthResource, WidthResource);
     /// Maximum pixel height of an image (Pixels)
     #[cfg(gm_v_1_3_21)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_21)))]
     (graphicsmagick_sys::ResourceType_HeightResource, HeightResource);
 }
 
@@ -526,9 +579,13 @@ types_enum_block! {
     /// MontageMode
     MontageMode;
 
+    ///
     (graphicsmagick_sys::MontageMode_UndefinedMode, UndefinedMode);
+    ///
     (graphicsmagick_sys::MontageMode_FrameMode, FrameMode);
+    ///
     (graphicsmagick_sys::MontageMode_UnframeMode, UnframeMode);
+    ///
     (graphicsmagick_sys::MontageMode_ConcatenateMode, ConcatenateMode);
 }
 
@@ -536,35 +593,65 @@ types_enum_block! {
     /// PreviewType
     PreviewType;
 
+    ///
     (graphicsmagick_sys::PreviewType_UndefinedPreview, UndefinedPreview);
+    ///
     (graphicsmagick_sys::PreviewType_RotatePreview, RotatePreview);
+    ///
     (graphicsmagick_sys::PreviewType_ShearPreview, ShearPreview);
+    ///
     (graphicsmagick_sys::PreviewType_RollPreview, RollPreview);
+    ///
     (graphicsmagick_sys::PreviewType_HuePreview, HuePreview);
+    ///
     (graphicsmagick_sys::PreviewType_SaturationPreview, SaturationPreview);
+    ///
     (graphicsmagick_sys::PreviewType_BrightnessPreview, BrightnessPreview);
+    ///
     (graphicsmagick_sys::PreviewType_GammaPreview, GammaPreview);
+    ///
     (graphicsmagick_sys::PreviewType_SpiffPreview, SpiffPreview);
+    ///
     (graphicsmagick_sys::PreviewType_DullPreview, DullPreview);
+    ///
     (graphicsmagick_sys::PreviewType_GrayscalePreview, GrayscalePreview);
+    ///
     (graphicsmagick_sys::PreviewType_QuantizePreview, QuantizePreview);
+    ///
     (graphicsmagick_sys::PreviewType_DespecklePreview, DespecklePreview);
+    ///
     (graphicsmagick_sys::PreviewType_ReduceNoisePreview, ReduceNoisePreview);
+    ///
     (graphicsmagick_sys::PreviewType_AddNoisePreview, AddNoisePreview);
+    ///
     (graphicsmagick_sys::PreviewType_SharpenPreview, SharpenPreview);
+    ///
     (graphicsmagick_sys::PreviewType_BlurPreview, BlurPreview);
+    ///
     (graphicsmagick_sys::PreviewType_ThresholdPreview, ThresholdPreview);
+    ///
     (graphicsmagick_sys::PreviewType_EdgeDetectPreview, EdgeDetectPreview);
+    ///
     (graphicsmagick_sys::PreviewType_SpreadPreview, SpreadPreview);
+    ///
     (graphicsmagick_sys::PreviewType_SolarizePreview, SolarizePreview);
+    ///
     (graphicsmagick_sys::PreviewType_ShadePreview, ShadePreview);
+    ///
     (graphicsmagick_sys::PreviewType_RaisePreview, RaisePreview);
+    ///
     (graphicsmagick_sys::PreviewType_SegmentPreview, SegmentPreview);
+    ///
     (graphicsmagick_sys::PreviewType_SwirlPreview, SwirlPreview);
+    ///
     (graphicsmagick_sys::PreviewType_ImplodePreview, ImplodePreview);
+    ///
     (graphicsmagick_sys::PreviewType_WavePreview, WavePreview);
+    ///
     (graphicsmagick_sys::PreviewType_OilPaintPreview, OilPaintPreview);
+    ///
     (graphicsmagick_sys::PreviewType_CharcoalDrawingPreview, CharcoalDrawingPreview);
+    ///
     (graphicsmagick_sys::PreviewType_JPEGPreview, JPEGPreview);
 }
 
@@ -572,8 +659,11 @@ types_enum_block! {
     /// [http://www.graphicsmagick.org/api/types.html#fillrule](http://www.graphicsmagick.org/api/types.html#fillrule)
     FillRule;
 
+    ///
     (graphicsmagick_sys::FillRule_UndefinedRule, UndefinedRule);
+    ///
     (graphicsmagick_sys::FillRule_EvenOddRule, EvenOddRule);
+    ///
     (graphicsmagick_sys::FillRule_NonZeroRule, NonZeroRule);
 }
 
@@ -581,8 +671,11 @@ types_enum_block! {
     /// [http://www.graphicsmagick.org/api/types.html#clippathunits](http://www.graphicsmagick.org/api/types.html#clippathunits)
     ClipPathUnits;
 
+    ///
     (graphicsmagick_sys::ClipPathUnits_UserSpace, UserSpace);
+    ///
     (graphicsmagick_sys::ClipPathUnits_UserSpaceOnUse, UserSpaceOnUse);
+    ///
     (graphicsmagick_sys::ClipPathUnits_ObjectBoundingBox, ObjectBoundingBox);
 }
 
@@ -609,15 +702,25 @@ types_enum_block! {
     /// [http://www.graphicsmagick.org/api/types.html#stretchtype](http://www.graphicsmagick.org/api/types.html#stretchtype)
     StretchType;
 
+    ///
     (graphicsmagick_sys::StretchType_NormalStretch, NormalStretch);
+    ///
     (graphicsmagick_sys::StretchType_UltraCondensedStretch, UltraCondensedStretch);
+    ///
     (graphicsmagick_sys::StretchType_ExtraCondensedStretch, ExtraCondensedStretch);
+    ///
     (graphicsmagick_sys::StretchType_CondensedStretch, CondensedStretch);
+    ///
     (graphicsmagick_sys::StretchType_SemiCondensedStretch, SemiCondensedStretch);
+    ///
     (graphicsmagick_sys::StretchType_SemiExpandedStretch, SemiExpandedStretch);
+    ///
     (graphicsmagick_sys::StretchType_ExpandedStretch, ExpandedStretch);
+    ///
     (graphicsmagick_sys::StretchType_ExtraExpandedStretch, ExtraExpandedStretch);
+    ///
     (graphicsmagick_sys::StretchType_UltraExpandedStretch, UltraExpandedStretch);
+    ///
     (graphicsmagick_sys::StretchType_AnyStretch, AnyStretch);
 }
 
@@ -625,9 +728,13 @@ types_enum_block! {
     /// [http://www.graphicsmagick.org/api/types.html#styletype](http://www.graphicsmagick.org/api/types.html#styletype)
     StyleType;
 
+    ///
     (graphicsmagick_sys::StyleType_NormalStyle, NormalStyle);
+    ///
     (graphicsmagick_sys::StyleType_ItalicStyle, ItalicStyle);
+    ///
     (graphicsmagick_sys::StyleType_ObliqueStyle, ObliqueStyle);
+    ///
     (graphicsmagick_sys::StyleType_AnyStyle, AnyStyle);
 }
 
@@ -635,9 +742,13 @@ types_enum_block! {
     /// LineCap
     LineCap;
 
+    ///
     (graphicsmagick_sys::LineCap_UndefinedCap, UndefinedCap);
+    ///
     (graphicsmagick_sys::LineCap_ButtCap, ButtCap);
+    ///
     (graphicsmagick_sys::LineCap_RoundCap, RoundCap);
+    ///
     (graphicsmagick_sys::LineCap_SquareCap, SquareCap);
 }
 
@@ -645,9 +756,13 @@ types_enum_block! {
     /// LineJoin
     LineJoin;
 
+    ///
     (graphicsmagick_sys::LineJoin_UndefinedJoin, UndefinedJoin);
+    ///
     (graphicsmagick_sys::LineJoin_MiterJoin, MiterJoin);
+    ///
     (graphicsmagick_sys::LineJoin_RoundJoin, RoundJoin);
+    ///
     (graphicsmagick_sys::LineJoin_BevelJoin, BevelJoin);
 }
 
@@ -655,8 +770,12 @@ types_enum_block! {
     /// [http://www.graphicsmagick.org/api/types.html#decorationtype](http://www.graphicsmagick.org/api/types.html#decorationtype)
     DecorationType;
 
+    ///
     (graphicsmagick_sys::DecorationType_NoDecoration, NoDecoration);
+    ///
     (graphicsmagick_sys::DecorationType_UnderlineDecoration, UnderlineDecoration);
+    ///
     (graphicsmagick_sys::DecorationType_OverlineDecoration, OverlineDecoration);
+    ///
     (graphicsmagick_sys::DecorationType_LineThroughDecoration, LineThroughDecoration);
 }

@@ -15,8 +15,8 @@ env:
   RUSTFLAGS: "-D warnings"
 
 jobs:
-  All:
-    name: Build & Test & Fmt & Doc
+  all:
+    name: All
 
     strategy:
       fail-fast: false
@@ -56,6 +56,7 @@ jobs:
           rustup toolchain install nightly
           rustup component add rustfmt
           rustup component add rustfmt --toolchain nightly-x86_64-unknown-linux-gnu
+          rustup component add clippy
 
       - name: Dependencies
         run: |
@@ -77,20 +78,20 @@ jobs:
       - name: Info
         run: |
           gm version
-          echo "=================================================="
+          echo
           GraphicsMagick-config --cppflags --ldflags --libs
 
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build
-        run: cargo build --verbose
+      - name: Fmt
+        run: cargo +nightly fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --verbose
 
       - name: Test
         run: cargo test --verbose -- --test-threads=1 --nocapture
 
-      - name: Fmt
-        run: cargo +nightly fmt --all -- --check
-
       - name: Doc
-        run: cargo doc
+        run: cargo +nightly doc --manifest-path graphicsmagick/Cargo.toml --features docs

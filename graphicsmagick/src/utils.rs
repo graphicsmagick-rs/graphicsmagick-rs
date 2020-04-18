@@ -32,7 +32,7 @@ pub fn initialize() {
     });
 }
 
-/// Check if [`initialized`] has called.
+/// Check if [`initialize`] has called.
 #[inline]
 pub fn has_initialized() -> bool {
     HAS_INITIALIZED.load(Ordering::SeqCst)

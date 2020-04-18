@@ -97,7 +97,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// # Panic
     ///
-    /// Panic if not call [`initialize`] first of all.
+    /// Panic if not call [`crate::initialize`] first of all.
     ///
     pub fn new() -> Self {
         assert_initialized();
@@ -122,7 +122,7 @@ impl<'a> MagickWand<'a> {
 
         let description_ptr = MagickGetException(self.wand, &mut severity as *mut ExceptionType);
 
-        if description_ptr == null_mut() {
+        if description_ptr.is_null() {
             return Exception::new(0.into(), "Unknown exception".to_string()).into();
         }
         let description =
@@ -132,7 +132,7 @@ impl<'a> MagickWand<'a> {
             Err(e) => return e.into(),
         };
         MagickRelinquishMemory(description_ptr as *mut c_void);
-        Exception::new(severity.into(), description.to_string()).into()
+        Exception::new(severity.into(), description).into()
     }
 
     #[inline]
@@ -169,6 +169,12 @@ impl Clone for MagickWand<'_> {
             wand: unsafe { CloneMagickWand(self.wand) },
             blob: self.blob,
         }
+    }
+}
+
+impl Default for MagickWand<'_> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -276,6 +282,7 @@ impl<'a> MagickWand<'a> {
     /// is suitable for viewing (i.e. top-left orientation).
     ///
     #[cfg(gm_v_1_3_26)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
     pub fn auto_orient_image(
         &mut self,
         current_orientation: OrientationType,
@@ -670,6 +677,7 @@ impl<'a> MagickWand<'a> {
     /// MagickDisplayImages() displays an image or image sequence.
     ///
     #[cfg(gm_v_1_3_29)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
     pub fn display_images(&mut self, server_name: &str) -> crate::Result<&mut Self> {
         use graphicsmagick_sys::MagickDisplayImages;
         let server_name = str_to_c_string(server_name);
@@ -1220,6 +1228,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageGravity() gets the image gravity.
     ///
     #[cfg(gm_v_1_3_22)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_22)))]
     pub fn get_image_gravity(&mut self) -> GravityType {
         use graphicsmagick_sys::MagickGetImageGravity;
         unsafe { MagickGetImageGravity(self.wand) }.into()
@@ -1284,6 +1293,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageIterations() gets the image iterations.
     ///
     #[cfg(gm_v_1_3_26)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
     pub fn get_image_iterations(&mut self) -> c_ulong {
         use graphicsmagick_sys::MagickGetImageIterations;
         unsafe { MagickGetImageIterations(self.wand) }
@@ -1323,6 +1333,7 @@ impl<'a> MagickWand<'a> {
     /// LeftBottomOrientation   Bottom to top and Left to right.
     ///
     #[cfg(gm_v_1_3_26)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
     pub fn get_image_orientation(&mut self) -> OrientationType {
         use graphicsmagick_sys::MagickGetImageOrientation;
         unsafe { MagickGetImageOrientation(self.wand) }.into()
@@ -1663,6 +1674,7 @@ impl<'a> MagickWand<'a> {
     /// images available.
     ///
     #[cfg(gm_v_1_3_29)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
     pub fn has_colormap(&mut self) -> crate::Result<bool> {
         use graphicsmagick_sys::MagickHasColormap;
         let mut colormap = 0;
@@ -1717,6 +1729,7 @@ impl<'a> MagickWand<'a> {
     /// an error.
     ///
     #[cfg(gm_v_1_3_29)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
     pub fn is_gray_image(&mut self) -> crate::Result<bool> {
         use graphicsmagick_sys::MagickIsGrayImage;
         let mut gray_image = 0;
@@ -1736,6 +1749,7 @@ impl<'a> MagickWand<'a> {
     /// an error.
     ///
     #[cfg(gm_v_1_3_29)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
     pub fn is_monochrome_image(&mut self) -> crate::Result<bool> {
         use graphicsmagick_sys::MagickIsMonochromeImage;
         let mut monochrome = 0;
@@ -1755,6 +1769,7 @@ impl<'a> MagickWand<'a> {
     /// an error.
     ///
     #[cfg(gm_v_1_3_29)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
     pub fn is_opaque_image(&mut self) -> crate::Result<bool> {
         use graphicsmagick_sys::MagickIsOpaqueImage;
         let mut opaque = 0;
@@ -1778,6 +1793,7 @@ impl<'a> MagickWand<'a> {
     /// colormap is in use.
     ///
     #[cfg(gm_v_1_3_29)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
     pub fn is_palette_image(&mut self) -> crate::Result<bool> {
         use graphicsmagick_sys::MagickIsPaletteImage;
         let mut palette = 0;
@@ -2429,6 +2445,7 @@ impl<'a> MagickWand<'a> {
     /// the image (.e.g MagickRemoveImageOption(wand,"jpeg","preserve-settings").
     ///
     #[cfg(gm_v_1_3_26)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
     pub fn remove_image_option(&mut self, format: &str, key: &str) -> crate::Result<&mut Self> {
         use graphicsmagick_sys::MagickRemoveImageOption;
         let format = str_to_c_string(format);
@@ -2967,6 +2984,7 @@ impl<'a> MagickWand<'a> {
     /// the tile.
     ///
     #[cfg(gm_v_1_3_22)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_22)))]
     pub fn set_image_gravity(&mut self, gravity: GravityType) -> crate::Result<&mut Self> {
         use graphicsmagick_sys::MagickSetImageGravity;
         let status = unsafe { MagickSetImageGravity(self.wand, gravity.into()) };
@@ -3020,6 +3038,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageIterations() sets the image iterations.
     ///
     #[cfg(gm_v_1_3_26)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
     pub fn set_image_iterations(&mut self, iterations: c_ulong) -> crate::Result<&mut Self> {
         use graphicsmagick_sys::MagickSetImageIterations;
         let status = unsafe { MagickSetImageIterations(self.wand, iterations) };
@@ -3042,6 +3061,7 @@ impl<'a> MagickWand<'a> {
     /// format (.e.g MagickSetImageOption(wand,"jpeg","preserve-settings","true").
     ///
     #[cfg(gm_v_1_3_26)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
     pub fn set_image_option(
         &mut self,
         format: &str,
@@ -3065,6 +3085,7 @@ impl<'a> MagickWand<'a> {
     /// The EXIF orientation tag will be updated if present.
     ///
     #[cfg(gm_v_1_3_26)]
+    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
     pub fn set_image_orientation(
         &mut self,
         new_orientation: OrientationType,

@@ -1,3 +1,5 @@
+#![allow(clippy::unreadable_literal)]
+
 use anyhow::{anyhow, bail, Context};
 use std::{env, path::PathBuf, process::Command};
 
@@ -11,7 +13,8 @@ fn new_graphicsmagick_config() -> anyhow::Result<GraphicsMagickConfig> {
     let gmw_config_env = "GRAPHICS_MAGICK_WAND_CONFIG";
     println!("cargo:rerun-if-env-changed={}", gmw_config_env);
 
-    let cmd_path = env::var(gmw_config_env).unwrap_or("GraphicsMagickWand-config".to_string());
+    let cmd_path =
+        env::var(gmw_config_env).unwrap_or_else(|_| "GraphicsMagickWand-config".to_string());
     let mut cmd = Command::new(&cmd_path);
     let output = cmd
         .args(&["--cppflags", "--ldflags", "--libs"])

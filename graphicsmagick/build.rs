@@ -1,3 +1,5 @@
+#![allow(clippy::unreadable_literal)]
+
 fn main() -> anyhow::Result<()> {
     let version_map = [
         ("gm_v_1_3_35", 0x242100),

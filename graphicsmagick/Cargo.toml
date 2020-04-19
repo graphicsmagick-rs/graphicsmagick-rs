@@ -1,6 +1,6 @@
 [package]
 name = "graphicsmagick"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["jmjoy <918734043@qq.com>"]
 edition = "2018"
 license = "MIT"
@@ -16,7 +16,7 @@ docs = []  # Just for building documentation.
 static = ["graphicsmagick-sys/static"]
 
 [dependencies]
-graphicsmagick-sys = { version = "0.1.0", path = "../graphicsmagick-sys" }
+graphicsmagick-sys = { version = "0.1.1", path = "../graphicsmagick-sys" }
 libc = "0.2.68"
 thiserror = "1.0.14"
 
@@ -26,7 +26,7 @@ env_logger = "0.7.1"
 
 [build-dependencies]
 anyhow = "1.0.28"
-graphicsmagick-sys = { version = "0.1.0", path = "../graphicsmagick-sys" }
+graphicsmagick-sys = { version = "0.1.1", path = "../graphicsmagick-sys" }
 
 [package.metadata.docs.rs]
 features = ["docs"]

@@ -1690,7 +1690,7 @@ impl<'a> MagickWand<'a> {
     /// traversing the list in the forward direction
     ///
     pub fn has_next_image(&mut self) -> bool {
-        (unsafe { MagickHasNextImage(self.wand) }) == 0
+        (unsafe { MagickHasNextImage(self.wand) }) == 1
     }
 
     /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickhaspreviousimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickhaspreviousimage)
@@ -2089,9 +2089,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// returned if the wand did not iterate to a next image.
     ///
-    pub fn next_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickNextImage(self.wand) };
-        self.check_status(status)
+    pub fn next_image(&mut self) -> bool {
+        (unsafe { MagickNextImage(self.wand) }) == 1
     }
 
     /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicknormalizeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicknormalizeimage)
@@ -4610,7 +4609,7 @@ mod tests {
     #[test]
     fn test_magick_wand_next_image() {
         let mut mw = new_logo_magick_wand();
-        assert!(mw.next_image().is_err());
+        assert!(!mw.next_image());
     }
 
     #[test]

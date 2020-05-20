@@ -54,7 +54,7 @@ jobs:
       - name: Rustup
         run: |
           rustup component add rustfmt clippy
-          rustup toolchain install nightly --allow-downgrade
+          rustup toolchain install nightly --allow-downgrade -c rustfmt clippy
 
       - name: Dependencies
         run: |

@@ -2,6 +2,7 @@
 #![warn(rust_2018_idioms)]
 #![warn(clippy::dbg_macro, clippy::print_stdout)]
 #![allow(clippy::too_many_arguments)]
+#![allow(unused_doc_comments)]
 //! <img src="https://github.com/jmjoy/graphicsmagick-rs/blob/master/meta/GraphicsMagick-Logo.webp?raw=true" alt="GraphicsMagick-Logo" align="right" />
 //!
 //! GraphicsMagick binding for Rust.

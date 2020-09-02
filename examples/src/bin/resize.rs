@@ -3,6 +3,9 @@ use graphicsmagick::{initialize, types::FilterTypes, wand::MagickWand};
 use std::path::PathBuf;
 
 fn main() -> anyhow::Result<()> {
+    // This function should be invoked in the primary (original) thread
+    // of the application's process, and before starting any OpenMP
+    // threads, as part of program initialization.
     initialize();
 
     let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))

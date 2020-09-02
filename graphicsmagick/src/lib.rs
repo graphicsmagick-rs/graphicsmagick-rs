@@ -31,7 +31,7 @@
 //!    be greater than or equal to `1.3.26` to used this method.
 //!
 //!    ![version-demo](https://github.com/jmjoy/graphicsmagick-rs/blob/master/meta/version-demo.webp?raw=true)
-//!
+//!    
 //! 1. `GraphicsMagick` supports OpenMP if you are compiling with OpenMP-enabled `cc`, you can set the environment variable
 //!    `OMP_NUM_THREADS` to limit the number of threads or set `OMP_DISPLAY_ENV=TRUE` to display the OpenMP info when
 //!    running the application.
@@ -49,7 +49,7 @@
 //!
 //! fn main() -> anyhow::Result<()> {
 //!     // This function should be invoked in the primary (original) thread
-//!     // of the application's process, and before // starting any OpenMP
+//!     // of the application's process, and before starting any OpenMP
 //!     // threads, as part of program initialization.
 //!     initialize();
 //!
@@ -76,6 +76,9 @@ pub(crate) mod tests;
 pub mod types;
 pub(crate) mod utils;
 pub mod wand;
+
+#[cfg(doctest)]
+doc_comment!(include_str!("../README.md"));
 
 pub use crate::{
     error::{Error, Result},

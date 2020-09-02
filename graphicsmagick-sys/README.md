@@ -1,1 +1,3 @@
-../README.md
+# graphicsmagick-sys
+
+GraphicsMagick binding for Rust.

@@ -1,9 +1,9 @@
-//! [http://www.graphicsmagick.org/api/types.html](http://www.graphicsmagick.org/api/types.html)
+//! <http://www.graphicsmagick.org/api/types.html>
 //!
 //! Binding of GraphicsMagick Types.
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#channeltype](http://www.graphicsmagick.org/api/types.html#channeltype)
+    /// <http://www.graphicsmagick.org/api/types.html#channeltype>
     ChannelType;
 
     /// Default
@@ -33,7 +33,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#filtertypes](http://www.graphicsmagick.org/api/types.html#filtertypes)
+    /// <http://www.graphicsmagick.org/api/types.html#filtertypes>
     ///
     /// FilterTypes is used to adjust the filter algorithm used when resizing images.
     /// Different filters experience varying degrees of success with various images and can
@@ -79,7 +79,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#compositeoperator](http://www.graphicsmagick.org/api/types.html#compositeoperator)
+    /// <http://www.graphicsmagick.org/api/types.html#compositeoperator>
     ///
     /// CompositeOperator is used to select the image composition algorithm used to compose
     /// a composite image with an image. By default, each of the composite image pixels are
@@ -206,7 +206,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#noisetype](http://www.graphicsmagick.org/api/types.html#noisetype)
+    /// <http://www.graphicsmagick.org/api/types.html#noisetype>
     ///
     /// NoiseType is used as an argument to select the type of noise to be added to the image.
     NoiseType;
@@ -230,7 +230,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#orientationtype](http://www.graphicsmagick.org/api/types.html#orientationtype)
+    /// <http://www.graphicsmagick.org/api/types.html#orientationtype>
     ///
     /// OrientationType specifies the orientation of the image. Useful for when the image is produced via a different ordinate system, the camera was turned on its side, or the page was scanned sideways.
     OrientationType;
@@ -272,7 +272,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#colorspacetype](http://www.graphicsmagick.org/api/types.html#colorspacetype)
+    /// <http://www.graphicsmagick.org/api/types.html#colorspacetype>
     ///
     /// The ColorspaceType enumeration is used to specify the colorspace that quantization
     /// (color reduction and mapping) is done under or to specify the colorspace when encoding
@@ -328,7 +328,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#compressiontype](http://www.graphicsmagick.org/api/types.html#compressiontype)
+    /// <http://www.graphicsmagick.org/api/types.html#compressiontype>
     ///
     /// CompressionType is used to express the desired compression type when encoding an image.
     /// Be aware that most image types only support a sub-set of the available compression types.
@@ -381,7 +381,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#gravitytype](http://www.graphicsmagick.org/api/types.html#gravitytype)
+    /// <http://www.graphicsmagick.org/api/types.html#gravitytype>
     ///
     /// GravityType specifies positioning of an object (e.g. text, image) within a bounding
     /// region (e.g. an image). Gravity provides a convenient way to locate objects irrespective
@@ -414,7 +414,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#interlacetype](http://www.graphicsmagick.org/api/types.html#interlacetype)
+    /// <http://www.graphicsmagick.org/api/types.html#interlacetype>
     ///
     /// InterlaceType specifies the ordering of the red, green, and blue pixel information in
     /// the image. Interlacing is usually used to make image information available to the user
@@ -439,7 +439,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#storagetype](http://www.graphicsmagick.org/api/types.html#storagetype)
+    /// <http://www.graphicsmagick.org/api/types.html#storagetype>
     StorageType;
 
     ///
@@ -457,7 +457,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#renderingintent](http://www.graphicsmagick.org/api/types.html#renderingintent)
+    /// <http://www.graphicsmagick.org/api/types.html#renderingintent>
     ///
     /// Rendering intent is a concept defined by ICC Spec ICC.1:1998-09, "File Format for Color
     /// Profiles". GraphicsMagick uses RenderingIntent in order to support ICC Color Profiles.
@@ -484,7 +484,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#imagetype](http://www.graphicsmagick.org/api/types.html#imagetype)
+    /// <http://www.graphicsmagick.org/api/types.html#imagetype>
     ///
     /// ImageType indicates the type classification of the image.
     ImageType;
@@ -514,7 +514,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#resolutiontype](http://www.graphicsmagick.org/api/types.html#resolutiontype)
+    /// <http://www.graphicsmagick.org/api/types.html#resolutiontype>
     ///
     /// By default, GraphicsMagick defines resolutions in pixels per inch. ResolutionType provides a means to adjust this.
     ResolutionType;
@@ -528,7 +528,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#virtualpixelmethod](http://www.graphicsmagick.org/api/types.html#virtualpixelmethod)
+    /// <http://www.graphicsmagick.org/api/types.html#virtualpixelmethod>
     ///
     /// Enum declaractions.
     VirtualPixelMethod;
@@ -546,7 +546,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#resourcetype](http://www.graphicsmagick.org/api/types.html#resourcetype)
+    /// <http://www.graphicsmagick.org/api/types.html#resourcetype>
     ///
     /// Typedef declarations.
     ResourceType;
@@ -567,11 +567,11 @@ types_enum_block! {
     (graphicsmagick_sys::ResourceType_ThreadsResource, ThreadsResource);
     /// Maximum pixel width of an image (Pixels)
     #[cfg(gm_v_1_3_21)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_21)))]
+    #[cfg_attr(doc, doc(cfg(gm_v_1_3_21)))]
     (graphicsmagick_sys::ResourceType_WidthResource, WidthResource);
     /// Maximum pixel height of an image (Pixels)
     #[cfg(gm_v_1_3_21)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_21)))]
+    #[cfg_attr(doc, doc(cfg(gm_v_1_3_21)))]
     (graphicsmagick_sys::ResourceType_HeightResource, HeightResource);
 }
 
@@ -656,7 +656,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#fillrule](http://www.graphicsmagick.org/api/types.html#fillrule)
+    /// <http://www.graphicsmagick.org/api/types.html#fillrule>
     FillRule;
 
     ///
@@ -668,7 +668,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#clippathunits](http://www.graphicsmagick.org/api/types.html#clippathunits)
+    /// <http://www.graphicsmagick.org/api/types.html#clippathunits>
     ClipPathUnits;
 
     ///
@@ -680,7 +680,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#paintmethod](http://www.graphicsmagick.org/api/types.html#paintmethod)
+    /// <http://www.graphicsmagick.org/api/types.html#paintmethod>
     ///
     /// PaintMethod specifies how pixel colors are to be replaced in the image. It is used to select
     /// the pixel-filling algorithm employed.
@@ -699,7 +699,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#stretchtype](http://www.graphicsmagick.org/api/types.html#stretchtype)
+    /// <http://www.graphicsmagick.org/api/types.html#stretchtype>
     StretchType;
 
     ///
@@ -725,7 +725,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#styletype](http://www.graphicsmagick.org/api/types.html#styletype)
+    /// <http://www.graphicsmagick.org/api/types.html#styletype>
     StyleType;
 
     ///
@@ -767,7 +767,7 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// [http://www.graphicsmagick.org/api/types.html#decorationtype](http://www.graphicsmagick.org/api/types.html#decorationtype)
+    /// <http://www.graphicsmagick.org/api/types.html#decorationtype>
     DecorationType;
 
     ///

@@ -1,4 +1,4 @@
-//! [http://www.graphicsmagick.org/wand/drawing_wand.html](http://www.graphicsmagick.org/wand/drawing_wand.html)
+//! <http://www.graphicsmagick.org/wand/drawing_wand.html>
 //!
 //! Binding of drawing_wand, Wand vector drawing interfaces.
 

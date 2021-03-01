@@ -38,7 +38,7 @@ or specify the environment variable `GRAPHICS_MAGICK_WAND_CONFIG` correctly.
    `OMP_NUM_THREADS` to limit the number of threads or set `OMP_DISPLAY_ENV=TRUE` to display the OpenMP info when
    running the application.
 
-   Read [http://www.graphicsmagick.org/OpenMP.html](http://www.graphicsmagick.org/OpenMP.html) for details.
+   Read <http://www.graphicsmagick.org/OpenMP.html> for details.
 
 ## Example
 

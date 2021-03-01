@@ -1,4 +1,4 @@
-//! [http://www.graphicsmagick.org/wand/pixel_wand.html](http://www.graphicsmagick.org/wand/pixel_wand.html)
+//! <http://www.graphicsmagick.org/wand/pixel_wand.html>
 //!
 //! Binding of pixel_wand, Wand pixel access interfaces.
 

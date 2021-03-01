@@ -93,4 +93,4 @@ jobs:
         run: cargo test --verbose -- --test-threads=1 --nocapture
 
       - name: Doc
-        run: cargo +nightly doc --manifest-path graphicsmagick/Cargo.toml --features docs
+        run: cargo +nightly doc --manifest-path graphicsmagick/Cargo.toml

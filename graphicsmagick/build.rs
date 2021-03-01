@@ -1,7 +1,8 @@
 #![allow(clippy::unreadable_literal)]
 
-fn main() -> anyhow::Result<()> {
+fn main() {
     let version_map = [
+        ("gm_v_1_3_36", 0x252200),
         ("gm_v_1_3_35", 0x242100),
         ("gm_v_1_3_34", 0x232002),
         ("gm_v_1_3_33", 0x232001),
@@ -25,6 +26,4 @@ fn main() -> anyhow::Result<()> {
             println!("cargo:rustc-cfg={}", version);
         }
     }
-
-    Ok(())
 }

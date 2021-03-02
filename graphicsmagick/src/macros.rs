@@ -45,7 +45,7 @@ macro_rules! types_enum_block {
     }
 }
 
-#[macro_export]
+#[cfg(doctest)]
 macro_rules! doc_comment {
     ($x:expr) => {
         #[doc = $x]

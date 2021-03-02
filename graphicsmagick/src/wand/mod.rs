@@ -1,4 +1,4 @@
-//! [http://www.graphicsmagick.org/wand/wand.html](http://www.graphicsmagick.org/wand/wand.html)
+//! <http://www.graphicsmagick.org/wand/wand.html>
 //!
 //! Binding of GraphicsMagick Wand C API.
 

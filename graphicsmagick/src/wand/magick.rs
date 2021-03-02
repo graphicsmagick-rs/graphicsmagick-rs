@@ -1,4 +1,4 @@
-//! [http://www.graphicsmagick.org/wand/magick_wand.html](http://www.graphicsmagick.org/wand/magick_wand.html)
+//! <http://www.graphicsmagick.org/wand/magick_wand.html>
 //!
 //! Binding of magick_wand, Wand image processing interfaces.
 
@@ -179,7 +179,7 @@ impl Default for MagickWand<'_> {
 }
 
 impl<'a> MagickWand<'a> {
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickadaptivethresholdimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickadaptivethresholdimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickadaptivethresholdimage>
     ///
     /// MagickAdaptiveThresholdImage() selects an individual threshold for each pixel
     ///
@@ -200,12 +200,12 @@ impl<'a> MagickWand<'a> {
         offset: c_long,
     ) -> crate::Result<&mut Self> {
         assert_ne!(width, 0, "width must be positive");
-        assert_ne!(height, 0, "width must be positive");
+        assert_ne!(height, 0, "height must be positive");
         let status = unsafe { MagickAdaptiveThresholdImage(self.wand, width, height, offset) };
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickaddimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickaddimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickaddimage>
     ///
     /// MagickAddImage() adds the specified images at the current image location.
     ///
@@ -214,7 +214,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickaddnoiseimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickaddnoiseimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickaddnoiseimage>
     ///
     /// MagickAddNoiseImage() adds random noise to the image.
     ///
@@ -223,7 +223,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickaffinetransformimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickaffinetransformimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickaffinetransformimage>
     ///
     /// MagickAffineTransformImage() transforms an image as dictated by the affine
     ///
@@ -237,7 +237,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickannotateimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickannotateimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickannotateimage>
     ///
     /// MagickAnnotateImage() annotates an image with text.
     ///
@@ -256,7 +256,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickanimateimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickanimateimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickanimateimages>
     ///
     /// MagickAnimateImages() animates an image or image sequence.
     ///
@@ -266,7 +266,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickappendimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickappendimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickappendimages>
     ///
     /// MagickAppendImages() append a set of images.
     ///
@@ -275,14 +275,14 @@ impl<'a> MagickWand<'a> {
         Self::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickautoorientimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickautoorientimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickautoorientimage>
     ///
     /// MagickAutoOrientImage() adjusts the current image so that its orientation
     ///
     /// is suitable for viewing (i.e. top-left orientation).
     ///
     #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
     pub fn auto_orient_image(
         &mut self,
         current_orientation: OrientationType,
@@ -292,7 +292,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickaverageimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickaverageimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickaverageimages>
     ///
     /// MagickAverageImages() average a set of images.
     ///
@@ -301,7 +301,7 @@ impl<'a> MagickWand<'a> {
         Self::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickblackthresholdimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickblackthresholdimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickblackthresholdimage>
     ///
     /// MagickBlackThresholdImage() is like MagickThresholdImage() but  forces all
     ///
@@ -314,7 +314,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickblurimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickblurimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickblurimage>
     ///
     /// MagickBlurImage() blurs an image.  We convolve the image with a Gaussian
     ///
@@ -329,7 +329,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickborderimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickborderimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickborderimage>
     ///
     /// MagickBorderImage() surrounds the image with a border of the color defined
     ///
@@ -345,7 +345,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcdlimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickcdlimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcdlimage>
     ///
     /// The MagickCdlImage() method applies ("bakes in") the ASC-CDL which is a
     ///
@@ -371,7 +371,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// "1.0,0.0,1.0:1.0,0.0,1.0:1.0,0.0,1.0:0.0"
     ///
-    /// See http://en.wikipedia.org/wiki/ASC_CDL for more information.
+    /// See <http://en.wikipedia.org/wiki/ASC_CDL> for more information.
     ///
     pub fn cdl_image(&mut self, cdl: &str) -> crate::Result<&mut Self> {
         let cdl = str_to_c_string(cdl);
@@ -379,7 +379,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcharcoalimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickcharcoalimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcharcoalimage>
     ///
     /// MagickCharcoalImage() simulates a charcoal drawing.
     ///
@@ -392,7 +392,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickchopimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickchopimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickchopimage>
     ///
     /// MagickChopImage() removes a region of an image and collapses the image to
     ///
@@ -410,7 +410,7 @@ impl<'a> MagickWand<'a> {
     }
 
     // No usage.
-    //    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickclearexception](http://www.graphicsmagick.org/wand/magick_wand.html#magickclearexception)
+    //    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickclearexception>
     //    ///
     //    /// MagickClearException() clears the last wand exception.
     //    ///
@@ -418,7 +418,7 @@ impl<'a> MagickWand<'a> {
     //        let status = unsafe { MagickClearException(self.wand) };
     //    }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickclipimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickclipimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickclipimage>
     ///
     /// MagickClipImage() clips along the first path from the 8BIM profile, if
     ///
@@ -429,7 +429,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickclippathimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickclippathimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickclippathimage>
     ///
     /// MagickClipPathImage() clips along the named paths from the 8BIM profile, if
     ///
@@ -446,7 +446,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcoalesceimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickcoalesceimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcoalesceimages>
     ///
     /// MagickCoalesceImages() composites a set of images while respecting any page
     ///
@@ -465,7 +465,7 @@ impl<'a> MagickWand<'a> {
         Self::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcolorfloodfillimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickcolorfloodfillimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcolorfloodfillimage>
     ///
     /// MagickColorFloodfillImage() changes the color value of any pixel that matches
     ///
@@ -489,7 +489,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcolorizeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickcolorizeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcolorizeimage>
     ///
     /// MagickColorizeImage() blends the fill color with each pixel in the image.
     ///
@@ -502,7 +502,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcommentimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickcommentimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcommentimage>
     ///
     /// MagickCommentImage() adds a comment to your image.
     ///
@@ -512,7 +512,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcompareimagechannels](http://www.graphicsmagick.org/wand/magick_wand.html#magickcompareimagechannels)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcompareimagechannels>
     ///
     /// MagickCompareImageChannels() compares one or more image channels and
     ///
@@ -537,7 +537,7 @@ impl<'a> MagickWand<'a> {
         Self::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcompareimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickcompareimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcompareimages>
     ///
     /// MagickCompareImage() compares one or more images and returns the specified
     ///
@@ -554,7 +554,7 @@ impl<'a> MagickWand<'a> {
         Self::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcompositeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickcompositeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcompositeimage>
     ///
     /// MagickCompositeImage() composite one image onto another at the specified
     ///
@@ -572,7 +572,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcontrastimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickcontrastimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcontrastimage>
     ///
     /// MagickContrastImage() enhances the intensity differences between the lighter
     ///
@@ -585,7 +585,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickconvolveimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickconvolveimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickconvolveimage>
     ///
     /// MagickConvolveImage() applies a custom convolution kernel to the image.
     ///
@@ -595,7 +595,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcropimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickcropimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcropimage>
     ///
     /// MagickCropImage() extracts a region of the image.
     ///
@@ -610,7 +610,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickcyclecolormapimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickcyclecolormapimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcyclecolormapimage>
     ///
     /// MagickCycleColormapImage() displaces an image's colormap by a given number
     ///
@@ -623,7 +623,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickdeconstructimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickdeconstructimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickdeconstructimages>
     ///
     /// MagickDeconstructImages() compares each image with the next in a sequence
     ///
@@ -636,7 +636,7 @@ impl<'a> MagickWand<'a> {
         Self::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickdescribeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickdescribeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickdescribeimage>
     ///
     /// MagickDescribeImage()  describes an image by formatting its attributes
     ///
@@ -651,7 +651,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickdespeckleimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickdespeckleimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickdespeckleimage>
     ///
     /// MagickDespeckleImage() reduces the speckle noise in an image while
     ///
@@ -662,7 +662,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickdisplayimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickdisplayimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickdisplayimage>
     ///
     /// MagickDisplayImage() displays an image.
     ///
@@ -672,12 +672,12 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickdisplayimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickdisplayimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickdisplayimages>
     ///
     /// MagickDisplayImages() displays an image or image sequence.
     ///
     #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn display_images(&mut self, server_name: &str) -> crate::Result<&mut Self> {
         use graphicsmagick_sys::MagickDisplayImages;
         let server_name = str_to_c_string(server_name);
@@ -685,7 +685,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickdrawimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickdrawimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickdrawimage>
     ///
     /// MagickDrawImage() draws vectors on the image as described by DrawingWand.
     ///
@@ -694,7 +694,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickedgeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickedgeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickedgeimage>
     ///
     /// MagickEdgeImage() enhance edges within the image with a convolution filter
     ///
@@ -707,7 +707,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickembossimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickembossimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickembossimage>
     ///
     /// MagickEmbossImage() returns a grayscale image with a three-dimensional
     ///
@@ -724,7 +724,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickenhanceimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickenhanceimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickenhanceimage>
     ///
     /// MagickEnhanceImage() applies a digital filter that improves the quality of a
     ///
@@ -735,7 +735,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickequalizeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickequalizeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickequalizeimage>
     ///
     /// MagickEqualizeImage() equalizes the image histogram.
     ///
@@ -744,7 +744,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickextentimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickextentimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickextentimage>
     ///
     /// Use MagickExtentImage() to change the image dimensions as specified by
     ///
@@ -767,7 +767,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickflattenimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickflattenimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickflattenimages>
     ///
     /// MagickFlattenImages() merges a sequence of images.  This is useful for
     ///
@@ -778,7 +778,7 @@ impl<'a> MagickWand<'a> {
         Self::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickflipimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickflipimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickflipimage>
     ///
     /// MagickFlipImage() creates a vertical mirror image by reflecting the pixels
     ///
@@ -789,7 +789,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickflopimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickflopimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickflopimage>
     ///
     /// MagickFlopImage() creates a horizontal mirror image by reflecting the pixels
     ///
@@ -800,7 +800,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickframeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickframeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickframeimage>
     ///
     /// MagickFrameImage() adds a simulated three-dimensional border around the
     ///
@@ -831,7 +831,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickfximage](http://www.graphicsmagick.org/wand/magick_wand.html#magickfximage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickfximage>
     ///
     /// MagickFxImage() evaluate expression for each pixel in the image.
     ///
@@ -841,7 +841,7 @@ impl<'a> MagickWand<'a> {
         Self::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickfximagechannel](http://www.graphicsmagick.org/wand/magick_wand.html#magickfximagechannel)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickfximagechannel>
     ///
     /// MagickFxImageChannel() evaluate expression for each pixel in the specified
     ///
@@ -857,7 +857,7 @@ impl<'a> MagickWand<'a> {
         Self::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgammaimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickgammaimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgammaimage>
     ///
     /// Use MagickGammaImage() to gamma-correct an image.  The same image viewed on
     ///
@@ -878,7 +878,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgammaimagechannel](http://www.graphicsmagick.org/wand/magick_wand.html#magickgammaimagechannel)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgammaimagechannel>
     ///
     /// Use MagickGammaImageChannel() to gamma-correct a particular image channel.
     ///
@@ -903,7 +903,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetconfigureinfo](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetconfigureinfo)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetconfigureinfo>
     ///
     /// MagickGetConfigureInfo() returns ImageMagick configure attributes such as
     ///
@@ -915,7 +915,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetcopyright](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetcopyright)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetcopyright>
     ///
     /// MagickGetCopyright() returns the ImageMagick API copyright as a string.
     ///
@@ -924,7 +924,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string_no_free(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetfilename](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetfilename)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetfilename>
     ///
     /// MagickGetFilename() returns the filename associated with an image sequence.
     ///
@@ -933,7 +933,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgethomeurl](http://www.graphicsmagick.org/wand/magick_wand.html#magickgethomeurl)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgethomeurl>
     ///
     /// MagickGetHomeURL() returns the ImageMagick home URL.
     ///
@@ -942,7 +942,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string_no_free(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimage>
     ///
     /// MagickGetImage() clones the image at the current image index.
     ///
@@ -951,7 +951,7 @@ impl<'a> MagickWand<'a> {
         Self::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageattribute](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageattribute)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageattribute>
     ///
     /// MagickGetImageAttribute returns an image attribute as a string
     ///
@@ -961,7 +961,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagebackgroundcolor](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagebackgroundcolor)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagebackgroundcolor>
     ///
     /// MagickGetImageBackgroundColor() returns the image background color.
     ///
@@ -973,7 +973,7 @@ impl<'a> MagickWand<'a> {
         Ok(background_color)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageblueprimary](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageblueprimary)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageblueprimary>
     ///
     /// MagickGetImageBluePrimary() returns the chromaticy blue primary point for the
     ///
@@ -991,7 +991,7 @@ impl<'a> MagickWand<'a> {
         Ok((x, y))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagebordercolor](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagebordercolor)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagebordercolor>
     ///
     /// MagickGetImageBorderColor() returns the image border color.
     ///
@@ -1002,7 +1002,7 @@ impl<'a> MagickWand<'a> {
         Ok(border_color)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageboundingbox](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageboundingbox)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageboundingbox>
     ///
     /// MagickGetImageBoundingBox() obtains the crop bounding box required to
     ///
@@ -1033,7 +1033,7 @@ impl<'a> MagickWand<'a> {
         Ok((width, height, x, y))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagechanneldepth](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagechanneldepth)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagechanneldepth>
     ///
     /// MagickGetImageChannelDepth() gets the depth for a particular image channel.
     ///
@@ -1041,7 +1041,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageChannelDepth(self.wand, channel.into()) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagechannelextrema](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagechannelextrema)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagechannelextrema>
     ///
     /// MagickGetImageChannelExtrema() gets the extrema for one or more image
     ///
@@ -1064,7 +1064,7 @@ impl<'a> MagickWand<'a> {
         Ok((minima, maxima))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagechannelmean](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagechannelmean)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagechannelmean>
     ///
     /// MagickGetImageChannelMean() gets the mean and standard deviation of one or
     ///
@@ -1092,7 +1092,7 @@ impl<'a> MagickWand<'a> {
         Ok((mean, standard_deviation))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecolormapcolor](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecolormapcolor)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecolormapcolor>
     ///
     /// MagickGetImageColormapColor() returns the color of the specified colormap
     ///
@@ -1105,7 +1105,7 @@ impl<'a> MagickWand<'a> {
         Ok(color)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecolors](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecolors)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecolors>
     ///
     /// MagickGetImageColors() gets the number of unique colors in the image.
     ///
@@ -1113,7 +1113,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageColors(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecolorspace](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecolorspace)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecolorspace>
     ///
     /// MagickGetImageColorspace() gets the image colorspace.
     ///
@@ -1121,7 +1121,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageColorspace(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecompose](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecompose)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecompose>
     ///
     /// MagickGetImageCompose() returns the composite operator associated with the
     ///
@@ -1131,7 +1131,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageCompose(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecompression](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecompression)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecompression>
     ///
     /// MagickGetImageCompression() gets the image compression.
     ///
@@ -1139,7 +1139,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageCompression(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedelay](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedelay)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedelay>
     ///
     /// MagickGetImageDelay() gets the image delay.
     ///
@@ -1147,7 +1147,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageDelay(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedepth](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedepth)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedepth>
     ///
     /// MagickGetImageDepth() gets the image depth.
     ///
@@ -1155,7 +1155,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageDepth(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageextrema](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageextrema)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageextrema>
     ///
     /// MagickGetImageExtrema() gets the extrema for the image.
     ///
@@ -1171,7 +1171,7 @@ impl<'a> MagickWand<'a> {
         Ok((min, max))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedispose](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedispose)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedispose>
     ///
     /// MagickGetImageDispose() gets the image disposal method.
     ///
@@ -1179,7 +1179,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageDispose(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagefilename](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagefilename)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagefilename>
     ///
     /// MagickGetImageFilename() returns the filename of a particular image in a
     ///
@@ -1190,7 +1190,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageformat](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageformat)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageformat>
     ///
     /// MagickGetImageFormat() returns the format of a particular image in a
     ///
@@ -1201,7 +1201,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagefuzz](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagefuzz)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagefuzz>
     ///
     /// MagickGetImageFuzz() returns the color comparison fuzz factor. Colors
     ///
@@ -1215,7 +1215,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageFuzz(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegamma](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegamma)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegamma>
     ///
     /// MagickGetImageGamma() gets the image gamma.
     ///
@@ -1223,18 +1223,18 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageGamma(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegravity](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegravity)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegravity>
     ///
     /// MagickGetImageGravity() gets the image gravity.
     ///
     #[cfg(gm_v_1_3_22)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_22)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_22)))]
     pub fn get_image_gravity(&mut self) -> GravityType {
         use graphicsmagick_sys::MagickGetImageGravity;
         unsafe { MagickGetImageGravity(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegreenprimary](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegreenprimary)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegreenprimary>
     ///
     /// MagickGetImageGreenPrimary() returns the chromaticy green primary point.
     ///
@@ -1250,7 +1250,7 @@ impl<'a> MagickWand<'a> {
         Ok((x, y))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageheight](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageheight)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageheight>
     ///
     /// MagickGetImageHeight() returns the image height.
     ///
@@ -1258,7 +1258,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageHeight(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagehistogram](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagehistogram)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagehistogram>
     ///
     /// MagickGetImageHistogram() returns the image histogram as an array of
     ///
@@ -1272,7 +1272,7 @@ impl<'a> MagickWand<'a> {
         })
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageindex](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageindex)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageindex>
     ///
     /// MagickGetImageIndex() returns the index of the current image.
     ///
@@ -1280,7 +1280,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageIndex(self.wand) as usize }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageinterlacescheme](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageinterlacescheme)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageinterlacescheme>
     ///
     /// MagickGetImageInterlaceScheme() gets the image interlace scheme.
     ///
@@ -1288,18 +1288,18 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageInterlaceScheme(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageiterations](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageiterations)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageiterations>
     ///
     /// MagickGetImageIterations() gets the image iterations.
     ///
     #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
     pub fn get_image_iterations(&mut self) -> c_ulong {
         use graphicsmagick_sys::MagickGetImageIterations;
         unsafe { MagickGetImageIterations(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagemattecolor](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagemattecolor)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagemattecolor>
     ///
     /// MagickGetImageMatteColor() returns the image matte color.
     ///
@@ -1310,7 +1310,7 @@ impl<'a> MagickWand<'a> {
         Ok(matte_color)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageorientation](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageorientation)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageorientation>
     ///
     /// MagickGetImageOrientation() gets the image orientation type. May be one of:
     ///
@@ -1333,13 +1333,13 @@ impl<'a> MagickWand<'a> {
     /// LeftBottomOrientation   Bottom to top and Left to right.
     ///
     #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
     pub fn get_image_orientation(&mut self) -> OrientationType {
         use graphicsmagick_sys::MagickGetImageOrientation;
         unsafe { MagickGetImageOrientation(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepage](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepage>
     ///
     /// MagickGetImagePage() retrieves the image page size and offset used when
     ///
@@ -1361,7 +1361,7 @@ impl<'a> MagickWand<'a> {
     }
 
     // TODO Make a better method to get pixels.
-    //    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepixels](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepixels)
+    //    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepixels>
     //    ///
     //    /// MagickGetImagePixels() extracts pixel data from an image and returns it to
     //    ///
@@ -1393,7 +1393,7 @@ impl<'a> MagickWand<'a> {
     //        Ok(pixels)
     //    }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageprofile](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageprofile)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageprofile>
     ///
     /// MagickGetImageProfile() returns the named image profile.
     ///
@@ -1404,7 +1404,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string(c.cast())
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageredprimary](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageredprimary)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageredprimary>
     ///
     /// MagickGetImageRedPrimary() returns the chromaticy red primary point.
     ///
@@ -1420,7 +1420,7 @@ impl<'a> MagickWand<'a> {
         Ok((x, y))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagerenderingintent](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagerenderingintent)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagerenderingintent>
     ///
     /// MagickGetImageRenderingIntent() gets the image rendering intent.
     ///
@@ -1428,7 +1428,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageRenderingIntent(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageresolution](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageresolution)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageresolution>
     ///
     /// MagickGetImageResolution() gets the image X &amp; Y resolution.
     ///
@@ -1444,7 +1444,7 @@ impl<'a> MagickWand<'a> {
         Ok((x, y))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagescene](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagescene)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagescene>
     ///
     /// MagickGetImageScene() gets the image scene.
     ///
@@ -1452,7 +1452,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageScene(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesignature](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesignature)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesignature>
     ///
     /// MagickGetImageSignature() generates an SHA-256 message digest for the image
     ///
@@ -1463,7 +1463,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesize](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesize)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesize>
     ///
     /// MagickGetImageSize() returns the image size.
     ///
@@ -1471,7 +1471,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageSize(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagetype](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagetype)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagetype>
     ///
     /// MagickGetImageType() gets the image type.
     ///
@@ -1479,7 +1479,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageType(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesavedtype](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesavedtype)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesavedtype>
     ///
     /// MagickGetImageSavedType() gets the image type that will be used when the
     ///
@@ -1491,7 +1491,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageSavedType(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageunits](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageunits)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageunits>
     ///
     /// MagickGetImageUnits() gets the image units of resolution.
     ///
@@ -1499,7 +1499,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageUnits(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagevirtualpixelmethod](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagevirtualpixelmethod)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagevirtualpixelmethod>
     ///
     /// MagickGetImageVirtualPixelMethod() returns the virtual pixel method for the
     ///
@@ -1509,7 +1509,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageVirtualPixelMethod(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagewhitepoint](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagewhitepoint)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagewhitepoint>
     ///
     /// MagickGetImageWhitePoint() returns the chromaticy white point.
     ///
@@ -1525,7 +1525,7 @@ impl<'a> MagickWand<'a> {
         Ok((x, y))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagewidth](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagewidth)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagewidth>
     ///
     /// MagickGetImageWidth() returns the image width.
     ///
@@ -1533,7 +1533,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetImageWidth(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetnumberimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetnumberimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetnumberimages>
     ///
     /// MagickGetNumberOfImages() returns the number of images associated with a
     ///
@@ -1543,7 +1543,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetNumberImages(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetpackagename](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetpackagename)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetpackagename>
     ///
     /// MagickGetPackageName() returns the ImageMagick package name.
     ///
@@ -1552,7 +1552,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string_no_free(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetquantumdepth](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetquantumdepth)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetquantumdepth>
     ///
     /// MagickGetQuantumDepth() returns the ImageMagick quantum depth.
     ///
@@ -1562,7 +1562,7 @@ impl<'a> MagickWand<'a> {
         (depth, c_str_to_string_no_free(c))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetreleasedate](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetreleasedate)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetreleasedate>
     ///
     /// MagickGetReleaseDate() returns the ImageMagick release date.
     ///
@@ -1571,7 +1571,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string_no_free(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetresourcelimit](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetresourcelimit)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetresourcelimit>
     ///
     /// MagickGetResourceLimit() returns the the specified resource in megabytes.
     ///
@@ -1579,7 +1579,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickGetResourceLimit(r#type.into()) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetsamplingfactors](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetsamplingfactors)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetsamplingfactors>
     ///
     /// MagickGetSamplingFactors() gets the horizontal and vertical sampling factor.
     ///
@@ -1589,7 +1589,7 @@ impl<'a> MagickWand<'a> {
         c_arr_to_vec(a, number_factors as usize, |p| unsafe { *p })
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetsize](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetsize)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetsize>
     ///
     /// MagickGetSize() returns the size associated with the magick wand.
     ///
@@ -1604,7 +1604,7 @@ impl<'a> MagickWand<'a> {
         (columns, rows)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickgetversion](http://www.graphicsmagick.org/wand/magick_wand.html#magickgetversion)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetversion>
     ///
     /// MagickGetVersion() returns the ImageMagick API version as a string and
     ///
@@ -1620,7 +1620,7 @@ impl<'a> MagickWand<'a> {
         (version, c_str_to_string_no_free(c))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickhaldclutimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickhaldclutimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickhaldclutimage>
     ///
     /// The MagickHaldClutImage() method apply a color lookup table (Hald CLUT) to
     ///
@@ -1652,7 +1652,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// The Hald CLUT algorithm has been developed by Eskil Steenberg as described
     ///
-    /// at http://www.quelsolaar.com/technology/clut.html, and was adapted for
+    /// at <http://www.quelsolaar.com/technology/clut.html>, and was adapted for
     ///
     /// GraphicsMagick by Clément Follet with support from Cédric Lejeune of
     ///
@@ -1663,7 +1663,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickhascolormap](http://www.graphicsmagick.org/wand/magick_wand.html#magickhascolormap)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickhascolormap>
     ///
     /// MagickHasColormap() returns True if the check was successful with the
     ///
@@ -1674,7 +1674,7 @@ impl<'a> MagickWand<'a> {
     /// images available.
     ///
     #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn has_colormap(&mut self) -> crate::Result<bool> {
         use graphicsmagick_sys::MagickHasColormap;
         let mut colormap = 0;
@@ -1683,7 +1683,7 @@ impl<'a> MagickWand<'a> {
         Ok(colormap != 0)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickhasnextimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickhasnextimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickhasnextimage>
     ///
     /// MagickHasNextImage() returns True if the wand has more images when
     ///
@@ -1693,7 +1693,7 @@ impl<'a> MagickWand<'a> {
         (unsafe { MagickHasNextImage(self.wand) }) == 1
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickhaspreviousimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickhaspreviousimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickhaspreviousimage>
     ///
     /// MagickHasPreviousImage() returns True if the wand has more images when
     ///
@@ -1703,7 +1703,7 @@ impl<'a> MagickWand<'a> {
         (unsafe { MagickHasPreviousImage(self.wand) }) == 0
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickimplodeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickimplodeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickimplodeimage>
     ///
     /// MagickImplodeImage() creates a new image that is a copy of an existing
     ///
@@ -1718,7 +1718,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickisgrayimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickisgrayimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickisgrayimage>
     ///
     /// MagickIsGrayImage() returns True if the check was successful with the
     ///
@@ -1729,7 +1729,7 @@ impl<'a> MagickWand<'a> {
     /// an error.
     ///
     #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn is_gray_image(&mut self) -> crate::Result<bool> {
         use graphicsmagick_sys::MagickIsGrayImage;
         let mut gray_image = 0;
@@ -1738,7 +1738,7 @@ impl<'a> MagickWand<'a> {
         Ok(gray_image == 0)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickismonochromeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickismonochromeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickismonochromeimage>
     ///
     /// MagickIsMonochromeImage() returns True if the check was successful with the
     ///
@@ -1749,7 +1749,7 @@ impl<'a> MagickWand<'a> {
     /// an error.
     ///
     #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn is_monochrome_image(&mut self) -> crate::Result<bool> {
         use graphicsmagick_sys::MagickIsMonochromeImage;
         let mut monochrome = 0;
@@ -1758,7 +1758,7 @@ impl<'a> MagickWand<'a> {
         Ok(monochrome == 0)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickisopaqueimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickisopaqueimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickisopaqueimage>
     ///
     /// MagickIsOpaqueImage() returns True if the check was successful with the
     ///
@@ -1769,7 +1769,7 @@ impl<'a> MagickWand<'a> {
     /// an error.
     ///
     #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn is_opaque_image(&mut self) -> crate::Result<bool> {
         use graphicsmagick_sys::MagickIsOpaqueImage;
         let mut opaque = 0;
@@ -1778,7 +1778,7 @@ impl<'a> MagickWand<'a> {
         Ok(opaque == 0)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickispaletteimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickispaletteimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickispaletteimage>
     ///
     /// MagickIsPaletteImage() returns True if the check was successful with the
     ///
@@ -1793,7 +1793,7 @@ impl<'a> MagickWand<'a> {
     /// colormap is in use.
     ///
     #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_29)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn is_palette_image(&mut self) -> crate::Result<bool> {
         use graphicsmagick_sys::MagickIsPaletteImage;
         let mut palette = 0;
@@ -1802,7 +1802,7 @@ impl<'a> MagickWand<'a> {
         Ok(palette == 0)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicklabelimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicklabelimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicklabelimage>
     ///
     /// MagickLabelImage() adds a label to your image.
     ///
@@ -1812,7 +1812,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicklevelimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicklevelimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicklevelimage>
     ///
     /// MagickLevelImage() adjusts the levels of an image by scaling the colors
     ///
@@ -1840,7 +1840,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicklevelimagechannel](http://www.graphicsmagick.org/wand/magick_wand.html#magicklevelimagechannel)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicklevelimagechannel>
     ///
     /// MagickLevelImageChannel() adjusts the levels of the specified channel of
     ///
@@ -1871,7 +1871,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickmagnifyimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickmagnifyimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickmagnifyimage>
     ///
     /// MagickMagnifyImage() is a convenience method that scales an image
     ///
@@ -1882,7 +1882,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickmapimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickmapimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickmapimage>
     ///
     /// MagickMapImage() replaces the colors of an image with the closest color
     ///
@@ -1897,7 +1897,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickmattefloodfillimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickmattefloodfillimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickmattefloodfillimage>
     ///
     /// MagickMatteFloodfillImage() changes the transparency value of any pixel that
     ///
@@ -1921,7 +1921,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickmedianfilterimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickmedianfilterimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickmedianfilterimage>
     ///
     /// MagickMedianFilterImage() applies a digital filter that improves the quality
     ///
@@ -1934,7 +1934,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickminifyimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickminifyimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickminifyimage>
     ///
     /// MagickMinifyImage() is a convenience method that scales an image
     ///
@@ -1945,7 +1945,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickmodulateimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickmodulateimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickmodulateimage>
     ///
     /// MagickModulateImage() lets you control the brightness, saturation, and hue
     ///
@@ -1961,7 +1961,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickmontageimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickmontageimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickmontageimage>
     ///
     /// Use MagickMontageImage() to create a composite image by combining several
     ///
@@ -1993,7 +1993,7 @@ impl<'a> MagickWand<'a> {
         MagickWand::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickmorphimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickmorphimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickmorphimages>
     ///
     /// MagickMorphImages() method morphs a set of images.  Both the image pixels
     ///
@@ -2006,7 +2006,7 @@ impl<'a> MagickWand<'a> {
         todo!()
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickmosaicimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickmosaicimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickmosaicimages>
     ///
     /// MagickMosaicImages() inlays an image sequence to form a single coherent
     ///
@@ -2019,7 +2019,7 @@ impl<'a> MagickWand<'a> {
         MagickWand::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickmotionblurimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickmotionblurimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickmotionblurimage>
     ///
     /// MagickMotionBlurImage() simulates motion blur.  We convolve the image with a
     ///
@@ -2041,7 +2041,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicknegateimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicknegateimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicknegateimage>
     ///
     /// MagickNegateImage() negates the colors in the reference image.  The
     ///
@@ -2058,7 +2058,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicknegateimagechannel](http://www.graphicsmagick.org/wand/magick_wand.html#magicknegateimagechannel)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicknegateimagechannel>
     ///
     /// MagickNegateImageChannel() negates the colors in the specified channel of the
     ///
@@ -2081,7 +2081,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicknextimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicknextimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicknextimage>
     ///
     /// MagickNextImage() associates the next image in the image list with a magick
     ///
@@ -2093,7 +2093,7 @@ impl<'a> MagickWand<'a> {
         (unsafe { MagickNextImage(self.wand) }) == 1
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicknormalizeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicknormalizeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicknormalizeimage>
     ///
     /// MagickNormalizeImage() enhances the contrast of a color image by adjusting
     ///
@@ -2108,7 +2108,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickoilpaintimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickoilpaintimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickoilpaintimage>
     ///
     /// MagickOilPaintImage() applies a special effect filter that simulates an oil
     ///
@@ -2121,7 +2121,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickopaqueimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickopaqueimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickopaqueimage>
     ///
     /// MagickOpaqueImage() changes any pixel that matches color with the color
     ///
@@ -2137,7 +2137,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickpingimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickpingimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickpingimage>
     ///
     /// MagickPingImage() is like MagickReadImage() except the only valid
     ///
@@ -2153,7 +2153,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickpreviewimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickpreviewimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickpreviewimages>
     ///
     /// MagickPreviewImages() tiles 9 thumbnails of the specified image with an
     ///
@@ -2168,7 +2168,7 @@ impl<'a> MagickWand<'a> {
         MagickWand::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickpreviousimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickpreviousimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickpreviousimage>
     ///
     /// MagickPreviousImage() selects the previous image associated with a magick
     ///
@@ -2179,7 +2179,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickprofileimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickprofileimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickprofileimage>
     ///
     /// Use MagickProfileImage() to add or remove a ICC, IPTC, or generic profile
     ///
@@ -2203,7 +2203,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickquantizeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickquantizeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickquantizeimage>
     ///
     /// MagickQuantizeImage() analyzes the colors within a reference image and
     ///
@@ -2243,7 +2243,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickquantizeimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickquantizeimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickquantizeimages>
     ///
     /// MagickQuantizeImage() analyzes the colors within a sequence of images and
     ///
@@ -2283,7 +2283,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryfontmetrics](http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryfontmetrics)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryfontmetrics>
     ///
     /// MagickQueryFontMetrics() returns a 7 element array representing the
     ///
@@ -2323,7 +2323,7 @@ impl<'a> MagickWand<'a> {
         arr
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryfonts](http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryfonts)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryfonts>
     ///
     /// MagickQueryFonts() returns any font that match the specified pattern.
     ///
@@ -2334,7 +2334,7 @@ impl<'a> MagickWand<'a> {
         c_arr_to_vec(a, number_fonts as usize, |s| c_str_to_string(unsafe { *s }))
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryformats](http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryformats)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryformats>
     ///
     /// MagickQueryFormats() returns any image formats that match the specified
     ///
@@ -2349,7 +2349,7 @@ impl<'a> MagickWand<'a> {
         })
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickradialblurimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickradialblurimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickradialblurimage>
     ///
     /// MagickRadialBlurImage() radial blurs an image.
     ///
@@ -2358,7 +2358,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickraiseimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickraiseimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickraiseimage>
     ///
     /// MagickRaiseImage() creates a simulated three-dimensional button-like effect
     ///
@@ -2380,7 +2380,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickreadimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickreadimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickreadimage>
     ///
     /// MagickReadImage() reads an image or image sequence.
     ///
@@ -2390,7 +2390,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickreadimageblob](http://www.graphicsmagick.org/wand/magick_wand.html#magickreadimageblob)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickreadimageblob>
     ///
     /// MagickReadImageBlob() reads an image or image sequence from a blob.
     ///
@@ -2403,7 +2403,7 @@ impl<'a> MagickWand<'a> {
     }
 
     // Not Need
-    //    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickreadimagefile](http://www.graphicsmagick.org/wand/magick_wand.html#magickreadimagefile)
+    //    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickreadimagefile>
     //    ///
     //    /// MagickReadImageFile() reads an image or image sequence from an open file
     //    ///
@@ -2413,7 +2413,7 @@ impl<'a> MagickWand<'a> {
     //        // let status = unsafe { MagickReadImageFile(self.wand, file) };
     //    }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickreducenoiseimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickreducenoiseimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickreducenoiseimage>
     ///
     /// MagickReduceNoiseImage() smooths the contours of an image while still
     ///
@@ -2428,7 +2428,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickremoveimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickremoveimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickremoveimage>
     ///
     /// MagickRemoveImage() removes an image from the image list.
     ///
@@ -2437,14 +2437,14 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickremoveimageoption](http://www.graphicsmagick.org/wand/magick_wand.html#magickremoveimageoption)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickremoveimageoption>
     ///
     /// MagickRemoveImageOption() removes an image format-specific option from the
     ///
     /// the image (.e.g MagickRemoveImageOption(wand,"jpeg","preserve-settings").
     ///
     #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
     pub fn remove_image_option(&mut self, format: &str, key: &str) -> crate::Result<&mut Self> {
         use graphicsmagick_sys::MagickRemoveImageOption;
         let format = str_to_c_string(format);
@@ -2453,7 +2453,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickremoveimageprofile](http://www.graphicsmagick.org/wand/magick_wand.html#magickremoveimageprofile)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickremoveimageprofile>
     ///
     /// MagickRemoveImageProfile() removes the named image profile and returns it.
     ///
@@ -2464,7 +2464,7 @@ impl<'a> MagickWand<'a> {
         c_str_to_string(c.cast())
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickresetiterator](http://www.graphicsmagick.org/wand/magick_wand.html#magickresetiterator)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickresetiterator>
     ///
     /// MagickReset() resets the wand iterator.  Use it in conjunction
     ///
@@ -2476,7 +2476,7 @@ impl<'a> MagickWand<'a> {
         unsafe { MagickResetIterator(self.wand) };
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickresampleimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickresampleimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickresampleimage>
     ///
     /// MagickResampleImage() resample image to desired resolution.
     ///
@@ -2509,7 +2509,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickresizeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickresizeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickresizeimage>
     ///
     /// MagickResizeImage() scales an image to the desired dimensions with one of
     ///
@@ -2542,7 +2542,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickrollimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickrollimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickrollimage>
     ///
     /// MagickRollImage() offsets an image as defined by x_offset and y_offset.
     ///
@@ -2551,7 +2551,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickrotateimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickrotateimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickrotateimage>
     ///
     /// MagickRotateImage() rotates an image the specified number of degrees. Empty
     ///
@@ -2568,7 +2568,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksampleimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicksampleimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksampleimage>
     ///
     /// MagickSampleImage() scales an image to the desired dimensions with pixel
     ///
@@ -2581,7 +2581,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickscaleimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickscaleimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickscaleimage>
     ///
     /// MagickScaleImage() scales the size of an image to the given dimensions.
     ///
@@ -2590,7 +2590,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickseparateimagechannel](http://www.graphicsmagick.org/wand/magick_wand.html#magickseparateimagechannel)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickseparateimagechannel>
     ///
     /// MagickChannelImage() separates a channel from the image and returns a
     ///
@@ -2603,7 +2603,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetcompressionquality](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetcompressionquality)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetcompressionquality>
     ///
     /// MagickSetCompressionQuality() sets the image quality factor, which
     ///
@@ -2721,7 +2721,7 @@ impl<'a> MagickWand<'a> {
     }
 
     // TODO Detect version to implement.
-    //     /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetdepth](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetdepth)
+    //     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetdepth>
     //     ///
     //     /// MagickSetDepth() sets the sample depth to be used when reading from a
     //     ///
@@ -2734,7 +2734,7 @@ impl<'a> MagickWand<'a> {
     //         self.check_status(status)
     //     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetfilename](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetfilename)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetfilename>
     ///
     /// MagickSetFilename() sets the filename before you read or write an image file.
     ///
@@ -2744,7 +2744,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetformat](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetformat)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetformat>
     ///
     /// MagickSetFormat() sets the file or blob format (e.g. "BMP") to be used
     ///
@@ -2764,7 +2764,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimage>
     ///
     /// MagickSetImage() replaces the last image returned by MagickSetImageIndex(),
     ///
@@ -2777,7 +2777,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageattribute](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageattribute)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageattribute>
     ///
     /// MagickSetImageAttribute sets an image attribute
     ///
@@ -2788,7 +2788,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagebackgroundcolor](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagebackgroundcolor)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagebackgroundcolor>
     ///
     /// MagickSetImageBackgroundColor() sets the image background color.
     ///
@@ -2800,7 +2800,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageblueprimary](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageblueprimary)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageblueprimary>
     ///
     /// MagickSetImageBluePrimary() sets the image chromaticity blue primary point.
     ///
@@ -2809,7 +2809,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagebordercolor](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagebordercolor)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagebordercolor>
     ///
     /// MagickSetImageBorderColor() sets the image border color.
     ///
@@ -2818,7 +2818,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecolormapcolor](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecolormapcolor)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecolormapcolor>
     ///
     /// MagickSetImageColormapColor() sets the color of the specified colormap
     ///
@@ -2833,7 +2833,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecolorspace](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecolorspace)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecolorspace>
     ///
     /// MagickSetImageColorspace() sets the image colorspace.
     ///
@@ -2851,7 +2851,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecompose](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecompose)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecompose>
     ///
     /// MagickSetImageCompose() sets the image composite operator, useful for
     ///
@@ -2864,7 +2864,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecompression](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecompression)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagecompression>
     ///
     /// MagickSetImageCompression() sets the image compression.
     ///
@@ -2876,7 +2876,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagedelay](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagedelay)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagedelay>
     ///
     /// MagickSetImageDelay() sets the image delay.
     ///
@@ -2885,7 +2885,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagechanneldepth](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagechanneldepth)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagechanneldepth>
     ///
     /// MagickSetImageChannelDepth() sets the depth of a particular image channel.
     ///
@@ -2898,7 +2898,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagedepth](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagedepth)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagedepth>
     ///
     /// MagickSetImageDepth() sets the image depth.
     ///
@@ -2907,7 +2907,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagedispose](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagedispose)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagedispose>
     ///
     /// MagickSetImageDispose() sets the image disposal method.
     ///
@@ -2916,7 +2916,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagefilename](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagefilename)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagefilename>
     ///
     /// MagickSetImageFilename() sets the filename of a particular image in a
     ///
@@ -2928,7 +2928,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageformat](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageformat)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageformat>
     ///
     /// MagickSetImageFormat() sets the format of a particular image in a
     ///
@@ -2940,7 +2940,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagefuzz](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagefuzz)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagefuzz>
     ///
     /// MagickSetImageFuzz() sets the color comparison fuzz factor.  Colors
     ///
@@ -2955,7 +2955,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagegamma](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagegamma)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagegamma>
     ///
     /// MagickSetImageGamma() sets the image gamma.
     ///
@@ -2964,7 +2964,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagegravity](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagegravity)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagegravity>
     ///
     /// MagickSetImageGravity() sets the image gravity.  This is used
     ///
@@ -2983,14 +2983,14 @@ impl<'a> MagickWand<'a> {
     /// the tile.
     ///
     #[cfg(gm_v_1_3_22)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_22)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_22)))]
     pub fn set_image_gravity(&mut self, gravity: GravityType) -> crate::Result<&mut Self> {
         use graphicsmagick_sys::MagickSetImageGravity;
         let status = unsafe { MagickSetImageGravity(self.wand, gravity.into()) };
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagegreenprimary](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagegreenprimary)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagegreenprimary>
     ///
     /// MagickSetImageGreenPrimary() sets the image chromaticity green primary
     ///
@@ -3005,7 +3005,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageindex](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageindex)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageindex>
     ///
     /// MagickSetImageIndex() set the current image to the position of the list
     ///
@@ -3016,7 +3016,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageinterlacescheme](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageinterlacescheme)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageinterlacescheme>
     ///
     /// MagickSetImageInterlaceScheme() sets the image interlace scheme.  Please
     ///
@@ -3032,19 +3032,19 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageiterations](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageiterations)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageiterations>
     ///
     /// MagickSetImageIterations() sets the image iterations.
     ///
     #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
     pub fn set_image_iterations(&mut self, iterations: c_ulong) -> crate::Result<&mut Self> {
         use graphicsmagick_sys::MagickSetImageIterations;
         let status = unsafe { MagickSetImageIterations(self.wand, iterations) };
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagemattecolor](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagemattecolor)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagemattecolor>
     ///
     /// MagickSetImageMatteColor() sets the image matte color.
     ///
@@ -3053,14 +3053,14 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageoption](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageoption)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageoption>
     ///
     /// MagickSetImageOption() associates one or options with a particular image
     ///
     /// format (.e.g MagickSetImageOption(wand,"jpeg","preserve-settings","true").
     ///
     #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
     pub fn set_image_option(
         &mut self,
         format: &str,
@@ -3077,14 +3077,14 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageorientation](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageorientation)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageorientation>
     ///
     /// MagickSetImageOrientation() sets the internal image orientation type.
     ///
     /// The EXIF orientation tag will be updated if present.
     ///
     #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(feature = "docs", doc(cfg(gm_v_1_3_26)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
     pub fn set_image_orientation(
         &mut self,
         new_orientation: OrientationType,
@@ -3094,7 +3094,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagepage](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagepage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagepage>
     ///
     /// MagickSetImagePage() sets the image page size and offset used when
     ///
@@ -3114,7 +3114,7 @@ impl<'a> MagickWand<'a> {
     }
 
     // TODO As get_image_pixels
-    //    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagepixels](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagepixels)
+    //    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagepixels>
     //    ///
     //    /// MagickSetImagePixels() accepts pixel data and stores it in the image at the
     //    ///
@@ -3143,7 +3143,7 @@ impl<'a> MagickWand<'a> {
     //        // let status = unsafe { MagickSetImagePixels(self.wand,  x_offset,  y_offset,  columns,  rows, map,  storage, pixels) };
     //    }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageprofile](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageprofile)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageprofile>
     ///
     /// MagickSetImageProfile() adds a named profile to the magick wand.  If a
     ///
@@ -3167,7 +3167,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageredprimary](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageredprimary)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageredprimary>
     ///
     /// MagickSetImageRedPrimary() sets the image chromaticity red primary point.
     ///
@@ -3176,7 +3176,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagerenderingintent](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagerenderingintent)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagerenderingintent>
     ///
     /// MagickSetImageRenderingIntent() sets the image rendering intent.
     ///
@@ -3188,7 +3188,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageresolution](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageresolution)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageresolution>
     ///
     /// MagickSetImageResolution() sets the image resolution.
     ///
@@ -3201,7 +3201,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagescene](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagescene)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagescene>
     ///
     /// MagickSetImageScene() sets the image scene.
     ///
@@ -3210,7 +3210,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagetype](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagetype)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagetype>
     ///
     /// MagickSetImageType() sets the image type.
     ///
@@ -3219,7 +3219,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagesavedtype](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagesavedtype)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagesavedtype>
     ///
     /// MagickSetImageSavedType() sets the image type that will be used when the
     ///
@@ -3230,7 +3230,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageunits](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageunits)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageunits>
     ///
     /// MagickSetImageUnits() sets the image units of resolution.
     ///
@@ -3239,7 +3239,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagevirtualpixelmethod](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagevirtualpixelmethod)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagevirtualpixelmethod>
     ///
     /// MagickSetImageVirtualPixelMethod() sets the image virtual pixel method.
     ///
@@ -3251,7 +3251,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetinterlacescheme](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetinterlacescheme)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetinterlacescheme>
     ///
     /// MagickSetInterlaceScheme() sets the interlace scheme used when writing
     ///
@@ -3265,7 +3265,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetresolution](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetresolution)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetresolution>
     ///
     /// MagickSetResolution() sets the resolution (density) of the magick wand.
     ///
@@ -3290,7 +3290,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetresolutionunits](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetresolutionunits)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetresolutionunits>
     ///
     /// MagickSetResolutionUnits() sets the resolution units of the magick wand.
     ///
@@ -3307,7 +3307,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetresourcelimit](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetresourcelimit)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetresourcelimit>
     ///
     /// MagickSetResourceLimit() sets the limit for a particular resource in
     ///
@@ -3318,7 +3318,7 @@ impl<'a> MagickWand<'a> {
         status != MagickFail
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetsamplingfactors](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetsamplingfactors)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetsamplingfactors>
     ///
     /// MagickSetSamplingFactors() sets the image sampling factors.
     ///
@@ -3329,7 +3329,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetsize](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetsize)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetsize>
     ///
     /// MagickSetSize() sets the size of the magick wand.  Set it before you
     ///
@@ -3340,7 +3340,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagewhitepoint](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagewhitepoint)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagewhitepoint>
     ///
     /// MagickSetImageWhitePoint() sets the image chromaticity white point.
     ///
@@ -3349,7 +3349,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksetpassphrase](http://www.graphicsmagick.org/wand/magick_wand.html#magicksetpassphrase)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetpassphrase>
     ///
     /// MagickSetPassphrase() sets the passphrase.
     ///
@@ -3359,7 +3359,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksharpenimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicksharpenimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksharpenimage>
     ///
     /// MagickSharpenImage() sharpens an image.  We convolve the image with a Gaussian
     ///
@@ -3374,7 +3374,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickshaveimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickshaveimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickshaveimage>
     ///
     /// MagickShaveImage() shaves pixels from the image edges.  It allocates the
     ///
@@ -3387,7 +3387,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickshearimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickshearimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickshearimage>
     ///
     /// MagickShearImage() slides one edge of an image along the X or Y axis,
     ///
@@ -3413,7 +3413,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksolarizeimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicksolarizeimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksolarizeimage>
     ///
     /// MagickSolarizeImage() applies a special effect to the image, similar to the
     ///
@@ -3428,7 +3428,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickspreadimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickspreadimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickspreadimage>
     ///
     /// MagickSpreadImage() is a special effects method that randomly displaces each
     ///
@@ -3439,7 +3439,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicksteganoimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicksteganoimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksteganoimage>
     ///
     /// Use MagickSteganoImage() to hide a digital watermark within the image.
     ///
@@ -3458,7 +3458,7 @@ impl<'a> MagickWand<'a> {
         MagickWand::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickstereoimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickstereoimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickstereoimage>
     ///
     /// MagickStereoImage() composites two images and produces a single image that
     ///
@@ -3469,7 +3469,7 @@ impl<'a> MagickWand<'a> {
         MagickWand::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickstripimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickstripimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickstripimage>
     ///
     /// MagickStripImage() removes all profiles and text attributes from the image.
     ///
@@ -3478,7 +3478,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickswirlimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickswirlimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickswirlimage>
     ///
     /// MagickSwirlImage() swirls the pixels about the center of the image, where
     ///
@@ -3491,7 +3491,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicktextureimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicktextureimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicktextureimage>
     ///
     /// MagickTextureImage() repeatedly tiles the texture image across and down the
     ///
@@ -3502,7 +3502,7 @@ impl<'a> MagickWand<'a> {
         MagickWand::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickthresholdimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickthresholdimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickthresholdimage>
     ///
     /// MagickThresholdImage() changes the value of individual pixels based on
     ///
@@ -3515,7 +3515,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickthresholdimagechannel](http://www.graphicsmagick.org/wand/magick_wand.html#magickthresholdimagechannel)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickthresholdimagechannel>
     ///
     /// MagickThresholdImageChannel() changes the value of individual pixel
     ///
@@ -3532,7 +3532,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicktintimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicktintimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicktintimage>
     ///
     /// MagickTintImage() applies a color vector to each pixel in the image.  The
     ///
@@ -3551,7 +3551,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicktransformimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicktransformimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicktransformimage>
     ///
     /// MagickTransformImage() is a convenience method that behaves like
     ///
@@ -3568,7 +3568,7 @@ impl<'a> MagickWand<'a> {
         MagickWand::from_wand(wand)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicktransparentimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicktransparentimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicktransparentimage>
     ///
     /// MagickTransparentImage() changes any pixel that matches color with the color
     ///
@@ -3584,7 +3584,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magicktrimimage](http://www.graphicsmagick.org/wand/magick_wand.html#magicktrimimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicktrimimage>
     ///
     /// MagickTrimImage() remove edges that are the background color from the image.
     ///
@@ -3593,7 +3593,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickunsharpmaskimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickunsharpmaskimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickunsharpmaskimage>
     ///
     /// MagickUnsharpMaskImage() sharpens an image.  We convolve the image with a
     ///
@@ -3614,7 +3614,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickwaveimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickwaveimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickwaveimage>
     ///
     /// MagickWaveImage()  creates a "ripple" effect in the image by shifting
     ///
@@ -3631,7 +3631,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickwhitethresholdimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickwhitethresholdimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickwhitethresholdimage>
     ///
     /// MagickWhiteThresholdImage() is like ThresholdImage() but  forces all pixels
     ///
@@ -3644,7 +3644,7 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimage](http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimage)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimage>
     ///
     /// MagickWriteImage() writes an image.
     ///
@@ -3655,7 +3655,7 @@ impl<'a> MagickWand<'a> {
     }
 
     // Not need
-    //    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimagesfile](http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimagesfile)
+    //    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimagesfile>
     //    ///
     //    /// MagickWriteImagesFile() writes an image or image sequence to a stdio
     //    ///
@@ -3673,7 +3673,7 @@ impl<'a> MagickWand<'a> {
     //        // let status = unsafe { MagickWriteImagesFile(self.wand, file,  adjoin) };
     //    }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimageblob](http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimageblob)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimageblob>
     ///
     /// MagickWriteImageBlob() implements direct to memory image formats.  It
     ///
@@ -3701,7 +3701,7 @@ impl<'a> MagickWand<'a> {
     }
 
     // Not need
-    //    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimagefile](http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimagefile)
+    //    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimagefile>
     //    ///
     //    /// MagickWriteImageFile() writes an image to an open file descriptor.
     //    ///
@@ -3709,7 +3709,7 @@ impl<'a> MagickWand<'a> {
     //        // let status = unsafe { MagickWriteImageFile(self.wand, file) };
     //    }
 
-    /// [http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimages](http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimages)
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimages>
     ///
     /// MagickWriteImages() writes an image or image sequence.  If the wand
     ///

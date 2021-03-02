@@ -28,6 +28,7 @@ jobs:
         # - windows-latest
 
         gm-version:
+          - GraphicsMagick-1_3_36
           - GraphicsMagick-1_3_35
           - GraphicsMagick-1_3_34
           - GraphicsMagick-1_3_33
@@ -92,4 +93,4 @@ jobs:
         run: cargo test --verbose -- --test-threads=1 --nocapture
 
       - name: Doc
-        run: cargo +nightly doc --manifest-path graphicsmagick/Cargo.toml --features docs
+        run: cargo +nightly rustdoc --manifest-path graphicsmagick/Cargo.toml -- --cfg docsrs

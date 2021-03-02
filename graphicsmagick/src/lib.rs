@@ -1,4 +1,4 @@
-#![cfg_attr(feature = "docs", feature(doc_cfg))]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 #![warn(rust_2018_idioms)]
 #![warn(clippy::dbg_macro, clippy::print_stdout)]
 #![allow(clippy::too_many_arguments)]
@@ -36,7 +36,7 @@
 //!    `OMP_NUM_THREADS` to limit the number of threads or set `OMP_DISPLAY_ENV=TRUE` to display the OpenMP info when
 //!    running the application.
 //!
-//!    Read [http://www.graphicsmagick.org/OpenMP.html](http://www.graphicsmagick.org/OpenMP.html) for details.
+//!    Read <http://www.graphicsmagick.org/OpenMP.html> for details.
 //!
 //! ## Example
 //!

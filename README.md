@@ -27,7 +27,7 @@ or specify the environment variable `GRAPHICS_MAGICK_WAND_CONFIG` correctly.
 
 ## Support
 
-1. Support and tested GraphicsMagick version: `1.3.20 ~ 1.3.35`.
+1. Support and tested GraphicsMagick version: `1.3.20 ~ 1.3.36`.
 
 1. There are some version flag in the documentation, like `gm_v_1_3_26`, meaning that your `GraphicsMagick` version must
    be greater than or equal to `1.3.26` to used this method.
@@ -38,7 +38,7 @@ or specify the environment variable `GRAPHICS_MAGICK_WAND_CONFIG` correctly.
    `OMP_NUM_THREADS` to limit the number of threads or set `OMP_DISPLAY_ENV=TRUE` to display the OpenMP info when
    running the application.
 
-   Read [http://www.graphicsmagick.org/OpenMP.html](http://www.graphicsmagick.org/OpenMP.html) for details.
+   Read <http://www.graphicsmagick.org/OpenMP.html> for details.
 
 ## Example
 

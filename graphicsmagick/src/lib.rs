@@ -1,4 +1,4 @@
-#![cfg_attr(doc, feature(doc_cfg))]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 #![warn(rust_2018_idioms)]
 #![warn(clippy::dbg_macro, clippy::print_stdout)]
 #![allow(clippy::too_many_arguments)]

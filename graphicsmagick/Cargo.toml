@@ -28,4 +28,5 @@ anyhow = "1.0.28"
 graphicsmagick-sys = { version = "0.1.1", path = "../graphicsmagick-sys" }
 
 [package.metadata.docs.rs]
+rustdoc-args = ["--cfg", "docsrs"]
 targets = ["x86_64-unknown-linux-gnu"]

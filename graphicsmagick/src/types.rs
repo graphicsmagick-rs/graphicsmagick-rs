@@ -567,11 +567,11 @@ types_enum_block! {
     (graphicsmagick_sys::ResourceType_ThreadsResource, ThreadsResource);
     /// Maximum pixel width of an image (Pixels)
     #[cfg(gm_v_1_3_21)]
-    #[cfg_attr(doc, doc(cfg(gm_v_1_3_21)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_21)))]
     (graphicsmagick_sys::ResourceType_WidthResource, WidthResource);
     /// Maximum pixel height of an image (Pixels)
     #[cfg(gm_v_1_3_21)]
-    #[cfg_attr(doc, doc(cfg(gm_v_1_3_21)))]
+    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_21)))]
     (graphicsmagick_sys::ResourceType_HeightResource, HeightResource);
 }
 

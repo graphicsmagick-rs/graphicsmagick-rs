@@ -200,7 +200,7 @@ impl<'a> MagickWand<'a> {
         offset: c_long,
     ) -> crate::Result<&mut Self> {
         assert_ne!(width, 0, "width must be positive");
-        assert_ne!(height, 0, "width must be positive");
+        assert_ne!(height, 0, "height must be positive");
         let status = unsafe { MagickAdaptiveThresholdImage(self.wand, width, height, offset) };
         self.check_status(status)
     }

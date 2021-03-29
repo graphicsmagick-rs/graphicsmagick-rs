@@ -61,9 +61,10 @@ jobs:
         run: |
           sudo sed -i '/^#\sdeb-src /s/^#//' "/etc/apt/sources.list"
           sudo apt-get update
-          sudo apt-get build-dep -f graphicsmagick
-          sudo apt-get install -f llvm-dev libclang-dev clang
-          sudo apt-get install -f mercurial
+          sudo apt-get build-dep -y graphicsmagick
+          sudo apt-get install -y llvm-dev libclang-dev clang
+          sudo apt-get install -y mercurial
+          sudo apt-get install -y libfreetype6-dev
 
       - name: Install GraphicsMagick
         run: |

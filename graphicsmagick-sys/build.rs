@@ -37,16 +37,17 @@ fn new_graphicsmagick_config() -> anyhow::Result<GraphicsMagickConfig> {
     let content = String::from_utf8(output.stdout)?;
     for line in content.lines() {
         if line.starts_with("-I") {
-            gmc.include_flags.push(line.to_string());
+            gmc.include_flags.push(line.trim().to_string());
         } else if line.starts_with("-L") {
             gmc.searches.extend(
-                line.split(' ')
+                line.trim()
+                    .split(' ')
                     .filter(|item| item.starts_with("-L"))
                     .map(|item| String::from(&item[2..])),
             )
         } else if line.starts_with("-l") {
             gmc.libs
-                .extend(line.split(' ').map(|item| String::from(&item[2..])));
+                .extend(line.trim().split(' ').map(|item| String::from(&item[2..])));
         }
     }
 

@@ -9,8 +9,6 @@
 
 GraphicsMagick binding for Rust.
 
-**Under development.**
-
 ## Requirement
 
 Require `graphicsmagick`, `libgraphicsmagick`, `clang` and `libclang`.

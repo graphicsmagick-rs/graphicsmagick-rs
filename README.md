@@ -7,7 +7,7 @@
 
 <img src="https://github.com/jmjoy/graphicsmagick-rs/blob/master/meta/GraphicsMagick-Logo.webp?raw=true" alt="GraphicsMagick-Logo" align="right" />
 
-GraphicsMagick binding for Rust.
+[GraphicsMagick](http://www.graphicsmagick.org/index.html) binding for Rust.
 
 ## Requirement
 

@@ -2303,9 +2303,16 @@ impl<'a> MagickWand<'a> {
     ///
     /// 6 maximum horizontal advance
     ///
-    pub fn query_font_metrics(&mut self, drawing_wand: &DrawingWand, text: &str) -> [f64; 7] {
+    pub fn query_font_metrics(
+        &mut self,
+        drawing_wand: &DrawingWand,
+        text: &str,
+    ) -> crate::Result<[f64; 7]> {
         let text = str_to_c_string(text);
         let ds = unsafe { MagickQueryFontMetrics(self.wand, drawing_wand.wand(), text.as_ptr()) };
+        if ds.is_null() {
+            return Err(unsafe { self.get_error() });
+        }
         let arr: [f64; 7] = unsafe {
             [
                 *(ds.add(0)),
@@ -2320,7 +2327,7 @@ impl<'a> MagickWand<'a> {
         unsafe {
             MagickFree(ds.cast());
         }
-        arr
+        Ok(arr)
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryfonts>
@@ -3816,8 +3823,7 @@ mod tests {
     #[test]
     fn test_magick_wand_annotate_image() {
         let mut mw = new_logo_magick_wand();
-        mw.annotate_image(&DrawingWand::new(), 0., 0., 0., "Hello 你好！")
-            .unwrap();
+        let _ = mw.annotate_image(&DrawingWand::new(), 0., 0., 0., "Hello 你好！");
     }
 
     #[test]
@@ -4672,7 +4678,7 @@ mod tests {
     #[test]
     fn test_magick_wand_query_font_metrics() {
         let mut mw = new_logo_magick_wand();
-        mw.query_font_metrics(&DrawingWand::new(), "");
+        let _ = mw.query_font_metrics(&DrawingWand::new(), "");
     }
 
     #[test]

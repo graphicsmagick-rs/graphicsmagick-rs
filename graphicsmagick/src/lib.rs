@@ -7,8 +7,6 @@
 //!
 //! GraphicsMagick binding for Rust.
 //!
-//! **Under development.**
-//!
 //! ## Requirement
 //!
 //! Require `graphicsmagick`, `libgraphicsmagick`, `clang` and `libclang`.
@@ -25,7 +23,7 @@
 //!
 //! ## Support
 //!
-//! 1. Support and tested GraphicsMagick version: `1.3.20 ~ 1.3.35`.
+//! 1. Support and tested GraphicsMagick version: `1.3.20 ~ 1.3.36`.
 //!
 //! 1. There are some version flag in the documentation, like `gm_v_1_3_26`, meaning that your `GraphicsMagick` version must
 //!    be greater than or equal to `1.3.26` to used this method.

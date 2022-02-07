@@ -1,8 +1,9 @@
 [package]
 name = "graphicsmagick-sys"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["jmjoy <918734043@qq.com>"]
-edition = "2018"
+edition = "2021"
+rust-version = "1.56"
 license = "MIT"
 description = "GraphicsMagick binding for Rust."
 readme = "README.md"
@@ -17,5 +18,5 @@ static = []
 [dependencies]
 
 [build-dependencies]
-anyhow = "1.0.27"
-bindgen = "0.53.2"
+anyhow = "1.0.53"
+bindgen = "0.59.2"

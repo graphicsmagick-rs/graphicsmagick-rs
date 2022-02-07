@@ -44,15 +44,3 @@ macro_rules! types_enum_block {
         }
     }
 }
-
-#[cfg(doctest)]
-macro_rules! doc_comment {
-    ($x:expr) => {
-        #[doc = $x]
-        extern "C" {}
-    };
-    ($x:expr, $($tt:tt)*) => {
-        #[doc = $x]
-        $($tt)*
-    };
-}

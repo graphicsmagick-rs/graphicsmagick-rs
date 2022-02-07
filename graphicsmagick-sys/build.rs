@@ -77,13 +77,13 @@ fn main() -> anyhow::Result<()> {
         .header("wrapper.h")
         .clang_args(&gmc.include_flags)
         // blacklist for not FFI-safe type u128.
-        .blacklist_type("_Float64x")
-        .blacklist_function("strtold")
-        .blacklist_function("qecvt")
-        .blacklist_function("qfcvt")
-        .blacklist_function("qgcvt")
-        .blacklist_function("qecvt_r")
-        .blacklist_function("qfcvt_r")
+        .blocklist_type("_Float64x")
+        .blocklist_function("strtold")
+        .blocklist_function("qecvt")
+        .blocklist_function("qfcvt")
+        .blocklist_function("qgcvt")
+        .blocklist_function("qecvt_r")
+        .blocklist_function("qfcvt_r")
         .generate()
         .map_err(|_| anyhow!("Unable to generate bindings"))?;
 

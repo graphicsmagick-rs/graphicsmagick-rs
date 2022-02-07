@@ -4,20 +4,15 @@ use std::{
     os::raw::{c_char, c_double, c_uint, c_void},
     ptr::null,
     str::Utf8Error,
-    sync::{
-        atomic::{AtomicBool, Ordering},
-        Once,
-    },
+    sync::Once,
     thread,
 };
 
-static HAS_INITIALIZED: AtomicBool = AtomicBool::new(false);
+static HAS_INITIALIZED: Once = Once::new();
 
 /// Wrapper of `graphicsmagick_sys::InitializeMagick`, call it before any `graphicsmagick` action.
 pub fn initialize() {
-    static START: Once = Once::new();
-
-    START.call_once(|| {
+    HAS_INITIALIZED.call_once(|| {
         assert_eq!(
             thread::current().name(),
             Some("main"),
@@ -27,15 +22,13 @@ pub fn initialize() {
         unsafe {
             InitializeMagick(null());
         }
-
-        HAS_INITIALIZED.store(true, Ordering::SeqCst)
     });
 }
 
 /// Check if [`initialize`] has called.
 #[inline]
 pub fn has_initialized() -> bool {
-    HAS_INITIALIZED.load(Ordering::SeqCst)
+    HAS_INITIALIZED.is_completed()
 }
 
 #[inline]

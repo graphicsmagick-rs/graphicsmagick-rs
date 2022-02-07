@@ -3,17 +3,7 @@
 //! Binding of pixel_wand, Wand pixel access interfaces.
 
 use crate::utils::{assert_initialized, c_str_to_string, str_to_c_string};
-use graphicsmagick_sys::{
-    ClonePixelWand, DestroyPixelWand, NewPixelWand, PixelGetBlack, PixelGetBlackQuantum,
-    PixelGetBlue, PixelGetBlueQuantum, PixelGetColorAsString, PixelGetColorCount, PixelGetCyan,
-    PixelGetCyanQuantum, PixelGetGreen, PixelGetGreenQuantum, PixelGetMagenta,
-    PixelGetMagentaQuantum, PixelGetOpacity, PixelGetOpacityQuantum, PixelGetRed,
-    PixelGetRedQuantum, PixelGetYellow, PixelGetYellowQuantum, PixelPacket, PixelSetBlack,
-    PixelSetBlackQuantum, PixelSetBlue, PixelSetBlueQuantum, PixelSetColor, PixelSetColorCount,
-    PixelSetCyan, PixelSetCyanQuantum, PixelSetGreen, PixelSetGreenQuantum, PixelSetMagenta,
-    PixelSetMagentaQuantum, PixelSetOpacity, PixelSetOpacityQuantum, PixelSetQuantumColor,
-    PixelSetRed, PixelSetRedQuantum, PixelSetYellow, PixelSetYellowQuantum, Quantum,
-};
+use graphicsmagick_sys::*;
 use std::{
     os::raw::{c_double, c_ulong},
     ptr::null_mut,

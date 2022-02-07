@@ -1,8 +1,9 @@
 [package]
 name = "graphicsmagick"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["jmjoy <918734043@qq.com>"]
-edition = "2018"
+edition = "2021"
+rust-version = "1.56"
 license = "MIT"
 description = "GraphicsMagick binding for Rust."
 readme = "README.md"
@@ -15,17 +16,17 @@ keywords = ["image", "magick", "gmagick", "imagemagick", "imagick"]
 static = ["graphicsmagick-sys/static"]
 
 [dependencies]
-graphicsmagick-sys = { version = "0.1.1", path = "../graphicsmagick-sys" }
-libc = "0.2.68"
-thiserror = "1.0.14"
+graphicsmagick-sys = { version = "0.1.2", path = "../graphicsmagick-sys" }
+libc = "0.2.117"
+thiserror = "1.0.30"
 
 [dev-dependencies]
-anyhow = "1.0.28"
-env_logger = "0.7.1"
+anyhow = "1.0.53"
+env_logger = "0.9.0"
 
 [build-dependencies]
-anyhow = "1.0.28"
-graphicsmagick-sys = { version = "0.1.1", path = "../graphicsmagick-sys" }
+anyhow = "1.0.53"
+graphicsmagick-sys = { version = "0.1.2", path = "../graphicsmagick-sys" }
 
 [package.metadata.docs.rs]
 rustdoc-args = ["--cfg", "docsrs"]

@@ -14,65 +14,7 @@ use crate::{
     },
     wand::{DrawingWand, PixelWand},
 };
-use graphicsmagick_sys::{
-    size_t, ssize_t, CloneMagickWand, DestroyMagickWand, ExceptionType,
-    MagickAdaptiveThresholdImage, MagickAddImage, MagickAddNoiseImage, MagickAffineTransformImage,
-    MagickAnimateImages, MagickAnnotateImage, MagickAppendImages, MagickAverageImages,
-    MagickBlackThresholdImage, MagickBlurImage, MagickBorderImage, MagickCdlImage,
-    MagickCharcoalImage, MagickChopImage, MagickClipImage, MagickClipPathImage,
-    MagickCoalesceImages, MagickColorFloodfillImage, MagickColorizeImage, MagickCommentImage,
-    MagickCompareImageChannels, MagickCompareImages, MagickCompositeImage, MagickContrastImage,
-    MagickConvolveImage, MagickCropImage, MagickCycleColormapImage, MagickDeconstructImages,
-    MagickDescribeImage, MagickDespeckleImage, MagickDisplayImage, MagickDrawImage,
-    MagickEdgeImage, MagickEmbossImage, MagickEnhanceImage, MagickEqualizeImage, MagickExtentImage,
-    MagickFail, MagickFlattenImages, MagickFlipImage, MagickFlopImage, MagickFrameImage,
-    MagickFree, MagickFxImage, MagickFxImageChannel, MagickGammaImage, MagickGammaImageChannel,
-    MagickGetConfigureInfo, MagickGetCopyright, MagickGetException, MagickGetFilename,
-    MagickGetHomeURL, MagickGetImage, MagickGetImageAttribute, MagickGetImageBackgroundColor,
-    MagickGetImageBluePrimary, MagickGetImageBorderColor, MagickGetImageBoundingBox,
-    MagickGetImageChannelDepth, MagickGetImageChannelExtrema, MagickGetImageChannelMean,
-    MagickGetImageColormapColor, MagickGetImageColors, MagickGetImageColorspace,
-    MagickGetImageCompose, MagickGetImageCompression, MagickGetImageDelay, MagickGetImageDepth,
-    MagickGetImageDispose, MagickGetImageExtrema, MagickGetImageFilename, MagickGetImageFormat,
-    MagickGetImageFuzz, MagickGetImageGamma, MagickGetImageGreenPrimary, MagickGetImageHeight,
-    MagickGetImageHistogram, MagickGetImageIndex, MagickGetImageInterlaceScheme,
-    MagickGetImageMatteColor, MagickGetImagePage, MagickGetImageProfile, MagickGetImageRedPrimary,
-    MagickGetImageRenderingIntent, MagickGetImageResolution, MagickGetImageSavedType,
-    MagickGetImageScene, MagickGetImageSignature, MagickGetImageSize, MagickGetImageType,
-    MagickGetImageUnits, MagickGetImageVirtualPixelMethod, MagickGetImageWhitePoint,
-    MagickGetImageWidth, MagickGetNumberImages, MagickGetPackageName, MagickGetQuantumDepth,
-    MagickGetReleaseDate, MagickGetResourceLimit, MagickGetSamplingFactors, MagickGetSize,
-    MagickGetVersion, MagickHaldClutImage, MagickHasNextImage, MagickHasPreviousImage,
-    MagickImplodeImage, MagickLabelImage, MagickLevelImage, MagickLevelImageChannel,
-    MagickMagnifyImage, MagickMapImage, MagickMatteFloodfillImage, MagickMedianFilterImage,
-    MagickMinifyImage, MagickModulateImage, MagickMontageImage, MagickMorphImages,
-    MagickMosaicImages, MagickMotionBlurImage, MagickNegateImage, MagickNegateImageChannel,
-    MagickNextImage, MagickNormalizeImage, MagickOilPaintImage, MagickOpaqueImage, MagickPass,
-    MagickPingImage, MagickPreviewImages, MagickPreviousImage, MagickProfileImage,
-    MagickQuantizeImage, MagickQuantizeImages, MagickQueryFontMetrics, MagickQueryFonts,
-    MagickQueryFormats, MagickRadialBlurImage, MagickRaiseImage, MagickReadImage,
-    MagickReadImageBlob, MagickReduceNoiseImage, MagickRelinquishMemory, MagickRemoveImage,
-    MagickRemoveImageProfile, MagickResampleImage, MagickResetIterator, MagickResizeImage,
-    MagickRollImage, MagickRotateImage, MagickSampleImage, MagickScaleImage,
-    MagickSeparateImageChannel, MagickSetCompressionQuality, MagickSetFilename, MagickSetFormat,
-    MagickSetImage, MagickSetImageAttribute, MagickSetImageBackgroundColor,
-    MagickSetImageBluePrimary, MagickSetImageBorderColor, MagickSetImageChannelDepth,
-    MagickSetImageColormapColor, MagickSetImageColorspace, MagickSetImageCompose,
-    MagickSetImageCompression, MagickSetImageDelay, MagickSetImageDepth, MagickSetImageDispose,
-    MagickSetImageFilename, MagickSetImageFormat, MagickSetImageFuzz, MagickSetImageGamma,
-    MagickSetImageGreenPrimary, MagickSetImageIndex, MagickSetImageInterlaceScheme,
-    MagickSetImageMatteColor, MagickSetImagePage, MagickSetImageProfile, MagickSetImageRedPrimary,
-    MagickSetImageRenderingIntent, MagickSetImageResolution, MagickSetImageSavedType,
-    MagickSetImageScene, MagickSetImageType, MagickSetImageUnits, MagickSetImageVirtualPixelMethod,
-    MagickSetImageWhitePoint, MagickSetInterlaceScheme, MagickSetPassphrase, MagickSetResolution,
-    MagickSetResolutionUnits, MagickSetResourceLimit, MagickSetSamplingFactors, MagickSetSize,
-    MagickSharpenImage, MagickShaveImage, MagickShearImage, MagickSolarizeImage, MagickSpreadImage,
-    MagickSteganoImage, MagickStereoImage, MagickStripImage, MagickSwirlImage, MagickTextureImage,
-    MagickThresholdImage, MagickThresholdImageChannel, MagickTintImage, MagickTransformImage,
-    MagickTransparentImage, MagickTrimImage, MagickUnsharpMaskImage, MagickWaveImage,
-    MagickWhiteThresholdImage, MagickWriteImage, MagickWriteImageBlob, MagickWriteImages,
-    NewMagickWand, Quantum,
-};
+use graphicsmagick_sys::*;
 use std::{
     os::raw::{c_double, c_long, c_uint, c_ulong, c_void},
     ptr::null_mut,
@@ -287,7 +229,6 @@ impl<'a> MagickWand<'a> {
         &mut self,
         current_orientation: OrientationType,
     ) -> crate::Result<&mut Self> {
-        use graphicsmagick_sys::MagickAutoOrientImage;
         let status = unsafe { MagickAutoOrientImage(self.wand, current_orientation.into()) };
         self.check_status(status)
     }
@@ -679,7 +620,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_29)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn display_images(&mut self, server_name: &str) -> crate::Result<&mut Self> {
-        use graphicsmagick_sys::MagickDisplayImages;
         let server_name = str_to_c_string(server_name);
         let status = unsafe { MagickDisplayImages(self.wand, server_name.as_ptr()) };
         self.check_status(status)
@@ -1230,7 +1170,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_22)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_22)))]
     pub fn get_image_gravity(&mut self) -> GravityType {
-        use graphicsmagick_sys::MagickGetImageGravity;
         unsafe { MagickGetImageGravity(self.wand) }.into()
     }
 
@@ -1295,7 +1234,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_26)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
     pub fn get_image_iterations(&mut self) -> c_ulong {
-        use graphicsmagick_sys::MagickGetImageIterations;
         unsafe { MagickGetImageIterations(self.wand) }
     }
 
@@ -1335,7 +1273,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_26)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
     pub fn get_image_orientation(&mut self) -> OrientationType {
-        use graphicsmagick_sys::MagickGetImageOrientation;
         unsafe { MagickGetImageOrientation(self.wand) }.into()
     }
 
@@ -1676,7 +1613,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_29)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn has_colormap(&mut self) -> crate::Result<bool> {
-        use graphicsmagick_sys::MagickHasColormap;
         let mut colormap = 0;
         let status = unsafe { MagickHasColormap(self.wand, &mut colormap) };
         self.check_status(status)?;
@@ -1731,7 +1667,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_29)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn is_gray_image(&mut self) -> crate::Result<bool> {
-        use graphicsmagick_sys::MagickIsGrayImage;
         let mut gray_image = 0;
         let status = unsafe { MagickIsGrayImage(self.wand, &mut gray_image) };
         self.check_status(status)?;
@@ -1751,7 +1686,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_29)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn is_monochrome_image(&mut self) -> crate::Result<bool> {
-        use graphicsmagick_sys::MagickIsMonochromeImage;
         let mut monochrome = 0;
         let status = unsafe { MagickIsMonochromeImage(self.wand, &mut monochrome) };
         self.check_status(status)?;
@@ -1771,7 +1705,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_29)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn is_opaque_image(&mut self) -> crate::Result<bool> {
-        use graphicsmagick_sys::MagickIsOpaqueImage;
         let mut opaque = 0;
         let status = unsafe { MagickIsOpaqueImage(self.wand, &mut opaque) };
         self.check_status(status)?;
@@ -1795,7 +1728,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_29)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
     pub fn is_palette_image(&mut self) -> crate::Result<bool> {
-        use graphicsmagick_sys::MagickIsPaletteImage;
         let mut palette = 0;
         let status = unsafe { MagickIsPaletteImage(self.wand, &mut palette) };
         self.check_status(status)?;
@@ -2453,7 +2385,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_26)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
     pub fn remove_image_option(&mut self, format: &str, key: &str) -> crate::Result<&mut Self> {
-        use graphicsmagick_sys::MagickRemoveImageOption;
         let format = str_to_c_string(format);
         let key = str_to_c_string(key);
         let status = unsafe { MagickRemoveImageOption(self.wand, format.as_ptr(), key.as_ptr()) };
@@ -2992,7 +2923,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_22)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_22)))]
     pub fn set_image_gravity(&mut self, gravity: GravityType) -> crate::Result<&mut Self> {
-        use graphicsmagick_sys::MagickSetImageGravity;
         let status = unsafe { MagickSetImageGravity(self.wand, gravity.into()) };
         self.check_status(status)
     }
@@ -3046,7 +2976,6 @@ impl<'a> MagickWand<'a> {
     #[cfg(gm_v_1_3_26)]
     #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
     pub fn set_image_iterations(&mut self, iterations: c_ulong) -> crate::Result<&mut Self> {
-        use graphicsmagick_sys::MagickSetImageIterations;
         let status = unsafe { MagickSetImageIterations(self.wand, iterations) };
         self.check_status(status)
     }
@@ -3074,7 +3003,6 @@ impl<'a> MagickWand<'a> {
         key: &str,
         value: &str,
     ) -> crate::Result<&mut Self> {
-        use graphicsmagick_sys::MagickSetImageOption;
         let format = str_to_c_string(format);
         let key = str_to_c_string(key);
         let value = str_to_c_string(value);
@@ -3096,7 +3024,6 @@ impl<'a> MagickWand<'a> {
         &mut self,
         new_orientation: OrientationType,
     ) -> crate::Result<&mut Self> {
-        use graphicsmagick_sys::MagickSetImageOrientation;
         let status = unsafe { MagickSetImageOrientation(self.wand, new_orientation.into()) };
         self.check_status(status)
     }

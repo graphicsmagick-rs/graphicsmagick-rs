@@ -1,6 +1,6 @@
 [package]
 name = "graphicsmagick"
-version = "0.2.2"
+version = "0.3.0"
 authors = ["jmjoy <918734043@qq.com>"]
 edition = "2021"
 rust-version = "1.56"
@@ -14,6 +14,25 @@ keywords = ["image", "binding"]
 
 [features]
 static = ["graphicsmagick-sys/static"]
+v_1_3_20 = []
+v_1_3_21 = ["v_1_3_20"]
+v_1_3_22 = ["v_1_3_21"]
+v_1_3_23 = ["v_1_3_22"]
+v_1_3_24 = ["v_1_3_23"]
+v_1_3_25 = ["v_1_3_24"]
+v_1_3_26 = ["v_1_3_25"]
+v_1_3_27 = ["v_1_3_26"]
+v_1_3_28 = ["v_1_3_27"]
+v_1_3_29 = ["v_1_3_28"]
+v_1_3_30 = ["v_1_3_29"]
+v_1_3_31 = ["v_1_3_30"]
+v_1_3_32 = ["v_1_3_31"]
+v_1_3_33 = ["v_1_3_32"]
+v_1_3_34 = ["v_1_3_33"]
+v_1_3_35 = ["v_1_3_34"]
+v_1_3_36 = ["v_1_3_35"]
+v_1_3_37 = ["v_1_3_36"]
+v_1_3_38 = ["v_1_3_37"]
 
 [dependencies]
 graphicsmagick-sys = { version = "0.1.2", path = "../graphicsmagick-sys" }

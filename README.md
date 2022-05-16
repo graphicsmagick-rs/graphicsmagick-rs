@@ -25,13 +25,14 @@ or specify the environment variable `GRAPHICS_MAGICK_WAND_CONFIG` correctly.
 
 ## Support
 
-1. Support and tested GraphicsMagick version: `1.3.20 ~ 1.3.37`.
+1. Support and tested GraphicsMagick version: `>= 1.3.20`.
 
-1. There are some version flag in the documentation, like `gm_v_1_3_26`, meaning that your `GraphicsMagick` version must
-   be greater than or equal to `1.3.26` to used this method.
+1. If you want to use higher version functions, you should specify features like:
 
-   ![version-demo](https://github.com/jmjoy/graphicsmagick-rs/blob/master/meta/version-demo.webp?raw=true)
-   
+   ```toml
+   featuers = ["v_1_3_36"]
+   ```
+
 1. `GraphicsMagick` supports OpenMP if you are compiling with OpenMP-enabled `cc`, you can set the environment variable
    `OMP_NUM_THREADS` to limit the number of threads or set `OMP_DISPLAY_ENV=TRUE` to display the OpenMP info when
    running the application.

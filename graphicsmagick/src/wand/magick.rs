@@ -22,10 +22,10 @@ use std::{
     str::Utf8Error,
 };
 
-#[cfg(gm_v_1_3_26)]
+#[cfg(feature = "v1_3_26")]
 use crate::types::OrientationType;
 
-#[cfg(gm_v_1_3_22)]
+#[cfg(feature = "v1_3_22")]
 use crate::types::GravityType;
 
 /// Wrapper of `graphicsmagick_sys::MagickWand`.
@@ -223,8 +223,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// is suitable for viewing (i.e. top-left orientation).
     ///
-    #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
+    #[cfg(feature = "v1_3_26")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
     pub fn auto_orient_image(
         &mut self,
         current_orientation: OrientationType,
@@ -617,8 +617,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickDisplayImages() displays an image or image sequence.
     ///
-    #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
+    #[cfg(feature = "v1_3_29")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn display_images(&mut self, server_name: &str) -> crate::Result<&mut Self> {
         let server_name = str_to_c_string(server_name);
         let status = unsafe { MagickDisplayImages(self.wand, server_name.as_ptr()) };
@@ -1167,8 +1167,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageGravity() gets the image gravity.
     ///
-    #[cfg(gm_v_1_3_22)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_22)))]
+    #[cfg(feature = "v1_3_22")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_22")))]
     pub fn get_image_gravity(&mut self) -> GravityType {
         unsafe { MagickGetImageGravity(self.wand) }.into()
     }
@@ -1231,8 +1231,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageIterations() gets the image iterations.
     ///
-    #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
+    #[cfg(feature = "v1_3_26")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
     pub fn get_image_iterations(&mut self) -> c_ulong {
         unsafe { MagickGetImageIterations(self.wand) }
     }
@@ -1270,8 +1270,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// LeftBottomOrientation   Bottom to top and Left to right.
     ///
-    #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
+    #[cfg(feature = "v1_3_26")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
     pub fn get_image_orientation(&mut self) -> OrientationType {
         unsafe { MagickGetImageOrientation(self.wand) }.into()
     }
@@ -1610,8 +1610,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// images available.
     ///
-    #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
+    #[cfg(feature = "v1_3_29")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn has_colormap(&mut self) -> crate::Result<bool> {
         let mut colormap = 0;
         let status = unsafe { MagickHasColormap(self.wand, &mut colormap) };
@@ -1664,8 +1664,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// an error.
     ///
-    #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
+    #[cfg(feature = "v1_3_29")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn is_gray_image(&mut self) -> crate::Result<bool> {
         let mut gray_image = 0;
         let status = unsafe { MagickIsGrayImage(self.wand, &mut gray_image) };
@@ -1683,8 +1683,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// an error.
     ///
-    #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
+    #[cfg(feature = "v1_3_29")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn is_monochrome_image(&mut self) -> crate::Result<bool> {
         let mut monochrome = 0;
         let status = unsafe { MagickIsMonochromeImage(self.wand, &mut monochrome) };
@@ -1702,8 +1702,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// an error.
     ///
-    #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
+    #[cfg(feature = "v1_3_29")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn is_opaque_image(&mut self) -> crate::Result<bool> {
         let mut opaque = 0;
         let status = unsafe { MagickIsOpaqueImage(self.wand, &mut opaque) };
@@ -1725,8 +1725,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// colormap is in use.
     ///
-    #[cfg(gm_v_1_3_29)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_29)))]
+    #[cfg(feature = "v1_3_29")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn is_palette_image(&mut self) -> crate::Result<bool> {
         let mut palette = 0;
         let status = unsafe { MagickIsPaletteImage(self.wand, &mut palette) };
@@ -2382,8 +2382,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// the image (.e.g MagickRemoveImageOption(wand,"jpeg","preserve-settings").
     ///
-    #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
+    #[cfg(feature = "v1_3_26")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
     pub fn remove_image_option(&mut self, format: &str, key: &str) -> crate::Result<&mut Self> {
         let format = str_to_c_string(format);
         let key = str_to_c_string(key);
@@ -2920,8 +2920,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// the tile.
     ///
-    #[cfg(gm_v_1_3_22)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_22)))]
+    #[cfg(feature = "v1_3_22")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_22")))]
     pub fn set_image_gravity(&mut self, gravity: GravityType) -> crate::Result<&mut Self> {
         let status = unsafe { MagickSetImageGravity(self.wand, gravity.into()) };
         self.check_status(status)
@@ -2973,8 +2973,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickSetImageIterations() sets the image iterations.
     ///
-    #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
+    #[cfg(feature = "v1_3_26")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
     pub fn set_image_iterations(&mut self, iterations: c_ulong) -> crate::Result<&mut Self> {
         let status = unsafe { MagickSetImageIterations(self.wand, iterations) };
         self.check_status(status)
@@ -2995,8 +2995,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// format (.e.g MagickSetImageOption(wand,"jpeg","preserve-settings","true").
     ///
-    #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
+    #[cfg(feature = "v1_3_26")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
     pub fn set_image_option(
         &mut self,
         format: &str,
@@ -3018,8 +3018,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// The EXIF orientation tag will be updated if present.
     ///
-    #[cfg(gm_v_1_3_26)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_26)))]
+    #[cfg(feature = "v1_3_26")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
     pub fn set_image_orientation(
         &mut self,
         new_orientation: OrientationType,
@@ -3768,7 +3768,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(gm_v_1_3_26)]
+    #[cfg(feature = "v1_3_26")]
     fn test_magick_wand_auto_orient_image() {
         let mut mw = new_logo_magick_wand();
         mw.auto_orient_image(OrientationType::BottomLeftOrientation)
@@ -3945,7 +3945,7 @@ mod tests {
 
     #[test]
     #[ignore] // Ignore because it is a gui method.
-    #[cfg(gm_v_1_3_29)]
+    #[cfg(feature = "v1_3_29")]
     fn test_magick_wand_display_images() {
         let mut mw = new_logo_magick_wand();
         mw.display_images("").unwrap();
@@ -4196,7 +4196,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(gm_v_1_3_22)]
+    #[cfg(feature = "v1_3_22")]
     fn test_magick_wand_get_image_gravity() {
         let mut mw = new_logo_magick_wand();
         mw.get_image_gravity();
@@ -4233,7 +4233,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(gm_v_1_3_26)]
+    #[cfg(feature = "v1_3_26")]
     fn test_magick_wand_get_image_iterations() {
         let mut mw = new_logo_magick_wand();
         mw.get_image_iterations();
@@ -4246,7 +4246,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(gm_v_1_3_26)]
+    #[cfg(feature = "v1_3_26")]
     fn test_magick_wand_get_image_orientation() {
         let mut mw = new_logo_magick_wand();
         mw.get_image_orientation();
@@ -4399,7 +4399,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(gm_v_1_3_29)]
+    #[cfg(feature = "v1_3_29")]
     fn test_magick_wand_has_colormap() {
         let mut mw = new_logo_magick_wand();
         mw.has_colormap().unwrap();
@@ -4424,28 +4424,28 @@ mod tests {
     }
 
     #[test]
-    #[cfg(gm_v_1_3_29)]
+    #[cfg(feature = "v1_3_29")]
     fn test_magick_wand_is_gray_image() {
         let mut mw = new_logo_magick_wand();
         mw.is_gray_image().unwrap();
     }
 
     #[test]
-    #[cfg(gm_v_1_3_29)]
+    #[cfg(feature = "v1_3_29")]
     fn test_magick_wand_is_monochrome_image() {
         let mut mw = new_logo_magick_wand();
         mw.is_monochrome_image().unwrap();
     }
 
     #[test]
-    #[cfg(gm_v_1_3_29)]
+    #[cfg(feature = "v1_3_29")]
     fn test_magick_wand_is_opaque_image() {
         let mut mw = new_logo_magick_wand();
         mw.is_opaque_image().unwrap();
     }
 
     #[test]
-    #[cfg(gm_v_1_3_29)]
+    #[cfg(feature = "v1_3_29")]
     fn test_magick_wand_is_palette_image() {
         let mut mw = new_logo_magick_wand();
         mw.is_palette_image().unwrap();
@@ -4643,7 +4643,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(gm_v_1_3_26)]
+    #[cfg(feature = "v1_3_26")]
     fn test_magick_wand_remove_image_option() {
         let mut mw = new_logo_magick_wand();
         assert!(mw.remove_image_option("", "").is_err());
@@ -4841,7 +4841,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(gm_v_1_3_22)]
+    #[cfg(feature = "v1_3_22")]
     fn test_magick_wand_set_image_gravity() {
         let mut mw = new_logo_magick_wand();
         mw.set_image_gravity(GravityType::ForgetGravity).unwrap();
@@ -4867,7 +4867,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(gm_v_1_3_26)]
+    #[cfg(feature = "v1_3_26")]
     fn test_magick_wand_set_image_iterations() {
         let mut mw = new_logo_magick_wand();
         mw.set_image_iterations(0).unwrap();
@@ -4880,7 +4880,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(gm_v_1_3_26)]
+    #[cfg(feature = "v1_3_26")]
     fn test_magick_wand_set_image_option() {
         let mut mw = new_logo_magick_wand();
         mw.set_image_option("", "", "").unwrap();

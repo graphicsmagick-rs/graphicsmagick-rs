@@ -10,4 +10,4 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.53"
-graphicsmagick = { version = "0.2.0", path = "../graphicsmagick" }
+graphicsmagick = { version = "0.3.0", path = "../graphicsmagick" }

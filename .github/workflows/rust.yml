@@ -29,43 +29,43 @@ jobs:
 
         flag:
           - gm-version: GraphicsMagick-1_3_38
-            feature: v_1_3_38
+            feature: v1_3_38
           - gm-version: GraphicsMagick-1_3_37
-            feature: v_1_3_37
+            feature: v1_3_37
           - gm-version: GraphicsMagick-1_3_36
-            feature: v_1_3_36
+            feature: v1_3_36
           - gm-version: GraphicsMagick-1_3_35
-            feature: v_1_3_35
+            feature: v1_3_35
           - gm-version: GraphicsMagick-1_3_34
-            feature: v_1_3_34
+            feature: v1_3_34
           - gm-version: GraphicsMagick-1_3_33
-            feature: v_1_3_33
+            feature: v1_3_33
           - gm-version: GraphicsMagick-1_3_32
-            feature: v_1_3_32
+            feature: v1_3_32
           - gm-version: GraphicsMagick-1_3_31
-            feature: v_1_3_31
+            feature: v1_3_31
           - gm-version: GraphicsMagick-1_3_30
-            feature: v_1_3_30
+            feature: v1_3_30
           - gm-version: GraphicsMagick-1_3_29
-            feature: v_1_3_29
+            feature: v1_3_29
           - gm-version: GraphicsMagick-1_3_28
-            feature: v_1_3_28
+            feature: v1_3_28
           - gm-version: GraphicsMagick-1_3_27
-            feature: v_1_3_27
+            feature: v1_3_27
           - gm-version: GraphicsMagick-1_3_26
-            feature: v_1_3_26
+            feature: v1_3_26
           - gm-version: GraphicsMagick-1_3_25
-            feature: v_1_3_25
+            feature: v1_3_25
           - gm-version: GraphicsMagick-1_3_24
-            feature: v_1_3_24
+            feature: v1_3_24
           - gm-version: GraphicsMagick-1_3_23
-            feature: v_1_3_23
+            feature: v1_3_23
           - gm-version: GraphicsMagick-1_3_22
-            feature: v_1_3_22
+            feature: v1_3_22
           - gm-version: GraphicsMagick-1_3_21
-            feature: v_1_3_21
+            feature: v1_3_21
           - gm-version: GraphicsMagick-1_3_20
-            feature: v_1_3_20
+            feature: v1_3_20
 
     runs-on: ${{ matrix.os }}
 
@@ -113,4 +113,4 @@ jobs:
         run: cargo test --verbose --features ${{ matrix.flag.feature }} -- --test-threads=1 --nocapture
 
       - name: Doc
-        run: cargo +nightly rustdoc --manifest-path graphicsmagick/Cargo.toml -- --cfg docsrs
+        run: cargo +nightly rustdoc --manifest-path graphicsmagick/Cargo.toml --all-features -- --cfg docsrs

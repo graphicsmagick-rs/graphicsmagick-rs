@@ -566,12 +566,12 @@ types_enum_block! {
     /// Maximum number of worker threads
     (graphicsmagick_sys::ResourceType_ThreadsResource, ThreadsResource);
     /// Maximum pixel width of an image (Pixels)
-    #[cfg(gm_v_1_3_21)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_21)))]
+    #[cfg(feature = "v1_3_21")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_21")))]
     (graphicsmagick_sys::ResourceType_WidthResource, WidthResource);
     /// Maximum pixel height of an image (Pixels)
-    #[cfg(gm_v_1_3_21)]
-    #[cfg_attr(docsrs, doc(cfg(gm_v_1_3_21)))]
+    #[cfg(feature = "v1_3_21")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_21")))]
     (graphicsmagick_sys::ResourceType_HeightResource, HeightResource);
 }
 

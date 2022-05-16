@@ -14,6 +14,8 @@ keywords = ["image", "binding"]
 
 [features]
 static = ["graphicsmagick-sys/static"]
+
+# Version features.
 v_1_3_20 = []
 v_1_3_21 = ["v_1_3_20"]
 v_1_3_22 = ["v_1_3_21"]

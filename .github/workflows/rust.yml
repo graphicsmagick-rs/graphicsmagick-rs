@@ -27,7 +27,7 @@ jobs:
         # - macos-latest
         # - windows-latest
 
-        include:
+        flag:
           - gm-version: GraphicsMagick-1_3_38
             feature: v_1_3_38
           - gm-version: GraphicsMagick-1_3_37
@@ -89,7 +89,7 @@ jobs:
         run: |
           hg clone http://hg.code.sf.net/p/graphicsmagick/code /tmp/graphicsmagick
           cd /tmp/graphicsmagick
-          hg update -r ${{ matrix.gm-version }}
+          hg update -r ${{ matrix.flag.gm-version }}
           ./configure
           make -j $(nproc)
           sudo make install
@@ -110,7 +110,7 @@ jobs:
       #   run: cargo clippy --verbose
 
       - name: Test
-        run: cargo test --verbose --feature ${{ matrix.feature }} -- --test-threads=1 --nocapture
+        run: cargo test --verbose --features ${{ matrix.flag.feature }} -- --test-threads=1 --nocapture
 
       - name: Doc
         run: cargo +nightly rustdoc --manifest-path graphicsmagick/Cargo.toml -- --cfg docsrs

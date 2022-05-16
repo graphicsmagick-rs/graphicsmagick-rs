@@ -25,7 +25,7 @@ or specify the environment variable `GRAPHICS_MAGICK_WAND_CONFIG` correctly.
 
 ## Support
 
-1. Support and tested GraphicsMagick version: `1.3.20 ~ 1.3.37`.
+1. Support and tested GraphicsMagick version: `1.3.20 ~ 1.3.38`.
 
 1. There are some version flag in the documentation, like `gm_v_1_3_26`, meaning that your `GraphicsMagick` version must
    be greater than or equal to `1.3.26` to used this method.

@@ -2,7 +2,6 @@
 #![warn(rust_2018_idioms)]
 #![warn(clippy::dbg_macro, clippy::print_stdout)]
 #![allow(clippy::too_many_arguments)]
-#![allow(unused_doc_comments)]
 #![doc = include_str!("../README.md")]
 
 #[macro_use]

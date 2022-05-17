@@ -106,8 +106,8 @@ jobs:
       - name: Fmt
         run: cargo +nightly fmt --all -- --check
 
-      # - name: Clippy
-      #   run: cargo clippy --verbose
+      - name: Clippy
+        run: cargo clippy --verbose
 
       - name: Test
         run: cargo test --verbose --features ${{ matrix.flag.feature }} -- --test-threads=1 --nocapture

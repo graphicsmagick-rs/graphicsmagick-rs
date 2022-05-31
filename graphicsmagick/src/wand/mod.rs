@@ -1,6 +1,6 @@
-//! <http://www.graphicsmagick.org/wand/wand.html>
-//!
 //! Binding of GraphicsMagick Wand C API.
+//!
+//! <http://www.graphicsmagick.org/wand/wand.html>
 
 pub mod drawing;
 pub mod magick;

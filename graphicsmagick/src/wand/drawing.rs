@@ -1,6 +1,6 @@
-//! <http://www.graphicsmagick.org/wand/drawing_wand.html>
-//!
 //! Binding of drawing_wand, Wand vector drawing interfaces.
+//!
+//! <http://www.graphicsmagick.org/wand/drawing_wand.html>
 
 use crate::{
     types::{
@@ -66,7 +66,7 @@ impl DrawingWand {
 }
 
 impl DrawingWand {
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawannotation](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawannotation)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawannotation>
     ///
     /// DrawAnnotation() draws text on the image.
     ///
@@ -76,7 +76,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawaffine](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawaffine)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawaffine>
     ///
     /// DrawAffine() adjusts the current affine transformation matrix with
     ///
@@ -90,7 +90,7 @@ impl DrawingWand {
     }
 
     // TODO Implement later.
-    // /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawallocatewand](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawallocatewand)
+    // /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawallocatewand>
     // ///
     // /// DrawAllocateWand() allocates an initial drawing wand which is an
     // ///
@@ -101,7 +101,7 @@ impl DrawingWand {
     //     todo!()
     // }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawarc](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawarc)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawarc>
     ///
     /// DrawArc() draws an arc falling within a specified bounding rectangle on the
     ///
@@ -120,7 +120,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawbezier](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawbezier)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawbezier>
     ///
     /// DrawBezier() draws a bezier curve through a set of points on the image.
     ///
@@ -129,7 +129,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawcircle](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawcircle)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawcircle>
     ///
     /// DrawCircle() draws a circle on the image.
     ///
@@ -138,7 +138,7 @@ impl DrawingWand {
         self
     }
 
-    //    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawclearexception](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawclearexception)
+    //    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawclearexception>
     //    ///
     //    /// DrawClearException() clears any existing exception from the drawing wand.
     //    ///
@@ -146,7 +146,7 @@ impl DrawingWand {
     //        let status = unsafe { MagickDrawClearException(self.wand) };
     //    }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetclippath](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetclippath)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetclippath>
     ///
     /// DrawGetClipPath() obtains the current clipping path ID. The value returned
     ///
@@ -157,7 +157,7 @@ impl DrawingWand {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetclippath](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetclippath)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetclippath>
     ///
     /// DrawSetClipPath() associates a named clipping path with the image.  Only
     ///
@@ -171,7 +171,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetcliprule](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetcliprule)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetcliprule>
     ///
     /// DrawGetClipRule() returns the current polygon fill rule to be used by the
     ///
@@ -181,7 +181,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetClipRule(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetcliprule](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetcliprule)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetcliprule>
     ///
     /// DrawSetClipRule() set the polygon fill rule to be used by the clipping path.
     ///
@@ -190,7 +190,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetclipunits](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetclipunits)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetclipunits>
     ///
     /// DrawGetClipUnits() returns the interpretation of clip path units.
     ///
@@ -198,7 +198,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetClipUnits(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetclipunits](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetclipunits)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetclipunits>
     ///
     /// DrawSetClipUnits() sets the interpretation of clip path units.
     ///
@@ -207,7 +207,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawcolor](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawcolor)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawcolor>
     ///
     /// DrawColor() draws color on image using the current fill color, starting at
     ///
@@ -230,7 +230,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawcomment](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawcomment)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawcomment>
     ///
     /// DrawComment() adds a comment to a vector output stream.
     ///
@@ -240,7 +240,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawellipse](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawellipse)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawellipse>
     ///
     /// DrawEllipse() draws an ellipse on the image.
     ///
@@ -257,7 +257,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfillcolor](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetfillcolor)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfillcolor>
     ///
     /// DrawGetFillColor() returns the fill color used for drawing filled objects.
     ///
@@ -267,7 +267,7 @@ impl DrawingWand {
         pw
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfillcolor](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetfillcolor)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfillcolor>
     ///
     /// DrawSetFillColor() sets the fill color to be used for drawing filled objects.
     ///
@@ -276,7 +276,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfillpatternurl](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetfillpatternurl)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfillpatternurl>
     ///
     /// DrawSetFillPatternURL() sets the URL to use as a fill pattern for filling
     ///
@@ -292,7 +292,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfillopacity](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetfillopacity)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfillopacity>
     ///
     /// DrawGetFillOpacity() returns the opacity used when drawing using the fill
     ///
@@ -302,7 +302,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetFillOpacity(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfillopacity](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetfillopacity)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfillopacity>
     ///
     /// DrawSetFillOpacity() sets the opacity to use when drawing using the fill
     ///
@@ -313,7 +313,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfillrule](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetfillrule)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfillrule>
     ///
     /// DrawGetFillRule() returns the fill rule used while drawing polygons.
     ///
@@ -321,7 +321,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetFillRule(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfillrule](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetfillrule)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfillrule>
     ///
     /// DrawSetFillRule() sets the fill rule to use while drawing polygons.
     ///
@@ -330,7 +330,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfont](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetfont)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfont>
     ///
     /// DrawGetFont() returns a null-terminaged string specifying the font used
     ///
@@ -343,7 +343,7 @@ impl DrawingWand {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfont](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetfont)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfont>
     ///
     /// DrawSetFont() sets the fully-sepecified font to use when annotating with
     ///
@@ -355,7 +355,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfontfamily](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetfontfamily)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfontfamily>
     ///
     /// DrawGetFontFamily() returns the font family to use when annotating with text.
     ///
@@ -366,7 +366,7 @@ impl DrawingWand {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontfamily](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetfontfamily)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontfamily>
     ///
     /// DrawSetFontFamily() sets the font family to use when annotating with text.
     ///
@@ -376,7 +376,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfontsize](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetfontsize)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfontsize>
     ///
     /// DrawGetFontSize() returns the font pointsize used when annotating with text.
     ///
@@ -384,7 +384,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetFontSize(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontsize](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetfontsize)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontsize>
     ///
     /// DrawSetFontSize() sets the font pointsize to use when annotating with text.
     ///
@@ -393,7 +393,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfontstretch](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetfontstretch)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfontstretch>
     ///
     /// DrawGetFontStretch() returns the font stretch used when annotating with text.
     ///
@@ -401,7 +401,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetFontStretch(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontstretch](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetfontstretch)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontstretch>
     ///
     /// DrawSetFontStretch() sets the font stretch to use when annotating with text.
     ///
@@ -412,7 +412,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfontstyle](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetfontstyle)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfontstyle>
     ///
     /// DrawGetFontStyle() returns the font style used when annotating with text.
     ///
@@ -420,7 +420,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetFontStyle(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontstyle](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetfontstyle)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontstyle>
     ///
     /// DrawSetFontStyle() sets the font style to use when annotating with text.
     ///
@@ -431,7 +431,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfontweight](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetfontweight)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetfontweight>
     ///
     /// DrawGetFontWeight() returns the font weight used when annotating with text.
     ///
@@ -439,7 +439,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetFontWeight(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontweight](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetfontweight)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontweight>
     ///
     /// DrawSetFontWeight() sets the font weight to use when annotating with text.
     ///
@@ -448,7 +448,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetgravity](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetgravity)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetgravity>
     ///
     /// DrawGetGravity() returns the text placement gravity used when annotating
     ///
@@ -458,7 +458,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetGravity(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetgravity](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetgravity)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetgravity>
     ///
     /// DrawSetGravity() sets the text placement gravity to use when annotating
     ///
@@ -470,7 +470,7 @@ impl DrawingWand {
     }
 
     // TODO Implement later.
-    // /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawcomposite](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawcomposite)
+    // /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawcomposite>
     // ///
     // /// DrawComposite() composites an image onto the current image, using the
     // ///
@@ -482,7 +482,7 @@ impl DrawingWand {
     // let status = unsafe { MagickDrawComposite(self.wand,  composite_operator,  x,  y,  width,  height, image) };
     // }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawline](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawline)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawline>
     ///
     /// DrawLine() draws a line on the image using the current stroke color,
     ///
@@ -493,7 +493,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawmatte](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawmatte)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawmatte>
     ///
     /// DrawMatte() paints on the image's opacity channel in order to set effected
     ///
@@ -520,7 +520,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathclose](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathclose)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathclose>
     ///
     /// DrawPathClose() adds a path element to the current path which closes the
     ///
@@ -535,7 +535,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetoabsolute](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathcurvetoabsolute)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetoabsolute>
     ///
     /// DrawPathCurveToAbsolute() draws a cubic Bezier curve from the current
     ///
@@ -560,7 +560,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetorelative](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathcurvetorelative)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetorelative>
     ///
     /// DrawPathCurveToRelative() draws a cubic Bezier curve from the current
     ///
@@ -585,7 +585,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetoquadraticbezierabsolute](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathcurvetoquadraticbezierabsolute)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetoquadraticbezierabsolute>
     ///
     /// DrawPathCurveToQuadraticBezierAbsolute() draws a quadratic Bezier curve
     ///
@@ -606,7 +606,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetoquadraticbezierrelative](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathcurvetoquadraticbezierrelative)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetoquadraticbezierrelative>
     ///
     /// DrawPathCurveToQuadraticBezierRelative() draws a quadratic Bezier curve
     ///
@@ -627,7 +627,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetoquadraticbeziersmoothabsolute](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathcurvetoquadraticbeziersmoothabsolute)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetoquadraticbeziersmoothabsolute>
     ///
     /// DrawPathCurveToQuadraticBezierSmoothAbsolute() draws a quadratic
     ///
@@ -662,7 +662,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetoquadraticbeziersmoothrelative](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathcurvetoquadraticbeziersmoothrelative)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetoquadraticbeziersmoothrelative>
     ///
     /// DrawPathCurveToQuadraticBezierSmoothRelative() draws a quadratic
     ///
@@ -697,7 +697,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetosmoothabsolute](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathcurvetosmoothabsolute)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetosmoothabsolute>
     ///
     /// DrawPathCurveToSmoothAbsolute() draws a cubic Bezier curve from the
     ///
@@ -732,7 +732,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetosmoothrelative](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathcurvetosmoothrelative)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathcurvetosmoothrelative>
     ///
     /// DrawPathCurveToSmoothRelative() draws a cubic Bezier curve from the
     ///
@@ -767,7 +767,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathellipticarcabsolute](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathellipticarcabsolute)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathellipticarcabsolute>
     ///
     /// DrawPathEllipticArcAbsolute() draws an elliptical arc from the current
     ///
@@ -814,7 +814,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathellipticarcrelative](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathellipticarcrelative)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathellipticarcrelative>
     ///
     /// DrawPathEllipticArcRelative() draws an elliptical arc from the current
     ///
@@ -861,7 +861,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathfinish](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathfinish)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathfinish>
     ///
     /// DrawPathFinish() terminates the current path.
     ///
@@ -870,7 +870,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetoabsolute](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathlinetoabsolute)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetoabsolute>
     ///
     /// DrawPathLineToAbsolute() draws a line path from the current point to the
     ///
@@ -883,7 +883,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetorelative](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathlinetorelative)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetorelative>
     ///
     /// DrawPathLineToRelative() draws a line path from the current point to the
     ///
@@ -896,7 +896,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetohorizontalabsolute](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathlinetohorizontalabsolute)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetohorizontalabsolute>
     ///
     /// DrawPathLineToHorizontalAbsolute() draws a horizontal line path from the
     ///
@@ -909,7 +909,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetohorizontalrelative](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathlinetohorizontalrelative)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetohorizontalrelative>
     ///
     /// DrawPathLineToHorizontalRelative() draws a horizontal line path from the
     ///
@@ -922,7 +922,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetoverticalabsolute](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathlinetoverticalabsolute)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetoverticalabsolute>
     ///
     /// DrawPathLineToVerticalAbsolute() draws a vertical line path from the
     ///
@@ -935,7 +935,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetoverticalrelative](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathlinetoverticalrelative)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathlinetoverticalrelative>
     ///
     /// DrawPathLineToVerticalRelative() draws a vertical line path from the
     ///
@@ -948,7 +948,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathmovetoabsolute](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathmovetoabsolute)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathmovetoabsolute>
     ///
     /// DrawPathMoveToAbsolute() starts a new sub-path at the given coordinate
     ///
@@ -961,7 +961,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathmovetorelative](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathmovetorelative)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathmovetorelative>
     ///
     /// DrawPathMoveToRelative() starts a new sub-path at the given coordinate
     ///
@@ -974,7 +974,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathstart](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpathstart)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpathstart>
     ///
     /// DrawPathStart() declares the start of a path drawing list which is terminated
     ///
@@ -991,7 +991,7 @@ impl DrawingWand {
         self
     }
 
-    //    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpeekgraphiccontext](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpeekgraphiccontext)
+    //    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpeekgraphiccontext>
     //    ///
     //    /// DrawPeekGraphicContext() returns the current graphic drawing_wand.
     //    ///
@@ -1000,7 +1000,7 @@ impl DrawingWand {
     //        todo!()
     //    }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpoint](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpoint)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpoint>
     ///
     /// DrawPoint() draws a point using the current stroke color and stroke
     ///
@@ -1011,7 +1011,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpolygon](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpolygon)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpolygon>
     ///
     /// DrawPolygon() draws a polygon using the current stroke, stroke width, and
     ///
@@ -1022,7 +1022,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpolyline](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpolyline)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpolyline>
     ///
     /// DrawPolyline() draws a polyline using the current stroke, stroke width, and
     ///
@@ -1033,7 +1033,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpopclippath](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpopclippath)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpopclippath>
     ///
     /// DrawPopClipPath() terminates a clip path definition.
     ///
@@ -1042,7 +1042,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpopdefs](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpopdefs)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpopdefs>
     ///
     /// DrawPopDefs() terminates a definition list
     ///
@@ -1051,7 +1051,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpopgraphiccontext](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpopgraphiccontext)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpopgraphiccontext>
     ///
     /// DrawPopGraphicContext() destroys the current drawing_wand returning to the
     ///
@@ -1066,7 +1066,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpoppattern](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpoppattern)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpoppattern>
     ///
     /// DrawPopPattern() terminates a pattern definition.
     ///
@@ -1075,7 +1075,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpushclippath](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpushclippath)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpushclippath>
     ///
     /// DrawPushClipPath() starts a clip path definition which is comprized of
     ///
@@ -1089,7 +1089,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpushdefs](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpushdefs)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpushdefs>
     ///
     /// DrawPushDefs() indicates that commands up to a terminating DrawPopDefs()
     ///
@@ -1102,7 +1102,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpushgraphiccontext](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpushgraphiccontext)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpushgraphiccontext>
     ///
     /// DrawPushGraphicContext() clones the current drawing wand to create a
     ///
@@ -1119,7 +1119,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawpushpattern](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawpushpattern)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawpushpattern>
     ///
     /// DrawPushPattern() indicates that subsequent commands up to a
     ///
@@ -1146,7 +1146,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawrectangle](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawrectangle)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawrectangle>
     ///
     /// DrawRectangle() draws a rectangle given two coordinates and using
     ///
@@ -1163,7 +1163,7 @@ impl DrawingWand {
         self
     }
 
-    //    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawrender](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawrender)
+    //    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawrender>
     //    ///
     //    /// DrawRender() renders all preceding drawing commands onto the image.
     //    ///
@@ -1173,7 +1173,7 @@ impl DrawingWand {
     //        unsafe { MagickDrawRender(self.wand) };
     //    }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawrotate](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawrotate)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawrotate>
     ///
     /// DrawRotate() applies the specified rotation to the current coordinate space.
     ///
@@ -1182,7 +1182,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawroundrectangle](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawroundrectangle)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawroundrectangle>
     ///
     /// DrawRoundRectangle() draws a rounted rectangle given two coordinates,
     ///
@@ -1203,7 +1203,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawscale](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawscale)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawscale>
     ///
     /// DrawScale() adjusts the scaling factor to apply in the horizontal and
     ///
@@ -1214,7 +1214,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawskewx](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawskewx)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawskewx>
     ///
     /// DrawSkewX() skews the current coordinate system in the horizontal
     ///
@@ -1225,7 +1225,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawskewy](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawskewy)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawskewy>
     ///
     /// DrawSkewY() skews the current coordinate system in the vertical
     ///
@@ -1237,7 +1237,7 @@ impl DrawingWand {
     }
 
     // This method has commented.
-    // /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstopcolor](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetstopcolor)
+    // /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstopcolor>
     // ///
     // /// DrawSetStopColor() sets the stop color and offset for gradients
     // ///
@@ -1245,7 +1245,7 @@ impl DrawingWand {
     // // unsafe { MagickDrawSetStopColor(self.wand, stop_color, offset) };
     // }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokecolor](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetstrokecolor)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokecolor>
     ///
     /// DrawGetStrokeColor() returns the color used for stroking object outlines.
     ///
@@ -1255,7 +1255,7 @@ impl DrawingWand {
         pw
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokecolor](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetstrokecolor)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokecolor>
     ///
     /// DrawSetStrokeColor() sets the color used for stroking object outlines.
     ///
@@ -1264,7 +1264,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokepatternurl](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetstrokepatternurl)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokepatternurl>
     ///
     /// DrawSetStrokePatternURL() sets the pattern used for stroking object outlines.
     ///
@@ -1274,7 +1274,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokeantialias](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetstrokeantialias)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokeantialias>
     ///
     /// DrawGetStrokeAntialias() returns the current stroke antialias setting.
     ///
@@ -1288,7 +1288,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetStrokeAntialias(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokeantialias](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetstrokeantialias)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokeantialias>
     ///
     /// DrawSetStrokeAntialias() controls whether stroked outlines are antialiased.
     ///
@@ -1303,7 +1303,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokedasharray](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetstrokedasharray)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokedasharray>
     ///
     /// DrawGetStrokeDashArray() returns an array representing the pattern of
     ///
@@ -1317,7 +1317,7 @@ impl DrawingWand {
         c_arr_to_vec(a, number_elements as usize, |e| unsafe { *e })
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokedasharray](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetstrokedasharray)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokedasharray>
     ///
     /// DrawSetStrokeDashArray() specifies the pattern of dashes and gaps used to
     ///
@@ -1338,7 +1338,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokedashoffset](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetstrokedashoffset)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokedashoffset>
     ///
     /// DrawGetStrokeDashOffset() returns the offset into the dash pattern to
     ///
@@ -1348,7 +1348,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetStrokeDashOffset(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokedashoffset](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetstrokedashoffset)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokedashoffset>
     ///
     /// DrawSetStrokeDashOffset() specifies the offset into the dash pattern to
     ///
@@ -1359,7 +1359,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokelinecap](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetstrokelinecap)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokelinecap>
     ///
     /// DrawGetStrokeLineCap() returns the shape to be used at the end of
     ///
@@ -1371,7 +1371,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetStrokeLineCap(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokelinecap](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetstrokelinecap)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokelinecap>
     ///
     /// DrawSetStrokeLineCap() specifies the shape to be used at the end of
     ///
@@ -1384,7 +1384,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokelinejoin](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetstrokelinejoin)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokelinejoin>
     ///
     /// DrawGetStrokeLineJoin() returns the shape to be used at the
     ///
@@ -1398,7 +1398,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetStrokeLineJoin(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokelinejoin](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetstrokelinejoin)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokelinejoin>
     ///
     /// DrawSetStrokeLineJoin() specifies the shape to be used at the
     ///
@@ -1413,7 +1413,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokemiterlimit](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetstrokemiterlimit)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokemiterlimit>
     ///
     /// DrawGetStrokeMiterLimit() returns the miter limit. When two line
     ///
@@ -1429,7 +1429,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetStrokeMiterLimit(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokemiterlimit](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetstrokemiterlimit)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokemiterlimit>
     ///
     /// DrawSetStrokeMiterLimit() specifies the miter limit. When two line
     ///
@@ -1446,7 +1446,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokeopacity](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetstrokeopacity)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokeopacity>
     ///
     /// DrawGetStrokeOpacity() returns the opacity of stroked object outlines.
     ///
@@ -1454,7 +1454,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetStrokeOpacity(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokeopacity](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetstrokeopacity)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokeopacity>
     ///
     /// DrawSetStrokeOpacity() specifies the opacity of stroked object outlines.
     ///
@@ -1463,7 +1463,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokewidth](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgetstrokewidth)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokewidth>
     ///
     /// DrawGetStrokeWidth() returns the width of the stroke used to draw object
     ///
@@ -1473,7 +1473,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetStrokeWidth(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokewidth](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetstrokewidth)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokewidth>
     ///
     /// DrawSetStrokeWidth() sets the width of the stroke used to draw object
     ///
@@ -1484,7 +1484,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgettextantialias](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgettextantialias)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgettextantialias>
     ///
     /// DrawGetTextAntialias() returns the current text antialias setting, which
     ///
@@ -1494,7 +1494,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetTextAntialias(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextantialias](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsettextantialias)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextantialias>
     ///
     /// DrawSetTextAntialias() controls whether text is antialiased.  Text is
     ///
@@ -1505,7 +1505,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgettextdecoration](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgettextdecoration)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgettextdecoration>
     ///
     /// DrawGetTextDecoration() returns the decoration applied when annotating with
     ///
@@ -1515,7 +1515,7 @@ impl DrawingWand {
         unsafe { MagickDrawGetTextDecoration(self.wand) }.into()
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextdecoration](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsettextdecoration)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextdecoration>
     ///
     /// DrawSetTextDecoration() specifies a decoration to be applied when
     ///
@@ -1526,7 +1526,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgettextencoding](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgettextencoding)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgettextencoding>
     ///
     /// DrawGetTextEncoding() returns a null-terminated string which specifies the
     ///
@@ -1539,7 +1539,7 @@ impl DrawingWand {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextencoding](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsettextencoding)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextencoding>
     ///
     /// DrawSetTextEncoding() specifies specifies the code set to use for
     ///
@@ -1559,7 +1559,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawgettextundercolor](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawgettextundercolor)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgettextundercolor>
     ///
     /// DrawGetTextUnderColor() returns the color of a background rectangle
     ///
@@ -1571,7 +1571,7 @@ impl DrawingWand {
         under_color
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextundercolor](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsettextundercolor)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextundercolor>
     ///
     /// DrawSetTextUnderColor() specifies the color of a background rectangle
     ///
@@ -1582,7 +1582,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawtranslate](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawtranslate)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawtranslate>
     ///
     /// DrawTranslate() applies a translation to the current coordinate
     ///
@@ -1595,7 +1595,7 @@ impl DrawingWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetviewbox](http://www.graphicsdrawing.org/wand/drawing_wand.html#drawsetviewbox)
+    /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetviewbox>
     ///
     /// DrawSetViewbox() sets the overall canvas size to be recorded with the
     ///

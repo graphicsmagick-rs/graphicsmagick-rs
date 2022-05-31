@@ -1,6 +1,6 @@
-//! <http://www.graphicsmagick.org/wand/magick_wand.html>
-//!
 //! Binding of magick_wand, Wand image processing interfaces.
+//!
+//! <http://www.graphicsmagick.org/wand/magick_wand.html>
 
 use crate::{
     error::Exception,

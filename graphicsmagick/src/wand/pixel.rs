@@ -1,6 +1,6 @@
-//! <http://www.graphicsmagick.org/wand/pixel_wand.html>
-//!
 //! Binding of pixel_wand, Wand pixel access interfaces.
+//!
+//! <http://www.graphicsmagick.org/wand/pixel_wand.html>
 
 use crate::utils::{assert_initialized, c_str_to_string, str_to_c_string};
 use graphicsmagick_sys::*;
@@ -73,7 +73,7 @@ impl Default for PixelWand {
 }
 
 impl PixelWand {
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetblack](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetblack)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetblack>
     ///
     /// PixelGetBlack() returns the normalized black color of the pixel wand.
     ///
@@ -81,7 +81,7 @@ impl PixelWand {
         unsafe { PixelGetBlack(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetblackquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetblackquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetblackquantum>
     ///
     /// PixelGetBlackQuantum() returns the black color of the pixel wand.  The
     ///
@@ -91,7 +91,7 @@ impl PixelWand {
         unsafe { PixelGetBlackQuantum(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetblue](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetblue)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetblue>
     ///
     /// PixelGetBlue(const) returns the normalized blue color of the pixel wand.
     ///
@@ -99,7 +99,7 @@ impl PixelWand {
         unsafe { PixelGetBlue(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetbluequantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetbluequantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetbluequantum>
     ///
     /// PixelGetBlueQuantum(const ) returns the blue color of the pixel wand.  The
     ///
@@ -109,7 +109,7 @@ impl PixelWand {
         unsafe { PixelGetBlueQuantum(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcolorasstring](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetcolorasstring)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcolorasstring>
     ///
     /// PixelGetColorAsString() gets the color of the pixel wand.
     ///
@@ -118,7 +118,7 @@ impl PixelWand {
         c_str_to_string(c)
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcolorcount](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetcolorcount)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcolorcount>
     ///
     /// PixelGetColorCount() returns the color count associated with this color.
     ///
@@ -126,7 +126,7 @@ impl PixelWand {
         unsafe { PixelGetColorCount(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcyan](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetcyan)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcyan>
     ///
     /// PixelGetCyan() returns the normalized cyan color of the pixel wand.
     ///
@@ -134,7 +134,7 @@ impl PixelWand {
         unsafe { PixelGetCyan(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcyanquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetcyanquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcyanquantum>
     ///
     /// PixelGetCyanQuantum() returns the cyan color of the pixel wand.  The color
     ///
@@ -144,7 +144,7 @@ impl PixelWand {
         unsafe { PixelGetCyanQuantum(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetgreen](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetgreen)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetgreen>
     ///
     /// PixelGetGreen(const ) returns the normalized green color of the pixel wand.
     ///
@@ -152,7 +152,7 @@ impl PixelWand {
         unsafe { PixelGetGreen(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetgreenquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetgreenquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetgreenquantum>
     ///
     /// PixelGetGreenQuantum(const ) returns the green color of the pixel wand.  The
     ///
@@ -162,7 +162,7 @@ impl PixelWand {
         unsafe { PixelGetGreenQuantum(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetmagenta](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetmagenta)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetmagenta>
     ///
     /// PixelGetMagenta() returns the normalized magenta color of the pixel wand.
     ///
@@ -170,7 +170,7 @@ impl PixelWand {
         unsafe { PixelGetMagenta(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetmagentaquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetmagentaquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetmagentaquantum>
     ///
     /// PixelGetMagentaQuantum() returns the magenta color of the pixel wand.  The
     ///
@@ -180,7 +180,7 @@ impl PixelWand {
         unsafe { PixelGetMagentaQuantum(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetopacity](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetopacity)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetopacity>
     ///
     /// PixelGetOpacity(const ) returns the normalized opacity color of the pixel
     ///
@@ -190,7 +190,7 @@ impl PixelWand {
         unsafe { PixelGetOpacity(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetopacityquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetopacityquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetopacityquantum>
     ///
     /// PixelGetOpacityQuantum(const ) returns the opacity color of the pixel wand.
     ///
@@ -200,7 +200,7 @@ impl PixelWand {
         unsafe { PixelGetOpacityQuantum(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetred](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetred)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetred>
     ///
     /// PixelGetRed(const ) returns the normalized red color of the pixel wand.
     ///
@@ -208,7 +208,7 @@ impl PixelWand {
         unsafe { PixelGetRed(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetredquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetredquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetredquantum>
     ///
     /// PixelGetRedQuantum(const ) returns the red color of the pixel wand.  The
     ///
@@ -218,7 +218,7 @@ impl PixelWand {
         unsafe { PixelGetRedQuantum(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetyellow](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetyellow)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetyellow>
     ///
     /// PixelGetYellow() returns the normalized yellow color of the pixel wand.
     ///
@@ -226,7 +226,7 @@ impl PixelWand {
         unsafe { PixelGetYellow(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetyellowquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelgetyellowquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetyellowquantum>
     ///
     /// PixelGetYellowQuantum() returns the yellow color of the pixel wand.  The
     ///
@@ -236,7 +236,7 @@ impl PixelWand {
         unsafe { PixelGetYellowQuantum(self.wand) }
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetblack](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetblack)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetblack>
     ///
     /// PixelSetBlack() sets the normalized black color of the pixel wand.
     ///
@@ -245,7 +245,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetblackquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetblackquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetblackquantum>
     ///
     /// PixelSetBlackQuantum() sets the black color of the pixel wand.  The color
     ///
@@ -256,7 +256,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetblue](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetblue)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetblue>
     ///
     /// PixelSetBlue() sets the normalized blue color of the pixel wand.
     ///
@@ -265,7 +265,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetbluequantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetbluequantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetbluequantum>
     ///
     /// PixelSetBlueQuantum() sets the blue color of the pixel wand.  The color must
     ///
@@ -276,7 +276,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetcolor](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetcolor)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetcolor>
     ///
     /// PixelSetColor() sets the color of the pixel wand with a string (e.g.
     ///
@@ -288,7 +288,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetcolorcount](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetcolorcount)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetcolorcount>
     ///
     /// PixelSetColorCount() sets the color count of the pixel wand.
     ///
@@ -297,7 +297,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetcyan](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetcyan)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetcyan>
     ///
     /// PixelSetCyan() sets the normalized cyan color of the pixel wand.
     ///
@@ -306,7 +306,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetcyanquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetcyanquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetcyanquantum>
     ///
     /// PixelSetCyanQuantum() sets the cyan color of the pixel wand.  The color must
     ///
@@ -317,7 +317,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetgreen](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetgreen)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetgreen>
     ///
     /// PixelSetGreen() sets the normalized green color of the pixel wand.
     ///
@@ -326,7 +326,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetgreenquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetgreenquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetgreenquantum>
     ///
     /// PixelSetGreenQuantum() sets the green color of the pixel wand.  The color must
     ///
@@ -337,7 +337,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetmagenta](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetmagenta)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetmagenta>
     ///
     /// PixelSetMagenta() sets the normalized magenta color of the pixel wand.
     ///
@@ -346,7 +346,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetmagentaquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetmagentaquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetmagentaquantum>
     ///
     /// PixelSetMagentaQuantum() sets the magenta color of the pixel wand.  The
     ///
@@ -357,7 +357,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetopacity](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetopacity)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetopacity>
     ///
     /// PixelSetOpacity() sets the normalized opacity color of the pixel wand.
     ///
@@ -366,7 +366,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetopacityquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetopacityquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetopacityquantum>
     ///
     /// PixelSetOpacityQuantum() sets the opacity color of the pixel wand.  The
     ///
@@ -377,7 +377,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetquantumcolor](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetquantumcolor)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetquantumcolor>
     ///
     /// PixelSetQuantumColor() sets the color of the pixel wand.
     ///
@@ -386,7 +386,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetred](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetred)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetred>
     ///
     /// PixelSetRed() sets the normalized red color of the pixel wand.
     ///
@@ -395,7 +395,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetredquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetredquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetredquantum>
     ///
     /// PixelSetRedQuantum() sets the red color of the pixel wand.  The color must
     ///
@@ -406,7 +406,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetyellow](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetyellow)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetyellow>
     ///
     /// PixelSetYellow() sets the normalized yellow color of the pixel wand.
     ///
@@ -415,7 +415,7 @@ impl PixelWand {
         self
     }
 
-    /// [http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetyellowquantum](http://www.graphicspixel.org/wand/pixel_wand.html#pixelsetyellowquantum)
+    /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetyellowquantum>
     ///
     /// PixelSetYellowQuantum() sets the yellow color of the pixel wand.  The color
     ///

@@ -1,6 +1,6 @@
-//! <http://www.graphicsmagick.org/api/types.html>
-//!
 //! Binding of GraphicsMagick Types.
+//!
+//! <http://www.graphicsmagick.org/api/types.html>
 
 types_enum_block! {
     /// <http://www.graphicsmagick.org/api/types.html#channeltype>
@@ -33,8 +33,6 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#filtertypes>
-    ///
     /// FilterTypes is used to adjust the filter algorithm used when resizing images.
     /// Different filters experience varying degrees of success with various images and can
     /// take significantly different amounts of processing time. GraphicsMagick uses the
@@ -42,6 +40,8 @@ types_enum_block! {
     /// most images in a reasonable amount of time. Other filter types (e.g. TriangleFilter) may
     /// execute much faster but may show artifacts when the image is re-sized or around diagonal
     /// lines. The only way to be sure is to test the filter with sample images.
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#filtertypes>
     FilterTypes;
 
     /// Unset value.
@@ -79,8 +79,6 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#compositeoperator>
-    ///
     /// CompositeOperator is used to select the image composition algorithm used to compose
     /// a composite image with an image. By default, each of the composite image pixels are
     /// replaced by the corresponding image tile pixel. Specify CompositeOperator to select
@@ -92,6 +90,8 @@ types_enum_block! {
     /// zero outside, and between zero and 255 on the boundary. For certain operations, if image
     /// does not have a matte channel, it is initialized with 0 for any pixel matching in color
     /// to pixel location (0,0), otherwise 255 (to work properly borderWidth must be 0).
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#compositeoperator>
     CompositeOperator;
 
     /// Unset value.
@@ -206,9 +206,9 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#noisetype>
-    ///
     /// NoiseType is used as an argument to select the type of noise to be added to the image.
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#noisetype>
     NoiseType;
 
     /// Uniform noise
@@ -230,9 +230,9 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#orientationtype>
-    ///
     /// OrientationType specifies the orientation of the image. Useful for when the image is produced via a different ordinate system, the camera was turned on its side, or the page was scanned sideways.
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#orientationtype>
     OrientationType;
 
     ///
@@ -272,8 +272,6 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#colorspacetype>
-    ///
     /// The ColorspaceType enumeration is used to specify the colorspace that quantization
     /// (color reduction and mapping) is done under or to specify the colorspace when encoding
     /// an output image. Colorspaces are ways of describing colors to fit the requirements of a
@@ -283,6 +281,8 @@ types_enum_block! {
     /// differences more closely han do distances in RGB space. These color spaces may give better
     /// results when color reducing an image. Refer to quantize for more details.
     //When encoding an output image, the colorspaces RGBColorspace, CMYKColorspace, and GRAYColorspace may be specified. The CMYKColorspace option is only applicable when writing TIFF, JPEG, and Adobe Photoshop bitmap (PSD) files.
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#colorspacetype>
     ColorspaceType;
 
     /// Unset value.
@@ -328,12 +328,12 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#compressiontype>
-    ///
     /// CompressionType is used to express the desired compression type when encoding an image.
     /// Be aware that most image types only support a sub-set of the available compression types.
     /// If the compression type specified is incompatable with the image, GraphicsMagick selects
     /// a compression type compatable with the image type, which might be no compression at all.
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#compressiontype>
     CompressionType;
 
     /// Unset value.
@@ -381,13 +381,13 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#gravitytype>
-    ///
     /// GravityType specifies positioning of an object (e.g. text, image) within a bounding
     /// region (e.g. an image). Gravity provides a convenient way to locate objects irrespective
     /// of the size of the bounding region, in other words, you don't need to provide absolute
     /// coordinates in order to position an object. A common default for gravity is
     /// NorthWestGravity.
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#gravitytype>
     GravityType;
 
     /// Don't use gravity.
@@ -414,8 +414,6 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#interlacetype>
-    ///
     /// InterlaceType specifies the ordering of the red, green, and blue pixel information in
     /// the image. Interlacing is usually used to make image information available to the user
     /// faster by taking advantage of the space vs time tradeoff. For example, interlacing allows
@@ -423,6 +421,8 @@ types_enum_block! {
     /// image resolution increasing over time.
     ///
     /// Use LineInterlace or PlaneInterlace to create an interlaced GIF or progressive JPEG image.
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#interlacetype>
     InterlaceType;
 
     /// Unset value.
@@ -457,8 +457,6 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#renderingintent>
-    ///
     /// Rendering intent is a concept defined by ICC Spec ICC.1:1998-09, "File Format for Color
     /// Profiles". GraphicsMagick uses RenderingIntent in order to support ICC Color Profiles.
     ///
@@ -466,6 +464,8 @@ types_enum_block! {
     /// during the evaluation of this profile in a sequence of profiles. It applies specifically
     /// to that profile in the sequence and not to the entire sequence. Typically, the user or
     /// application will set the rendering intent dynamically at runtime or embedding time."
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#renderingintent>
     RenderingIntent;
 
     /// Unset value.
@@ -484,9 +484,9 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#imagetype>
-    ///
     /// ImageType indicates the type classification of the image.
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#imagetype>
     ImageType;
 
     /// Unset value.
@@ -514,9 +514,9 @@ types_enum_block! {
 }
 
 types_enum_block! {
+    /// By default, GraphicsMagick defines resolutions in pixels per inch. ResolutionType provides a means to adjust this.
     /// <http://www.graphicsmagick.org/api/types.html#resolutiontype>
     ///
-    /// By default, GraphicsMagick defines resolutions in pixels per inch. ResolutionType provides a means to adjust this.
     ResolutionType;
 
     /// Unset value.
@@ -528,9 +528,9 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#virtualpixelmethod>
-    ///
     /// Enum declaractions.
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#virtualpixelmethod>
     VirtualPixelMethod;
 
     ///
@@ -546,9 +546,9 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#resourcetype>
-    ///
     /// Typedef declarations.
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#resourcetype>
     ResourceType;
 
     /// Undefined value
@@ -680,10 +680,10 @@ types_enum_block! {
 }
 
 types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#paintmethod>
-    ///
     /// PaintMethod specifies how pixel colors are to be replaced in the image. It is used to select
     /// the pixel-filling algorithm employed.
+    ///
+    /// <http://www.graphicsmagick.org/api/types.html#paintmethod>
     PaintMethod;
 
     /// Replace pixel color at point.

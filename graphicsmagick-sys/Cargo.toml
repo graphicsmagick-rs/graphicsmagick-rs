@@ -19,4 +19,4 @@ static = []
 
 [build-dependencies]
 anyhow = "1.0.53"
-bindgen = "0.59.2"
+bindgen = { version = "0.60.1", features = ["runtime", "which-rustfmt"] }

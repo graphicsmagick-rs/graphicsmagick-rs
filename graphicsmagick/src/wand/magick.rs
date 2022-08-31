@@ -1354,7 +1354,7 @@ impl<'a> MagickWand<'a> {
     /// use graphicsmagick::wand::{MagickWand, MagickWandExportCharPixel};
     ///
     /// MagickWand::new()
-    ///     .get_image_pixels::<MagickWandExportCharPixel>(0, 0, 640, 1, "RGB", CharPixel);
+    ///     .get_image_pixels::<MagickWandExportCharPixel>(0, 0, 640, 1, "RGB");
     /// ```
     ///
     pub fn get_image_pixels<ExportType: MagickWandExportType>(

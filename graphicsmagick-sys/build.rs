@@ -3,6 +3,7 @@
 use anyhow::{anyhow, bail, Context};
 use std::{env, path::PathBuf, process::Command};
 
+#[derive(Debug)]
 struct GraphicsMagickConfig {
     include_flags: Vec<String>,
     searches: Vec<String>,
@@ -49,7 +50,7 @@ fn new_graphicsmagick_config() -> anyhow::Result<GraphicsMagickConfig> {
         };
 
         match flag {
-            "-I" => gmc.include_flags.push(format!("-I{token}")),
+            "-I" => gmc.include_flags.push(format!("-I{value}")),
             "-L" => gmc.searches.push(value.to_string()),
             "-l" => gmc.libs.push(value.to_string()),
             _ => (),

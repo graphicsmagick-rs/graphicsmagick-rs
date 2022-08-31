@@ -16,7 +16,8 @@ use crate::{
 };
 use graphicsmagick_sys::*;
 use std::{
-    os::raw::{c_double, c_long, c_uint, c_ulong, c_void},
+    fmt,
+    os::raw::{c_double, c_float, c_long, c_uchar, c_uint, c_ulong, c_ushort, c_void},
     ptr::null_mut,
     slice,
     str::Utf8Error,
@@ -27,6 +28,44 @@ use crate::types::OrientationType;
 
 #[cfg(feature = "v1_3_22")]
 use crate::types::GravityType;
+
+/// # Safety
+///
+/// `STORAGE_TYPE` must match `TARGET`.
+pub unsafe trait MagickWandExportTypeSealed {
+    const STORAGE_TYPE: StorageType;
+
+    /// Make using it in generic code easier.
+    type Target: fmt::Debug + fmt::Display + Copy + Clone;
+}
+
+pub trait MagickWandExportType: MagickWandExportTypeSealed {}
+
+macro_rules! def_magickwand_export_type {
+    ($name:ident, $STORAGE_TYPE:expr, $Target:ty) => {
+        pub struct $name;
+        unsafe impl MagickWandExportTypeSealed for $name {
+            const STORAGE_TYPE: StorageType = $STORAGE_TYPE;
+            type Target = $Target;
+        }
+        impl MagickWandExportType for $name {}
+    };
+}
+
+def_magickwand_export_type!(MagickWandExportCharPixel, StorageType_CharPixel, c_uchar);
+def_magickwand_export_type!(MagickWandExportShortPixel, StorageType_ShortPixel, c_ushort);
+def_magickwand_export_type!(
+    MagickWandExportIntegerPixel,
+    StorageType_IntegerPixel,
+    c_uint
+);
+def_magickwand_export_type!(MagickWandExportLongPixel, StorageType_LongPixel, c_ulong);
+def_magickwand_export_type!(MagickWandExportFloatPixel, StorageType_FloatPixel, c_float);
+def_magickwand_export_type!(
+    MagickWandExportDoublePixel,
+    StorageType_DoublePixel,
+    c_double
+);
 
 /// Wrapper of `graphicsmagick_sys::MagickWand`.
 pub struct MagickWand<'a> {
@@ -1297,38 +1336,71 @@ impl<'a> MagickWand<'a> {
         Ok((width, height, x, y))
     }
 
-    // TODO Make a better method to get pixels.
-    //    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepixels>
-    //    ///
-    //    /// MagickGetImagePixels() extracts pixel data from an image and returns it to
-    //    ///
-    //    /// you.  The method returns False on success otherwise True if an error is
-    //    ///
-    //    /// encountered.  The data is returned as char, short int, int, long, float,
-    //    ///
-    //    /// or double in the order specified by map.
-    //    ///
-    //    /// Suppose you want to extract the first scanline of a 640x480 image as
-    //    ///
-    //    /// character data in red-green-blue order:
-    //    ///
-    //    /// MagickGetImagePixels(wand,0,0,640,1,"RGB",CharPixel,pixels);
-    //    ///
-    //    pub fn get_image_pixels(
-    //        &mut self,
-    //        x_offset: c_long,
-    //        y_offset: c_long,
-    //        columns: c_ulong,
-    //        rows: c_ulong,
-    //        map: &str,
-    //    ) -> crate::Result<Vec<c_uchar>> {
-    //        let mut pixels = Vec::with_capacity((columns * rows) as usize * map.len());
-    //        let map = str_to_c_string(map);
-    //        let storage = StorageType::CharPixel;
-    //        let status = unsafe { MagickGetImagePixels(self.wand,  x_offset,  y_offset,  columns, rows, map.as_ptr(),  storage.into(), pixels.as_mut_ptr()) };
-    //        self.check_status(status)?;
-    //        Ok(pixels)
-    //    }
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepixels>
+    ///
+    /// MagickGetImagePixels() extracts pixel data from an image and returns it to
+    /// you.
+    ///
+    /// The method returns False on success otherwise True if an error is
+    /// encountered.
+    ///
+    /// The data is returned as char, short int, int, long, float, or double
+    /// in the order specified by map.
+    ///
+    /// Suppose you want to extract the first scanline of a 640x480 image as
+    /// character data in red-green-blue order:
+    ///
+    /// ```
+    /// use graphicsmagick::{
+    ///     wand::{MagickWand, MagickWandExportCharPixel},
+    ///     initialize,
+    /// };
+    ///
+    /// initialize();
+    ///
+    /// MagickWand::new()
+    ///     .get_image_pixels::<MagickWandExportCharPixel>(0, 0, 640, 1, "RGB");
+    /// ```
+    ///
+    pub fn get_image_pixels<ExportType: MagickWandExportType>(
+        &mut self,
+        x_offset: c_long,
+        y_offset: c_long,
+        columns: c_ulong,
+        rows: c_ulong,
+        map: &str,
+    ) -> crate::Result<Vec<ExportType::Target>> {
+        let size: usize = (columns * rows).try_into().unwrap();
+        let len = size * map.len();
+
+        let mut pixels = Vec::with_capacity(len);
+        let map = str_to_c_string(map);
+        let storage = ExportType::STORAGE_TYPE;
+
+        let status = unsafe {
+            MagickGetImagePixels(
+                self.wand,
+                x_offset,
+                y_offset,
+                columns,
+                rows,
+                map.as_ptr(),
+                storage,
+                pixels.spare_capacity_mut().as_mut_ptr() as *mut c_uchar,
+            )
+        };
+        self.check_status(status)?;
+
+        // Safety:
+        //
+        // MagickGetImagePixels succeeds, so it should have written
+        // `len` bytes into the vec.
+        unsafe {
+            pixels.set_len(len);
+        }
+
+        Ok(pixels)
+    }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageprofile>
     ///
@@ -4258,17 +4330,31 @@ mod tests {
         mw.get_image_page().unwrap();
     }
 
-    //    #[test]
-    //    fn test_magick_wand_get_image_pixels() {
-    //        let mut mw = new_logo_magick_wand();
-    //        dbg!(mw.get_image_pixels(
-    //            0, 0, 0, 0, "RGBA"
-    //        ).unwrap());
-    //
-    //        dbg!(mw.get_image_pixels(
-    //            0, 0, 10, 10, "RGBA"
-    //        ).unwrap());
-    //    }
+    fn test_magick_wand_get_image_pixels_inner<ExportType: MagickWandExportType>() {
+        let mut mw = new_logo_magick_wand();
+
+        let pixels = mw
+            .get_image_pixels::<ExportType>(0, 0, 0, 0, "RGBA")
+            .unwrap();
+
+        assert!(pixels.is_empty());
+
+        let pixels = mw
+            .get_image_pixels::<ExportType>(0, 0, 10, 10, "RGBA")
+            .unwrap();
+
+        assert!(!pixels.is_empty());
+    }
+
+    #[test]
+    fn test_magick_wand_get_image_pixels() {
+        test_magick_wand_get_image_pixels_inner::<MagickWandExportCharPixel>();
+        test_magick_wand_get_image_pixels_inner::<MagickWandExportShortPixel>();
+        test_magick_wand_get_image_pixels_inner::<MagickWandExportIntegerPixel>();
+        test_magick_wand_get_image_pixels_inner::<MagickWandExportLongPixel>();
+        test_magick_wand_get_image_pixels_inner::<MagickWandExportFloatPixel>();
+        test_magick_wand_get_image_pixels_inner::<MagickWandExportDoublePixel>();
+    }
 
     #[test]
     fn test_magick_wand_get_image_profile() {

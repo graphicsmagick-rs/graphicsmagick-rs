@@ -86,21 +86,25 @@ jobs:
           sudo apt-get install -y llvm-dev libclang-dev clang mercurial libfreetype6-dev
 
       - name: Configure caching for graphicsmagick
+        id: cache-graphicsmagick
         uses: actions/cache@v3
         with:
           path: /tmp/graphicsmagick
           key: ${{ matrix.os }}-graphicsmagick-${{ matrix.flag.gm-version }}
 
-      - name: Install GraphicsMagick
+      - name: Build GraphicsMagick
+        if: steps.cache-graphicsmagick.outputs.cache-hit != 'true'
         run: |
-          if [ ! -d /tmp/graphicsmagick ]; then
-              hg clone http://hg.code.sf.net/p/graphicsmagick/code /tmp/graphicsmagick
-          fi
+          hg clone http://hg.code.sf.net/p/graphicsmagick/code /tmp/graphicsmagick
           cd /tmp/graphicsmagick
           hg update -r ${{ matrix.flag.gm-version }}
           ./configure
           make -j $(nproc)
-          sudo make install
+
+      - name: Install GraphicsMagick
+        run: |
+          cd /tmp/graphicsmagick
+          sudo make install -j $(nproc)
 
       - name: Info
         run: |

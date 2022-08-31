@@ -35,19 +35,24 @@ fn new_graphicsmagick_config() -> anyhow::Result<GraphicsMagickConfig> {
     };
 
     let content = String::from_utf8(output.stdout)?;
-    for line in content.lines() {
-        if line.starts_with("-I") {
-            gmc.include_flags.push(line.trim().to_string());
-        } else if line.starts_with("-L") {
-            gmc.searches.extend(
-                line.trim()
-                    .split(' ')
-                    .filter(|item| item.starts_with("-L"))
-                    .map(|item| String::from(&item[2..])),
-            )
-        } else if line.starts_with("-l") {
-            gmc.libs
-                .extend(line.trim().split(' ').map(|item| String::from(&item[2..])));
+
+    // split_ascii_whitespace would split '\n', '\t' and whitespace.
+    // It will also filter out any empty str in the result.
+    let mut it = content.split_ascii_whitespace();
+    while let Some(token) = it.next() {
+        let (flag, value) = if ["-I", "-L", "-l"].contains(&token) {
+            // Since token only contains the flag, the next element of it
+            // must contains the value.
+            (token, it.next().unwrap())
+        } else {
+            (&token[..2], &token[2..])
+        };
+
+        match flag {
+            "-I" => gmc.include_flags.push(format!("-I{token}")),
+            "-L" => gmc.searches.push(value.to_string()),
+            "-l" => gmc.libs.push(value.to_string()),
+            _ => (),
         }
     }
 

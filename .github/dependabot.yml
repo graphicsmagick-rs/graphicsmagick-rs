@@ -9,6 +9,10 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "cargo"
-    directory: "/"
+    directory: "/graphicsmagick"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "cargo"
+    directory: "/graphicsmagick-sys"
     schedule:
       interval: "daily"

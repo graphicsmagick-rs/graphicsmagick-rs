@@ -1351,7 +1351,12 @@ impl<'a> MagickWand<'a> {
     /// character data in red-green-blue order:
     ///
     /// ```
-    /// use graphicsmagick::wand::{MagickWand, MagickWandExportCharPixel};
+    /// use graphicsmagick::{
+    ///     wand::{MagickWand, MagickWandExportCharPixel},
+    ///     initialize,
+    /// };
+    ///
+    /// initialize();
     ///
     /// MagickWand::new()
     ///     .get_image_pixels::<MagickWandExportCharPixel>(0, 0, 640, 1, "RGB");

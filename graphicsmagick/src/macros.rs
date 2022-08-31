@@ -8,7 +8,7 @@ macro_rules! types_enum_block {
         )+
     ) => {
         $(#[$enum_docs])*
-        #[derive(Debug, Clone, Copy, PartialEq)]
+        #[derive(Debug, Clone, Copy, Eq, PartialEq)]
         pub enum $name {
             $(
                 $(#[$docs])*

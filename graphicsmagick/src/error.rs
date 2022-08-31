@@ -19,7 +19,7 @@ pub enum Error {
 }
 
 /// Wrapper of `graphicsmagick_sys::ExceptionType` and ExceptionInfo.
-#[derive(ThisError, Debug, PartialEq)]
+#[derive(ThisError, Debug, Eq, PartialEq)]
 #[error("kind: {kind:?}, description: {description}")]
 pub struct Exception {
     kind: ExceptionType,

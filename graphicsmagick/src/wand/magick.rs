@@ -4332,7 +4332,7 @@ mod tests {
             .get_image_pixels::<ExportType>(0, 0, 0, 0, "RGBA")
             .unwrap();
 
-        assert!(!pixels.is_empty());
+        assert!(pixels.is_empty());
         eprintln!("{:#?}", pixels);
 
         let pixels = mw

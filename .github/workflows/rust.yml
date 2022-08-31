@@ -85,22 +85,11 @@ jobs:
           sudo apt-get build-dep -y graphicsmagick
           sudo apt-get install -y llvm-dev libclang-dev clang mercurial libfreetype6-dev
 
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Generate Cargo.lock
-        run: cargo update
-
-      - name: Configure caching
+      - name: Configure caching for graphicsmagick
         uses: actions/cache@v3
         with:
-          path: |
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-            /tmp/graphicsmagick
-          key: ${{ matrix.os }}-cargo-${{ matrix.flag.gm-version }}-${{ matrix.flag.feature }}-${{ hashFiles('**/Cargo.lock') }}
+          path: /tmp/graphicsmagick
+          key: ${{ matrix.os }}-graphicsmagick-${{ matrix.flag.gm-version }}
 
       - name: Install GraphicsMagick
         run: |
@@ -118,6 +107,22 @@ jobs:
           gm version
           echo
           GraphicsMagick-config --cppflags --ldflags --libs
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Generate Cargo.lock
+        run: cargo update
+
+      - name: Configure caching for rust
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ matrix.os }}-cargo-${{ matrix.flag.gm-version }}-${{ matrix.flag.feature }}-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Fmt
         run: cargo +nightly fmt --all -- --check

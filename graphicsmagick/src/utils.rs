@@ -121,7 +121,7 @@ impl MagickCString {
     }
 
     /// Convert [`MagickCString`] to [`CStr`].
-    pub fn as_cstr(&self) -> &CStr {
+    pub fn as_c_str(&self) -> &CStr {
         self.0
             .as_ref()
             .map(|alloc| unsafe { CStr::from_ptr(alloc.as_ptr() as *const c_char) })
@@ -130,7 +130,7 @@ impl MagickCString {
 
     /// Convert [`MagickCString`] to [`str`].
     pub fn to_str(&self) -> Result<&str, Utf8Error> {
-        self.as_cstr().to_str()
+        self.as_c_str().to_str()
     }
 
     /// Convert [`MagickCString`] to utf-8 string, including
@@ -143,7 +143,7 @@ impl MagickCString {
     /// are replaced with [`std::char::REPLACEMENT_CHARACTER`],
     /// which looks like this: "�"
     pub fn to_str_lossy(&self) -> Cow<'_, str> {
-        String::from_utf8_lossy(self.as_cstr().to_bytes())
+        String::from_utf8_lossy(self.as_c_str().to_bytes())
     }
 }
 

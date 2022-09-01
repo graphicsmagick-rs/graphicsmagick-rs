@@ -7,14 +7,14 @@ use crate::{
         ClipPathUnits, DecorationType, FillRule, GravityType, LineCap, LineJoin, PaintMethod,
         StretchType, StyleType,
     },
-    utils::{assert_initialized, c_arr_to_vec, c_str_to_string, str_to_c_string},
+    utils::{assert_initialized, c_arr_to_vec, str_to_c_string},
     wand::pixel::PixelWand,
+    MagickCString,
 };
 use graphicsmagick_sys::*;
 use std::{
     os::raw::{c_double, c_uint, c_ulong},
     ptr::null_mut,
-    str::Utf8Error,
 };
 
 /// Wrapper of `graphicsmagick_sys::DrawingWand`.
@@ -152,9 +152,8 @@ impl DrawingWand {
     ///
     /// must be deallocated by the user when it is no longer needed.
     ///
-    pub fn get_clip_path(&self) -> Result<String, Utf8Error> {
-        let c = unsafe { MagickDrawGetClipPath(self.wand) };
-        c_str_to_string(c)
+    pub fn get_clip_path(&self) -> MagickCString {
+        unsafe { MagickCString::new(MagickDrawGetClipPath(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetclippath>
@@ -338,9 +337,8 @@ impl DrawingWand {
     ///
     /// when no longer needed.
     ///
-    pub fn get_font(&self) -> Result<String, Utf8Error> {
-        let c = unsafe { MagickDrawGetFont(self.wand) };
-        c_str_to_string(c)
+    pub fn get_font(&self) -> MagickCString {
+        unsafe { MagickCString::new(MagickDrawGetFont(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfont>
@@ -361,9 +359,8 @@ impl DrawingWand {
     ///
     /// The value returned must be freed by the user when it is no longer needed.
     ///
-    pub fn get_font_family(&self) -> Result<String, Utf8Error> {
-        let c = unsafe { MagickDrawGetFontFamily(self.wand) };
-        c_str_to_string(c)
+    pub fn get_font_family(&self) -> MagickCString {
+        unsafe { MagickCString::new(MagickDrawGetFontFamily(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontfamily>
@@ -1534,9 +1531,8 @@ impl DrawingWand {
     ///
     /// once it is no longer required.
     ///
-    pub fn get_text_encoding(&self) -> Result<String, Utf8Error> {
-        let c = unsafe { MagickDrawGetTextEncoding(self.wand) };
-        c_str_to_string(c)
+    pub fn get_text_encoding(&self) -> MagickCString {
+        unsafe { MagickCString::new(MagickDrawGetTextEncoding(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextencoding>
@@ -1663,7 +1659,7 @@ mod tests {
     #[test]
     fn test_drawing_wand_get_clip_path() {
         let dw = new_logo_drawing_wand();
-        dw.get_clip_path().unwrap();
+        dw.get_clip_path().to_str().unwrap();
     }
 
     #[test]
@@ -1753,7 +1749,7 @@ mod tests {
     #[test]
     fn test_drawing_wand_get_font() {
         let dw = new_logo_drawing_wand();
-        dw.get_font().unwrap();
+        dw.get_font().to_str().unwrap();
     }
 
     #[test]
@@ -1765,7 +1761,7 @@ mod tests {
     #[test]
     fn test_drawing_wand_get_font_family() {
         let dw = new_logo_drawing_wand();
-        dw.get_font_family().unwrap();
+        dw.get_font_family().to_str().unwrap();
     }
 
     #[test]
@@ -2215,7 +2211,7 @@ mod tests {
     #[test]
     fn test_drawing_wand_get_text_encoding() {
         let dw = new_logo_drawing_wand();
-        dw.get_text_encoding().unwrap();
+        dw.get_text_encoding().to_str().unwrap();
     }
 
     #[test]

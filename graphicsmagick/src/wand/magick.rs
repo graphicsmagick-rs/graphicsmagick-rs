@@ -9,19 +9,18 @@ use crate::{
         ImageType, InterlaceType, MetricType, MontageMode, NoiseType, PreviewType, RenderingIntent,
         ResolutionType, ResourceType, VirtualPixelMethod,
     },
-    utils::{
-        assert_initialized, c_arr_to_vec, c_str_to_string, c_str_to_string_no_free, str_to_c_string,
-    },
+    utils::{assert_initialized, c_arr_to_vec, str_to_c_string, CStrExt},
     wand::{DrawingWand, PixelWand},
+    MagickCString,
 };
 use graphicsmagick_sys::*;
 use std::{
+    ffi::CStr,
     fmt,
     marker::PhantomData,
     os::raw::{c_double, c_float, c_long, c_uchar, c_uint, c_ulong, c_ushort, c_void},
     ptr::null_mut,
     slice,
-    str::Utf8Error,
 };
 
 #[cfg(feature = "v1_3_26")]
@@ -633,9 +632,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// similar to the output of 'identify -verbose'.
     ///
-    pub fn describe_image(&mut self) -> Result<String, Utf8Error> {
-        let c = unsafe { MagickDescribeImage(self.wand) };
-        c_str_to_string(c)
+    pub fn describe_image(&mut self) -> MagickCString {
+        unsafe { MagickCString::new(MagickDescribeImage(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickdespeckleimage>
@@ -895,37 +893,33 @@ impl<'a> MagickWand<'a> {
     ///
     /// NAME, VERSION, LIB_VERSION, COPYRIGHT, etc.
     ///
-    pub fn get_configure_info(&mut self, name: &str) -> Result<String, Utf8Error> {
+    pub fn get_configure_info(&mut self, name: &str) -> MagickCString {
         let name = str_to_c_string(name);
-        let c = unsafe { MagickGetConfigureInfo(self.wand, name.as_ptr()) };
-        c_str_to_string(c)
+        unsafe { MagickCString::new(MagickGetConfigureInfo(self.wand, name.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetcopyright>
     ///
     /// MagickGetCopyright() returns the ImageMagick API copyright as a string.
     ///
-    pub fn get_copyright() -> Result<String, Utf8Error> {
-        let c = unsafe { MagickGetCopyright() };
-        c_str_to_string_no_free(c)
+    pub fn get_copyright() -> &'static CStr {
+        unsafe { CStr::from_ptr_checked_on_debug(MagickGetCopyright()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetfilename>
     ///
     /// MagickGetFilename() returns the filename associated with an image sequence.
     ///
-    pub fn get_filename(&self) -> Result<String, Utf8Error> {
-        let c = unsafe { MagickGetFilename(self.wand) };
-        c_str_to_string(c)
+    pub fn get_filename(&self) -> MagickCString {
+        unsafe { MagickCString::new(MagickGetFilename(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgethomeurl>
     ///
     /// MagickGetHomeURL() returns the ImageMagick home URL.
     ///
-    pub fn get_home_url() -> Result<String, Utf8Error> {
-        let c = unsafe { MagickGetHomeURL() };
-        c_str_to_string_no_free(c)
+    pub fn get_home_url() -> &'static CStr {
+        unsafe { CStr::from_ptr_checked_on_debug(MagickGetHomeURL()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimage>
@@ -941,10 +935,9 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageAttribute returns an image attribute as a string
     ///
-    pub fn get_image_attribute(&mut self, name: &str) -> Result<String, Utf8Error> {
+    pub fn get_image_attribute(&mut self, name: &str) -> MagickCString {
         let name = str_to_c_string(name);
-        let c = unsafe { MagickGetImageAttribute(self.wand, name.as_ptr()) };
-        c_str_to_string(c)
+        unsafe { MagickCString::new(MagickGetImageAttribute(self.wand, name.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagebackgroundcolor>
@@ -1171,9 +1164,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// sequence.
     ///
-    pub fn get_image_filename(&mut self) -> Result<String, Utf8Error> {
-        let c = unsafe { MagickGetImageFilename(self.wand) };
-        c_str_to_string(c)
+    pub fn get_image_filename(&mut self) -> MagickCString {
+        unsafe { MagickCString::new(MagickGetImageFilename(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageformat>
@@ -1182,9 +1174,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// sequence.
     ///
-    pub fn get_image_format(&mut self) -> Result<String, Utf8Error> {
-        let c = unsafe { MagickGetImageFormat(self.wand) };
-        c_str_to_string(c)
+    pub fn get_image_format(&mut self) -> MagickCString {
+        unsafe { MagickCString::new(MagickGetImageFormat(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagefuzz>
@@ -1413,11 +1404,12 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageProfile() returns the named image profile.
     ///
-    pub fn get_image_profile(&mut self, name: &str) -> Result<String, Utf8Error> {
+    pub fn get_image_profile(&mut self, name: &str) -> MagickCString {
         let mut length = 0;
         let name = str_to_c_string(name);
-        let c = unsafe { MagickGetImageProfile(self.wand, name.as_ptr(), &mut length) };
-        c_str_to_string(c.cast())
+        unsafe {
+            MagickCString::new(MagickGetImageProfile(self.wand, name.as_ptr(), &mut length).cast())
+        }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageredprimary>
@@ -1474,9 +1466,8 @@ impl<'a> MagickWand<'a> {
     ///
     /// pixel stream.
     ///
-    pub fn get_image_signature(&mut self) -> Result<String, Utf8Error> {
-        let c = unsafe { MagickGetImageSignature(self.wand) };
-        c_str_to_string(c)
+    pub fn get_image_signature(&mut self) -> MagickCString {
+        unsafe { MagickCString::new(MagickGetImageSignature(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesize>
@@ -1563,28 +1554,26 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetPackageName() returns the ImageMagick package name.
     ///
-    pub fn get_package_name() -> Result<String, Utf8Error> {
-        let c = unsafe { MagickGetPackageName() };
-        c_str_to_string_no_free(c)
+    pub fn get_package_name() -> &'static CStr {
+        unsafe { CStr::from_ptr_checked_on_debug(MagickGetPackageName()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetquantumdepth>
     ///
     /// MagickGetQuantumDepth() returns the ImageMagick quantum depth.
     ///
-    pub fn get_quantum_depth() -> (c_ulong, Result<String, Utf8Error>) {
+    pub fn get_quantum_depth() -> (c_ulong, &'static CStr) {
         let mut depth = 0;
         let c = unsafe { MagickGetQuantumDepth(&mut depth) };
-        (depth, c_str_to_string_no_free(c))
+        (depth, unsafe { CStr::from_ptr_checked_on_debug(c) })
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetreleasedate>
     ///
     /// MagickGetReleaseDate() returns the ImageMagick release date.
     ///
-    pub fn get_release_date() -> Result<String, Utf8Error> {
-        let c = unsafe { MagickGetReleaseDate() };
-        c_str_to_string_no_free(c)
+    pub fn get_release_date() -> &'static CStr {
+        unsafe { CStr::from_ptr_checked_on_debug(MagickGetReleaseDate()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetresourcelimit>
@@ -1630,10 +1619,10 @@ impl<'a> MagickWand<'a> {
     ///
     /// (MagickLibVersion, MagickVersion)
     ///
-    pub fn get_version() -> (c_ulong, Result<String, Utf8Error>) {
+    pub fn get_version() -> (c_ulong, &'static CStr) {
         let mut version = 0;
         let c = unsafe { MagickGetVersion(&mut version) };
-        (version, c_str_to_string_no_free(c))
+        (version, unsafe { CStr::from_ptr_checked_on_debug(c) })
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickhaldclutimage>
@@ -2345,11 +2334,13 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickQueryFonts() returns any font that match the specified pattern.
     ///
-    pub fn query_fonts(pattern: &str) -> Option<Vec<Result<String, Utf8Error>>> {
+    pub fn query_fonts(pattern: &str) -> Option<Vec<MagickCString>> {
         let pattern = str_to_c_string(pattern);
         let mut number_fonts = 0;
         let a = unsafe { MagickQueryFonts(pattern.as_ptr(), &mut number_fonts) };
-        c_arr_to_vec(a, number_fonts as usize, |s| c_str_to_string(unsafe { *s }))
+        c_arr_to_vec(a, number_fonts as usize, |s| unsafe {
+            MagickCString::new(*s)
+        })
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryformats>
@@ -2358,12 +2349,12 @@ impl<'a> MagickWand<'a> {
     ///
     /// pattern.
     ///
-    pub fn query_formats(pattern: &str) -> Option<Vec<Result<String, Utf8Error>>> {
+    pub fn query_formats(pattern: &str) -> Option<Vec<MagickCString>> {
         let pattern = str_to_c_string(pattern);
         let mut number_formats = 0;
         let a = unsafe { MagickQueryFormats(pattern.as_ptr(), &mut number_formats) };
-        c_arr_to_vec(a, number_formats as usize, |s| {
-            c_str_to_string(unsafe { *s })
+        c_arr_to_vec(a, number_formats as usize, |s| unsafe {
+            MagickCString::new(*s)
         })
     }
 
@@ -2473,11 +2464,14 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickRemoveImageProfile() removes the named image profile and returns it.
     ///
-    pub fn remove_image_profile(&mut self, name: &str) -> Result<String, Utf8Error> {
+    pub fn remove_image_profile(&mut self, name: &str) -> MagickCString {
         let name = str_to_c_string(name);
         let mut length = 0;
-        let c = unsafe { MagickRemoveImageProfile(self.wand, name.as_ptr(), &mut length) };
-        c_str_to_string(c.cast())
+        unsafe {
+            MagickCString::new(
+                MagickRemoveImageProfile(self.wand, name.as_ptr(), &mut length).cast(),
+            )
+        }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickresetiterator>
@@ -4004,7 +3998,7 @@ mod tests {
     #[test]
     fn test_magick_wand_describe_image() {
         let mut mw = new_logo_magick_wand();
-        mw.describe_image().unwrap();
+        mw.describe_image().to_str().unwrap();
     }
 
     #[test]
@@ -4118,24 +4112,24 @@ mod tests {
     #[test]
     fn test_magick_wand_get_configure_info() {
         let mut mw = new_logo_magick_wand();
-        mw.get_configure_info("VERSION").unwrap();
+        mw.get_configure_info("VERSION").to_str().unwrap();
     }
 
     #[test]
     fn test_magick_wand_get_copyright() {
-        MagickWand::get_copyright().unwrap();
+        MagickWand::get_copyright();
     }
 
     #[test]
     fn test_magick_wand_get_filename() {
         let mw = new_logo_magick_wand();
-        mw.get_filename().unwrap();
+        mw.get_filename().to_str().unwrap();
     }
 
     #[test]
     fn test_magick_wand_get_home_url() {
         let _mw = new_logo_magick_wand();
-        MagickWand::get_home_url().unwrap();
+        MagickWand::get_home_url();
     }
 
     #[test]
@@ -4147,7 +4141,7 @@ mod tests {
     #[test]
     fn test_magick_wand_get_image_attribute() {
         let mut mw = new_logo_magick_wand();
-        mw.get_image_attribute("").unwrap();
+        mw.get_image_attribute("").to_str().unwrap();
     }
 
     #[test]
@@ -4251,13 +4245,13 @@ mod tests {
     #[test]
     fn test_magick_wand_get_image_filename() {
         let mut mw = new_logo_magick_wand();
-        mw.get_image_filename().unwrap();
+        mw.get_image_filename().to_str().unwrap();
     }
 
     #[test]
     fn test_magick_wand_get_image_format() {
         let mut mw = new_logo_magick_wand();
-        mw.get_image_format().unwrap();
+        mw.get_image_format().to_str().unwrap();
     }
 
     #[test]
@@ -4364,7 +4358,7 @@ mod tests {
     #[test]
     fn test_magick_wand_get_image_profile() {
         let mut mw = new_logo_magick_wand();
-        mw.get_image_profile("ICM").unwrap();
+        mw.get_image_profile("ICM").to_str().unwrap();
     }
 
     #[test]
@@ -4394,7 +4388,7 @@ mod tests {
     #[test]
     fn test_magick_wand_get_image_signature() {
         let mut mw = new_logo_magick_wand();
-        mw.get_image_signature().unwrap();
+        mw.get_image_signature().to_str().unwrap();
     }
 
     #[test]
@@ -4447,17 +4441,17 @@ mod tests {
 
     #[test]
     fn test_magick_wand_get_package_name() {
-        MagickWand::get_package_name().unwrap();
+        MagickWand::get_package_name();
     }
 
     #[test]
     fn test_magick_wand_get_quantum_depth() {
-        MagickWand::get_quantum_depth().1.unwrap();
+        MagickWand::get_quantum_depth();
     }
 
     #[test]
     fn test_magick_wand_get_release_date() {
-        MagickWand::get_release_date().unwrap();
+        MagickWand::get_release_date();
     }
 
     #[test]
@@ -4479,7 +4473,7 @@ mod tests {
 
     #[test]
     fn test_magick_wand_get_version() {
-        MagickWand::get_version().1.unwrap();
+        MagickWand::get_version();
     }
 
     #[test]
@@ -4743,7 +4737,7 @@ mod tests {
     #[test]
     fn test_magick_wand_remove_image_profile() {
         let mut mw = new_logo_magick_wand();
-        mw.remove_image_profile("").unwrap();
+        mw.remove_image_profile("").to_str().unwrap();
     }
 
     #[test]

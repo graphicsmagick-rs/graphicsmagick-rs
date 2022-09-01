@@ -2,12 +2,11 @@
 //!
 //! <http://www.graphicsmagick.org/wand/pixel_wand.html>
 
-use crate::utils::{assert_initialized, c_str_to_string, str_to_c_string};
+use crate::utils::{assert_initialized, str_to_c_string, MagickCString};
 use graphicsmagick_sys::*;
 use std::{
     os::raw::{c_double, c_ulong},
     ptr::null_mut,
-    str::Utf8Error,
 };
 
 /// Wrapper of `graphicsmagick_sys::PixelWand`.
@@ -113,9 +112,8 @@ impl PixelWand {
     ///
     /// PixelGetColorAsString() gets the color of the pixel wand.
     ///
-    pub fn get_color_as_string(&mut self) -> Result<String, Utf8Error> {
-        let c = unsafe { PixelGetColorAsString(self.wand) };
-        c_str_to_string(c)
+    pub fn get_color_as_string(&mut self) -> MagickCString {
+        unsafe { MagickCString::new(PixelGetColorAsString(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcolorcount>
@@ -464,7 +462,7 @@ mod tests {
     #[test]
     fn test_pixel_wand_get_color_as_string() {
         let mut pw = new_pixel_wand();
-        pw.get_color_as_string().unwrap();
+        pw.get_color_as_string().to_str().unwrap();
     }
 
     #[test]

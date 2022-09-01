@@ -50,7 +50,7 @@ fn new_graphicsmagick_config() -> anyhow::Result<GraphicsMagickConfig> {
         };
 
         match flag {
-            "-I" => gmc.include_flags.push(format!("-I{value}")),
+            "-I" => gmc.include_flags.push(format!("-I{}", value)),
             "-L" => gmc.searches.push(value.to_string()),
             "-l" => gmc.libs.push(value.to_string()),
             _ => (),

@@ -164,63 +164,6 @@ pub(crate) trait CStrExt {
 impl CStrExt for CStr {}
 
 #[derive(Debug)]
-pub struct MagickIter<U> {
-    alloc: MagickAlloc,
-
-    index: usize,
-    /// len of the array
-    len: usize,
-
-    /// mem::size_of::<T>
-    size: usize,
-
-    /// The transformer
-    f: fn(*mut ()) -> U,
-}
-
-impl<U> MagickIter<U> {
-    /// Return `None` if `a.is_null()`.
-    ///
-    ///  * `f` - takes in `*mut T` (takes ownership) and produces `U`.
-    pub(crate) unsafe fn new<T>(a: *const T, len: usize, f: fn(*mut T) -> U) -> Option<Self> {
-        if a.is_null() {
-            None
-        } else {
-            Some(Self {
-                alloc: MagickAlloc::new(a as *mut c_void),
-                index: 0,
-                len,
-                size: mem::size_of::<T>(),
-                f: mem::transmute(f),
-            })
-        }
-    }
-}
-
-impl<U> Iterator for MagickIter<U> {
-    type Item = U;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.index == self.len {
-            return None;
-        }
-
-        // Use *mut u8 pointer since its size is 1.
-        let base_ptr = self.alloc.0 as *mut u8;
-
-        // Calculate the pointer
-        let p = unsafe { base_ptr.add(self.index * self.size) };
-
-        // Incr the index
-        self.index += 1;
-
-        Some((self.f)(p as *mut ()))
-    }
-}
-
-impl<U> ExactSizeIterator for MagickIter<U> {}
-
-#[derive(Debug)]
 pub struct MagickBoxSlice<T> {
     alloc: MagickAlloc,
     len: usize,

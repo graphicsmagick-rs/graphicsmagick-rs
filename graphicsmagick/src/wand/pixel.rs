@@ -10,6 +10,7 @@ use std::{
 };
 
 /// Wrapper of `graphicsmagick_sys::PixelWand`.
+#[repr(transparent)]
 pub struct PixelWand {
     wand: *mut graphicsmagick_sys::PixelWand,
 }

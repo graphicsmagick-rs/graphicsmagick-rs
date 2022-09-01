@@ -7,9 +7,9 @@ use crate::{
         ClipPathUnits, DecorationType, FillRule, GravityType, LineCap, LineJoin, PaintMethod,
         StretchType, StyleType,
     },
-    utils::{assert_initialized, c_arr_to_vec, str_to_c_string},
+    utils::{assert_initialized, str_to_c_string},
     wand::pixel::PixelWand,
-    MagickCString,
+    MagickBoxSlice, MagickCString,
 };
 use graphicsmagick_sys::*;
 use std::{
@@ -1308,10 +1308,10 @@ impl DrawingWand {
     ///
     /// array must be freed once it is no longer required by the user.
     ///
-    pub fn get_stroke_dash_array(&self) -> Option<Vec<c_double>> {
+    pub fn get_stroke_dash_array(&self) -> Option<MagickBoxSlice<c_double>> {
         let mut number_elements = 0;
         let a = unsafe { MagickDrawGetStrokeDashArray(self.wand, &mut number_elements) };
-        c_arr_to_vec(a, number_elements as usize, |e| unsafe { *e })
+        unsafe { MagickBoxSlice::new(a, number_elements.try_into().unwrap()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokedasharray>

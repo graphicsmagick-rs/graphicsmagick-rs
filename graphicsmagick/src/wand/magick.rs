@@ -4399,18 +4399,17 @@ mod tests {
         mw.get_image_page().unwrap();
     }
 
-    fn test_magick_wand_get_image_pixels_inner<ExportType: MagickWandExportType>() {
+    fn test_magick_wand_get_image_pixels_inner<T>()
+    where
+        T: MagickWandExportType + std::fmt::Debug,
+    {
         let mut mw = new_logo_magick_wand();
 
-        let pixels = mw
-            .get_image_pixels::<ExportType>(0, 0, 0, 0, "RGBA")
-            .unwrap();
+        let pixels = mw.get_image_pixels::<T>(0, 0, 0, 0, "RGBA").unwrap();
 
         assert!(pixels.is_empty());
 
-        let pixels = mw
-            .get_image_pixels::<ExportType>(0, 0, 10, 10, "RGBA")
-            .unwrap();
+        let pixels = mw.get_image_pixels::<T>(0, 0, 10, 10, "RGBA").unwrap();
 
         assert!(!pixels.is_empty());
     }

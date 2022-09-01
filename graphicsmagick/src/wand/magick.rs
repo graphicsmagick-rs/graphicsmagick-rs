@@ -16,7 +16,6 @@ use crate::{
 use graphicsmagick_sys::*;
 use std::{
     ffi::CStr,
-    fmt,
     marker::PhantomData,
     os::raw::{c_double, c_float, c_long, c_uchar, c_uint, c_ulong, c_ushort, c_void},
     ptr::null_mut,
@@ -31,41 +30,28 @@ use crate::types::GravityType;
 
 /// # Safety
 ///
-/// `STORAGE_TYPE` must match `TARGET`.
+/// `STORAGE_TYPE` must match the type being implemented.
 pub unsafe trait MagickWandExportTypeSealed {
     const STORAGE_TYPE: StorageType;
-
-    /// Make using it in generic code easier.
-    type Target: fmt::Debug + fmt::Display + Copy + Clone;
 }
 
 pub trait MagickWandExportType: MagickWandExportTypeSealed {}
 
 macro_rules! def_magickwand_export_type {
-    ($name:ident, $STORAGE_TYPE:expr, $Target:ty) => {
-        pub struct $name;
-        unsafe impl MagickWandExportTypeSealed for $name {
+    ($STORAGE_TYPE:expr, $type:ty) => {
+        unsafe impl MagickWandExportTypeSealed for $type {
             const STORAGE_TYPE: StorageType = $STORAGE_TYPE;
-            type Target = $Target;
         }
-        impl MagickWandExportType for $name {}
+        impl MagickWandExportType for $type {}
     };
 }
 
-def_magickwand_export_type!(MagickWandExportCharPixel, StorageType_CharPixel, c_uchar);
-def_magickwand_export_type!(MagickWandExportShortPixel, StorageType_ShortPixel, c_ushort);
-def_magickwand_export_type!(
-    MagickWandExportIntegerPixel,
-    StorageType_IntegerPixel,
-    c_uint
-);
-def_magickwand_export_type!(MagickWandExportLongPixel, StorageType_LongPixel, c_ulong);
-def_magickwand_export_type!(MagickWandExportFloatPixel, StorageType_FloatPixel, c_float);
-def_magickwand_export_type!(
-    MagickWandExportDoublePixel,
-    StorageType_DoublePixel,
-    c_double
-);
+def_magickwand_export_type!(StorageType_CharPixel, c_uchar);
+def_magickwand_export_type!(StorageType_ShortPixel, c_ushort);
+def_magickwand_export_type!(StorageType_IntegerPixel, c_uint);
+def_magickwand_export_type!(StorageType_LongPixel, c_ulong);
+def_magickwand_export_type!(StorageType_FloatPixel, c_float);
+def_magickwand_export_type!(StorageType_DoublePixel, c_double);
 
 /// Wrapper of `graphicsmagick_sys::MagickWand`.
 pub struct MagickWand<'a> {
@@ -1367,7 +1353,7 @@ impl<'a> MagickWand<'a> {
         columns: c_ulong,
         rows: c_ulong,
         map: &str,
-    ) -> crate::Result<Vec<ExportType::Target>> {
+    ) -> crate::Result<Vec<ExportType>> {
         let size: usize = (columns * rows).try_into().unwrap();
         let len = size * map.len();
 
@@ -4347,12 +4333,12 @@ mod tests {
 
     #[test]
     fn test_magick_wand_get_image_pixels() {
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportCharPixel>();
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportShortPixel>();
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportIntegerPixel>();
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportLongPixel>();
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportFloatPixel>();
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportDoublePixel>();
+        test_magick_wand_get_image_pixels_inner::<c_uchar>();
+        test_magick_wand_get_image_pixels_inner::<c_ushort>();
+        test_magick_wand_get_image_pixels_inner::<c_uint>();
+        test_magick_wand_get_image_pixels_inner::<c_ulong>();
+        test_magick_wand_get_image_pixels_inner::<c_float>();
+        test_magick_wand_get_image_pixels_inner::<c_double>();
     }
 
     #[test]

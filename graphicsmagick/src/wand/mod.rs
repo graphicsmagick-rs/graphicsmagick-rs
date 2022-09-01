@@ -6,12 +6,4 @@ pub mod drawing;
 pub mod magick;
 pub mod pixel;
 
-pub use self::{
-    drawing::DrawingWand,
-    magick::{
-        MagickWand, MagickWandExportCharPixel, MagickWandExportDoublePixel,
-        MagickWandExportFloatPixel, MagickWandExportIntegerPixel, MagickWandExportLongPixel,
-        MagickWandExportShortPixel,
-    },
-    pixel::PixelWand,
-};
+pub use self::{drawing::DrawingWand, magick::MagickWand, pixel::PixelWand};

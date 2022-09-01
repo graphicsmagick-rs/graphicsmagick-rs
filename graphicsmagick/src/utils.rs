@@ -95,26 +95,6 @@ impl Drop for MagickAlloc {
     }
 }
 
-pub(crate) fn c_arr_to_vec<T, U, F>(a: *const T, len: usize, f: F) -> Option<Vec<U>>
-where
-    F: Fn(*const T) -> U,
-{
-    if a.is_null() {
-        return None;
-    }
-
-    // Use MagickAlloc to ensure a is free on unwinding.
-    let _magick_vec = unsafe { MagickAlloc::new(a as *mut c_void) };
-
-    let mut v = Vec::with_capacity(len);
-    for i in 0..len {
-        let p = unsafe { a.add(i) };
-        v.push(f(p));
-    }
-
-    Some(v)
-}
-
 #[derive(Debug)]
 #[repr(transparent)]
 pub struct MagickCString(MagickAlloc);

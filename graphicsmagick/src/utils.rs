@@ -2,8 +2,12 @@ use graphicsmagick_sys::InitializeMagick;
 use std::{
     borrow::Cow,
     ffi::{CStr, CString},
+    marker::PhantomData,
+    mem,
+    ops::{Deref, DerefMut},
     os::raw::{c_char, c_double, c_uint, c_void},
-    ptr::{null, NonNull},
+    ptr::null,
+    slice::{from_raw_parts, from_raw_parts_mut},
     str::Utf8Error,
     sync::Once,
     thread,
@@ -73,59 +77,46 @@ pub(crate) fn str_to_c_string(s: &str) -> CString {
 }
 
 #[derive(Debug)]
-struct MagickAlloc(NonNull<c_void>);
+#[repr(transparent)]
+struct MagickAlloc(*mut c_void);
 
 impl MagickAlloc {
-    fn new(ptr: *mut c_void) -> Option<Self> {
-        NonNull::new(ptr).map(Self)
-    }
-
-    fn as_ptr(&self) -> *const c_void {
-        self.0.as_ptr() as *const c_void
+    unsafe fn new(ptr: *mut c_void) -> Self {
+        Self(ptr)
     }
 }
 impl Drop for MagickAlloc {
     fn drop(&mut self) {
-        unsafe {
-            graphicsmagick_sys::MagickFree(self.0.as_ptr());
+        if !self.0.is_null() {
+            unsafe {
+                graphicsmagick_sys::MagickFree(self.0);
+            }
         }
     }
 }
 
-pub(crate) fn c_arr_to_vec<T, U, F>(a: *const T, len: usize, f: F) -> Option<Vec<U>>
-where
-    F: Fn(*const T) -> U,
-{
-    if a.is_null() {
-        return None;
-    }
-
-    // Use MagickAlloc to ensure a is free on unwinding.
-    let _magick_vec = MagickAlloc::new(a as *mut c_void);
-
-    let mut v = Vec::with_capacity(len);
-    for i in 0..len {
-        let p = unsafe { a.add(i) };
-        v.push(f(p));
-    }
-
-    Some(v)
-}
-
 #[derive(Debug)]
-pub struct MagickCString(Option<MagickAlloc>);
+#[repr(transparent)]
+pub struct MagickCString(MagickAlloc);
 
 impl MagickCString {
     pub(crate) unsafe fn new(c: *const c_char) -> Self {
-        Self(MagickAlloc::new(c as *mut c_void))
+        Self(MagickAlloc(c as *mut c_void))
+    }
+
+    /// Return pointer to the underlying data.
+    pub fn as_ptr(&self) -> *const c_char {
+        self.0 .0 as *const c_char
     }
 
     /// Convert [`MagickCString`] to [`CStr`].
     pub fn as_c_str(&self) -> &CStr {
-        self.0
-            .as_ref()
-            .map(|alloc| unsafe { CStr::from_ptr(alloc.as_ptr() as *const c_char) })
-            .unwrap_or_else(|| unsafe { CStr::from_bytes_with_nul_unchecked(b"\0") })
+        let ptr = self.as_ptr();
+        if ptr.is_null() {
+            unsafe { CStr::from_bytes_with_nul_unchecked(b"\0") }
+        } else {
+            unsafe { CStr::from_ptr(ptr) }
+        }
     }
 
     /// Convert [`MagickCString`] to [`str`].
@@ -156,3 +147,49 @@ pub(crate) trait CStrExt {
 }
 
 impl CStrExt for CStr {}
+
+#[derive(Debug)]
+pub struct MagickBoxSlice<T> {
+    alloc: MagickAlloc,
+    len: usize,
+    phantom: PhantomData<T>,
+}
+
+impl<T> MagickBoxSlice<T> {
+    /// T must be either the same type as U, or be transparent newtype
+    /// of U.
+    /// T must be able to deal with all valid representation of U.
+    pub(crate) unsafe fn new<U>(a: *mut U, len: usize) -> Option<Self> {
+        assert_eq!(mem::size_of::<U>(), mem::size_of::<T>());
+
+        (!a.is_null()).then(|| Self {
+            alloc: MagickAlloc::new(a as *mut c_void),
+            len,
+            phantom: PhantomData,
+        })
+    }
+
+    /// Return pointer to the underlying data
+    pub fn as_ptr(&self) -> *const T {
+        self.alloc.0 as *const T
+    }
+
+    /// Return pointer to the underlying data
+    pub fn as_mut_ptr(&mut self) -> *mut T {
+        self.alloc.0 as *mut T
+    }
+}
+
+impl<T> Deref for MagickBoxSlice<T> {
+    type Target = [T];
+
+    fn deref(&self) -> &Self::Target {
+        unsafe { from_raw_parts(self.as_ptr(), self.len) }
+    }
+}
+
+impl<T> DerefMut for MagickBoxSlice<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        unsafe { from_raw_parts_mut(self.as_mut_ptr(), self.len) }
+    }
+}

@@ -9,9 +9,9 @@ use crate::{
         ImageType, InterlaceType, MetricType, MontageMode, NoiseType, PreviewType, RenderingIntent,
         ResolutionType, ResourceType, VirtualPixelMethod,
     },
-    utils::{assert_initialized, c_arr_to_vec, str_to_c_string, CStrExt},
+    utils::{assert_initialized, str_to_c_string, CStrExt},
     wand::{DrawingWand, PixelWand},
-    MagickCString,
+    MagickBoxSlice, MagickCString,
 };
 use graphicsmagick_sys::*;
 use std::{
@@ -1240,12 +1240,10 @@ impl<'a> MagickWand<'a> {
     ///
     /// PixelWand wands.
     ///
-    pub fn get_image_histogram(&mut self) -> Option<Vec<PixelWand>> {
+    pub fn get_image_histogram(&mut self) -> Option<MagickBoxSlice<PixelWand>> {
         let mut number_colors = 0;
         let wands = unsafe { MagickGetImageHistogram(self.wand, &mut number_colors) };
-        c_arr_to_vec(wands, number_colors as usize, |wand| {
-            PixelWand::from_wand_expect(unsafe { *wand })
-        })
+        unsafe { MagickBoxSlice::new(wands, number_colors.try_into().unwrap()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageindex>
@@ -1588,10 +1586,10 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetSamplingFactors() gets the horizontal and vertical sampling factor.
     ///
-    pub fn get_sampling_factors(&mut self) -> Option<Vec<c_double>> {
+    pub fn get_sampling_factors(&mut self) -> Option<MagickBoxSlice<c_double>> {
         let mut number_factors = 0;
         let a = unsafe { MagickGetSamplingFactors(self.wand, &mut number_factors) };
-        c_arr_to_vec(a, number_factors as usize, |p| unsafe { *p })
+        unsafe { MagickBoxSlice::new(a, number_factors.try_into().unwrap()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetsize>
@@ -2334,13 +2332,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickQueryFonts() returns any font that match the specified pattern.
     ///
-    pub fn query_fonts(pattern: &str) -> Option<Vec<MagickCString>> {
+    pub fn query_fonts(pattern: &str) -> Option<MagickBoxSlice<MagickCString>> {
         let pattern = str_to_c_string(pattern);
         let mut number_fonts = 0;
         let a = unsafe { MagickQueryFonts(pattern.as_ptr(), &mut number_fonts) };
-        c_arr_to_vec(a, number_fonts as usize, |s| unsafe {
-            MagickCString::new(*s)
-        })
+        unsafe { MagickBoxSlice::new(a, number_fonts.try_into().unwrap()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickqueryformats>
@@ -2349,13 +2345,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// pattern.
     ///
-    pub fn query_formats(pattern: &str) -> Option<Vec<MagickCString>> {
+    pub fn query_formats(pattern: &str) -> Option<MagickBoxSlice<MagickCString>> {
         let pattern = str_to_c_string(pattern);
         let mut number_formats = 0;
         let a = unsafe { MagickQueryFormats(pattern.as_ptr(), &mut number_formats) };
-        c_arr_to_vec(a, number_formats as usize, |s| unsafe {
-            MagickCString::new(*s)
-        })
+        unsafe { MagickBoxSlice::new(a, number_formats.try_into().unwrap()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickradialblurimage>
@@ -3697,13 +3691,10 @@ impl<'a> MagickWand<'a> {
     ///
     /// at the beginning.
     ///
-    pub fn write_image_blob(&mut self) -> Option<Vec<u8>> {
+    pub fn write_image_blob(&mut self) -> Option<MagickBoxSlice<u8>> {
         let mut length = 0;
         let ptr = unsafe { MagickWriteImageBlob(self.wand, &mut length) };
-        if ptr.is_null() {
-            return None;
-        }
-        Some(unsafe { Vec::from_raw_parts(ptr, length as usize, length as usize) })
+        unsafe { MagickBoxSlice::new(ptr, length.try_into().unwrap()) }
     }
 
     // Not need

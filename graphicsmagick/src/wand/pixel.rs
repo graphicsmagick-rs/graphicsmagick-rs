@@ -10,6 +10,7 @@ use std::{
 };
 
 /// Wrapper of `graphicsmagick_sys::PixelWand`.
+#[repr(transparent)]
 pub struct PixelWand {
     wand: *mut graphicsmagick_sys::PixelWand,
 }
@@ -31,11 +32,6 @@ impl PixelWand {
         } else {
             Some(PixelWand { wand })
         }
-    }
-
-    #[inline]
-    pub(crate) fn from_wand_expect(wand: *mut graphicsmagick_sys::PixelWand) -> PixelWand {
-        Self::from_wand(wand).expect("wand cant't be null")
     }
 
     #[inline]

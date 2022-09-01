@@ -17,6 +17,7 @@ use crate::{
 use graphicsmagick_sys::*;
 use std::{
     fmt,
+    marker::PhantomData,
     os::raw::{c_double, c_float, c_long, c_uchar, c_uint, c_ulong, c_ushort, c_void},
     ptr::null_mut,
     slice,
@@ -70,10 +71,10 @@ def_magickwand_export_type!(
 /// Wrapper of `graphicsmagick_sys::MagickWand`.
 pub struct MagickWand<'a> {
     wand: *mut graphicsmagick_sys::MagickWand,
-    blob: Option<&'a [u8]>,
+    phantom: PhantomData<&'a [u8]>,
 }
 
-impl<'a> MagickWand<'a> {
+impl MagickWand<'_> {
     /// Construct an empty MagickWand.
     ///
     /// # Panic
@@ -86,7 +87,10 @@ impl<'a> MagickWand<'a> {
         let wand = unsafe { NewMagickWand() };
         assert_ne!(wand, null_mut(), "NewMagickWand return NULL");
 
-        MagickWand { wand, blob: None }
+        MagickWand {
+            wand,
+            phantom: PhantomData,
+        }
     }
 
     #[inline]
@@ -117,11 +121,14 @@ impl<'a> MagickWand<'a> {
     }
 
     #[inline]
-    pub fn from_wand(wand: *mut graphicsmagick_sys::MagickWand) -> Option<MagickWand<'a>> {
+    pub fn from_wand(wand: *mut graphicsmagick_sys::MagickWand) -> Option<Self> {
         if wand.is_null() {
             None
         } else {
-            Some(MagickWand { wand, blob: None })
+            Some(MagickWand {
+                wand,
+                phantom: PhantomData,
+            })
         }
     }
 
@@ -148,7 +155,7 @@ impl Clone for MagickWand<'_> {
     fn clone(&self) -> Self {
         MagickWand {
             wand: unsafe { CloneMagickWand(self.wand) },
-            blob: self.blob,
+            phantom: PhantomData,
         }
     }
 }
@@ -2406,7 +2413,6 @@ impl<'a> MagickWand<'a> {
     /// MagickReadImageBlob() reads an image or image sequence from a blob.
     ///
     pub fn read_image_blob(&mut self, blob: &'a [u8]) -> crate::Result<&mut Self> {
-        self.blob = Some(blob);
         let length = blob.len() as size_t;
         let blob = blob.as_ptr();
         let status = unsafe { MagickReadImageBlob(self.wand, blob, length) };
@@ -3752,8 +3758,7 @@ mod tests {
 
     #[test]
     fn test_magick_wand_new() {
-        let mw = new_magick_wand();
-        assert_eq!(mw.blob, None);
+        let _mw = new_magick_wand();
     }
 
     #[test]

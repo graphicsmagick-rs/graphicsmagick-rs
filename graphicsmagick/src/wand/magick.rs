@@ -28,18 +28,22 @@ use crate::types::OrientationType;
 #[cfg(feature = "v1_3_22")]
 use crate::types::GravityType;
 
-/// # Safety
-///
-/// `STORAGE_TYPE` must match the type being implemented.
-pub unsafe trait MagickWandExportTypeSealed {
-    const STORAGE_TYPE: StorageType;
+mod sealed {
+    use super::StorageType;
+
+    /// # Safety
+    ///
+    /// `STORAGE_TYPE` must match the type being implemented.
+    pub unsafe trait MagickWandExportTypeSealed {
+        const STORAGE_TYPE: StorageType;
+    }
 }
 
-pub trait MagickWandExportType: MagickWandExportTypeSealed {}
+pub trait MagickWandExportType: sealed::MagickWandExportTypeSealed {}
 
 macro_rules! def_magickwand_export_type {
     ($STORAGE_TYPE:expr, $type:ty) => {
-        unsafe impl MagickWandExportTypeSealed for $type {
+        unsafe impl sealed::MagickWandExportTypeSealed for $type {
             const STORAGE_TYPE: StorageType = $STORAGE_TYPE;
         }
         impl MagickWandExportType for $type {}

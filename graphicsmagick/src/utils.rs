@@ -63,7 +63,11 @@ pub fn max_rgb<T: MaxRGB>() -> T {
 }
 
 pub(crate) fn str_to_c_string(s: &str) -> CString {
-    let buf = s.bytes().chain(0..1).collect::<Vec<_>>();
+    let buf = s.bytes().collect::<Vec<_>>();
+    // from_vec_unchecked appends the trailing '\0'
+    //
+    // Safety:
+    // s is a utf-8 str, so it cannot contains '\0'.
     unsafe { CString::from_vec_unchecked(buf) }
 }
 

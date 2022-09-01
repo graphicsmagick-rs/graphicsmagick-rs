@@ -4,7 +4,7 @@ use std::{
     ffi::{CStr, CString},
     mem,
     os::raw::{c_char, c_double, c_uint, c_void},
-    ptr::{null, NonNull},
+    ptr::null,
     str::Utf8Error,
     sync::Once,
     thread,
@@ -74,21 +74,20 @@ pub(crate) fn str_to_c_string(s: &str) -> CString {
 }
 
 #[derive(Debug)]
-struct MagickAlloc(NonNull<c_void>);
+#[repr(transparent)]
+struct MagickAlloc(*mut c_void);
 
 impl MagickAlloc {
-    unsafe fn new(ptr: *mut c_void) -> Option<Self> {
-        NonNull::new(ptr).map(Self)
-    }
-
-    fn as_mut_ptr(&mut self) -> *mut c_void {
-        self.0.as_ptr()
+    unsafe fn new(ptr: *mut c_void) -> Self {
+        Self(ptr)
     }
 }
 impl Drop for MagickAlloc {
     fn drop(&mut self) {
-        unsafe {
-            graphicsmagick_sys::MagickFree(self.0.as_ptr());
+        if !self.0.is_null() {
+            unsafe {
+                graphicsmagick_sys::MagickFree(self.0);
+            }
         }
     }
 }
@@ -115,19 +114,20 @@ where
 
 #[derive(Debug)]
 #[repr(transparent)]
-pub struct MagickCString(*const c_char);
+pub struct MagickCString(MagickAlloc);
 
 impl MagickCString {
     pub(crate) unsafe fn new(c: *const c_char) -> Self {
-        Self(c)
+        Self(MagickAlloc(c as *mut c_void))
     }
 
     /// Convert [`MagickCString`] to [`CStr`].
     pub fn as_c_str(&self) -> &CStr {
-        if self.0.is_null() {
+        let ptr = self.0 .0;
+        if ptr.is_null() {
             unsafe { CStr::from_bytes_with_nul_unchecked(b"\0") }
         } else {
-            unsafe { CStr::from_ptr(self.0) }
+            unsafe { CStr::from_ptr(ptr as *mut c_char) }
         }
     }
 
@@ -147,16 +147,6 @@ impl MagickCString {
     /// which looks like this: "�"
     pub fn to_str_lossy(&self) -> Cow<'_, str> {
         String::from_utf8_lossy(self.as_c_str().to_bytes())
-    }
-}
-
-impl Drop for MagickCString {
-    fn drop(&mut self) {
-        if !self.0.is_null() {
-            unsafe {
-                graphicsmagick_sys::MagickFree(self.0 as *mut c_void);
-            }
-        }
     }
 }
 
@@ -190,13 +180,17 @@ impl<U> MagickIter<U> {
     ///
     ///  * `f` - takes in `*mut T` (takes ownership) and produces `U`.
     pub(crate) unsafe fn new<T>(a: *const T, len: usize, f: fn(*mut T) -> U) -> Option<Self> {
-        Some(Self {
-            alloc: MagickAlloc::new(a as *mut c_void)?,
-            index: 0,
-            len,
-            size: mem::size_of::<T>(),
-            f: mem::transmute(f),
-        })
+        if a.is_null() {
+            None
+        } else {
+            Some(Self {
+                alloc: MagickAlloc::new(a as *mut c_void),
+                index: 0,
+                len,
+                size: mem::size_of::<T>(),
+                f: mem::transmute(f),
+            })
+        }
     }
 }
 
@@ -209,7 +203,7 @@ impl<U> Iterator for MagickIter<U> {
         }
 
         // Use *mut u8 pointer since its size is 1.
-        let base_ptr = self.alloc.as_mut_ptr() as *mut u8;
+        let base_ptr = self.alloc.0 as *mut u8;
 
         // Calculate the pointer
         let p = unsafe { base_ptr.add(self.index * self.size) };

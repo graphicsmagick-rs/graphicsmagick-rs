@@ -35,11 +35,6 @@ impl PixelWand {
     }
 
     #[inline]
-    pub(crate) fn from_wand_expect(wand: *mut graphicsmagick_sys::PixelWand) -> PixelWand {
-        Self::from_wand(wand).expect("wand cant't be null")
-    }
-
-    #[inline]
     pub fn wand(&self) -> *const graphicsmagick_sys::PixelWand {
         self.wand
     }

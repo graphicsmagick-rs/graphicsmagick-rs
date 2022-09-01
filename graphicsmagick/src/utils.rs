@@ -11,6 +11,7 @@ use std::{
 static HAS_INITIALIZED: Once = Once::new();
 
 /// Wrapper of `graphicsmagick_sys::InitializeMagick`, call it before any `graphicsmagick` action.
+/// Must be call in the main thread.
 pub fn initialize() {
     HAS_INITIALIZED.call_once(|| {
         assert_eq!(

@@ -2,6 +2,7 @@ use graphicsmagick_sys::InitializeMagick;
 use std::{
     borrow::Cow,
     ffi::{CStr, CString},
+    mem,
     os::raw::{c_char, c_double, c_uint, c_void},
     ptr::{null, NonNull},
     str::Utf8Error,
@@ -76,12 +77,16 @@ pub(crate) fn str_to_c_string(s: &str) -> CString {
 struct MagickAlloc(NonNull<c_void>);
 
 impl MagickAlloc {
-    fn new(ptr: *mut c_void) -> Option<Self> {
+    unsafe fn new(ptr: *mut c_void) -> Option<Self> {
         NonNull::new(ptr).map(Self)
     }
 
     fn as_ptr(&self) -> *const c_void {
         self.0.as_ptr() as *const c_void
+    }
+
+    fn as_mut_ptr(&mut self) -> *mut c_void {
+        self.0.as_ptr()
     }
 }
 impl Drop for MagickAlloc {
@@ -101,7 +106,7 @@ where
     }
 
     // Use MagickAlloc to ensure a is free on unwinding.
-    let _magick_vec = MagickAlloc::new(a as *mut c_void);
+    let _magick_vec = unsafe { MagickAlloc::new(a as *mut c_void) };
 
     let mut v = Vec::with_capacity(len);
     for i in 0..len {
@@ -156,3 +161,56 @@ pub(crate) trait CStrExt {
 }
 
 impl CStrExt for CStr {}
+
+#[derive(Debug)]
+pub struct MagickIter<U> {
+    alloc: MagickAlloc,
+
+    index: usize,
+    /// len of the array
+    len: usize,
+
+    /// mem::size_of::<T>
+    size: usize,
+
+    /// The transformer
+    f: fn(*mut ()) -> U,
+}
+
+impl<U> MagickIter<U> {
+    /// Return `None` if `a.is_null()`.
+    ///
+    ///  * `f` - takes in `*mut T` (takes ownership) and produces `U`.
+    pub(crate) unsafe fn new<T>(a: *const T, len: usize, f: fn(*mut T) -> U) -> Option<Self> {
+        Some(Self {
+            alloc: MagickAlloc::new(a as *mut c_void)?,
+            index: 0,
+            len,
+            size: mem::size_of::<T>(),
+            f: mem::transmute(f),
+        })
+    }
+}
+
+impl<U> Iterator for MagickIter<U> {
+    type Item = U;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index == self.len {
+            return None;
+        }
+
+        // Use *mut u8 pointer since its size is 1.
+        let base_ptr = self.alloc.as_mut_ptr() as *mut u8;
+
+        // Calculate the pointer
+        let p = unsafe { base_ptr.add(self.index * self.size) };
+
+        // Incr the index
+        self.index += 1;
+
+        Some((self.f)(p as *mut ()))
+    }
+}
+
+impl<U> ExactSizeIterator for MagickIter<U> {}

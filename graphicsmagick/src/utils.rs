@@ -71,15 +71,24 @@ pub(crate) fn str_to_c_string(s: &str) -> CString {
     unsafe { CString::from_vec_unchecked(buf) }
 }
 
+struct MagickCString(*const c_char);
+impl Drop for MagickCString {
+    fn drop(&mut self) {
+        let c = self.0;
+
+        if !c.is_null() {
+            unsafe {
+                graphicsmagick_sys::MagickFree(c as *mut c_void);
+            }
+        }
+    }
+}
+
 pub(crate) fn c_str_to_string(c: *const c_char) -> Result<String, Utf8Error> {
-    if c.is_null() {
-        return Ok("".to_string());
-    }
-    let s = unsafe { CStr::from_ptr(c) }.to_str()?.to_string();
-    unsafe {
-        graphicsmagick_sys::MagickFree(c as *mut c_void);
-    }
-    Ok(s)
+    // Use MagickCString to ensure c is free on unwinding.
+    let _magick_cstring = MagickCString(c);
+
+    c_str_to_string_no_free(c)
 }
 
 pub(crate) fn c_str_to_string_no_free(c: *const c_char) -> Result<String, Utf8Error> {

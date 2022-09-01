@@ -104,13 +104,18 @@ impl MagickCString {
         Self(MagickAlloc(c as *mut c_void))
     }
 
+    /// Return pointer to the underlying data.
+    pub fn as_ptr(&self) -> *const c_char {
+        self.0 .0 as *const c_char
+    }
+
     /// Convert [`MagickCString`] to [`CStr`].
     pub fn as_c_str(&self) -> &CStr {
-        let ptr = self.0 .0;
+        let ptr = self.as_ptr();
         if ptr.is_null() {
             unsafe { CStr::from_bytes_with_nul_unchecked(b"\0") }
         } else {
-            unsafe { CStr::from_ptr(ptr as *mut c_char) }
+            unsafe { CStr::from_ptr(ptr) }
         }
     }
 

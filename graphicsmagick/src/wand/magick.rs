@@ -4112,7 +4112,7 @@ mod tests {
 
     #[test]
     fn test_magick_wand_get_copyright() {
-        MagickWand::get_copyright().unwrap();
+        MagickWand::get_copyright();
     }
 
     #[test]
@@ -4124,7 +4124,7 @@ mod tests {
     #[test]
     fn test_magick_wand_get_home_url() {
         let _mw = new_logo_magick_wand();
-        MagickWand::get_home_url().unwrap();
+        MagickWand::get_home_url();
     }
 
     #[test]
@@ -4436,17 +4436,17 @@ mod tests {
 
     #[test]
     fn test_magick_wand_get_package_name() {
-        MagickWand::get_package_name().unwrap();
+        MagickWand::get_package_name();
     }
 
     #[test]
     fn test_magick_wand_get_quantum_depth() {
-        MagickWand::get_quantum_depth().1.unwrap();
+        MagickWand::get_quantum_depth();
     }
 
     #[test]
     fn test_magick_wand_get_release_date() {
-        MagickWand::get_release_date().unwrap();
+        MagickWand::get_release_date();
     }
 
     #[test]
@@ -4468,7 +4468,7 @@ mod tests {
 
     #[test]
     fn test_magick_wand_get_version() {
-        MagickWand::get_version().1.unwrap();
+        MagickWand::get_version();
     }
 
     #[test]

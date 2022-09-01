@@ -9,7 +9,7 @@ use crate::{
         ImageType, InterlaceType, MetricType, MontageMode, NoiseType, PreviewType, RenderingIntent,
         ResolutionType, ResourceType, VirtualPixelMethod,
     },
-    utils::{assert_initialized, c_arr_to_vec, str_to_c_string, CStrExt},
+    utils::{assert_initialized, str_to_c_string, CStrExt},
     wand::{DrawingWand, PixelWand},
     MagickBoxSlice, MagickCString,
 };

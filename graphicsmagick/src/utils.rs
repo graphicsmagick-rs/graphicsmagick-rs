@@ -81,10 +81,6 @@ impl MagickAlloc {
         NonNull::new(ptr).map(Self)
     }
 
-    fn as_ptr(&self) -> *const c_void {
-        self.0.as_ptr() as *const c_void
-    }
-
     fn as_mut_ptr(&mut self) -> *mut c_void {
         self.0.as_ptr()
     }
@@ -118,19 +114,20 @@ where
 }
 
 #[derive(Debug)]
-pub struct MagickCString(Option<MagickAlloc>);
+pub struct MagickCString(*const c_char);
 
 impl MagickCString {
     pub(crate) unsafe fn new(c: *const c_char) -> Self {
-        Self(MagickAlloc::new(c as *mut c_void))
+        Self(c)
     }
 
     /// Convert [`MagickCString`] to [`CStr`].
     pub fn as_c_str(&self) -> &CStr {
-        self.0
-            .as_ref()
-            .map(|alloc| unsafe { CStr::from_ptr(alloc.as_ptr() as *const c_char) })
-            .unwrap_or_else(|| unsafe { CStr::from_bytes_with_nul_unchecked(b"\0") })
+        if self.0.is_null() {
+            unsafe { CStr::from_bytes_with_nul_unchecked(b"\0") }
+        } else {
+            unsafe { CStr::from_ptr(self.0) }
+        }
     }
 
     /// Convert [`MagickCString`] to [`str`].

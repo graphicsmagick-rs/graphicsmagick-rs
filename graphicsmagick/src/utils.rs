@@ -71,8 +71,8 @@ pub(crate) fn str_to_c_string(s: &str) -> CString {
     unsafe { CString::from_vec_unchecked(buf) }
 }
 
-struct MagickCString(*const c_char);
-impl Drop for MagickCString {
+struct MagickAlloc(*const c_void);
+impl Drop for MagickAlloc {
     fn drop(&mut self) {
         let c = self.0;
 
@@ -85,8 +85,8 @@ impl Drop for MagickCString {
 }
 
 pub(crate) fn c_str_to_string(c: *const c_char) -> Result<String, Utf8Error> {
-    // Use MagickCString to ensure c is free on unwinding.
-    let _magick_cstring = MagickCString(c);
+    // Use MagickAlloc to ensure c is free on unwinding.
+    let _magick_cstring = MagickAlloc(c as *const c_void);
 
     c_str_to_string_no_free(c)
 }
@@ -106,13 +106,15 @@ where
     if a.is_null() {
         return None;
     }
+
+    // Use MagickAlloc to ensure a is free on unwinding.
+    let _magick_vec = MagickAlloc(a as *const c_void);
+
     let mut v = Vec::with_capacity(len);
     for i in 0..len {
         let p = unsafe { a.add(i) };
         v.push(f(p));
     }
-    unsafe {
-        graphicsmagick_sys::MagickFree(a as *mut c_void);
-    }
+
     Some(v)
 }

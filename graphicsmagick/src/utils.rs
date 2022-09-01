@@ -114,6 +114,7 @@ where
 }
 
 #[derive(Debug)]
+#[repr(transparent)]
 pub struct MagickCString(*const c_char);
 
 impl MagickCString {

@@ -146,3 +146,13 @@ impl MagickCString {
         String::from_utf8_lossy(self.as_cstr().to_bytes())
     }
 }
+
+pub(crate) trait CStrExt {
+    unsafe fn from_ptr_checked_on_debug<'a>(ptr: *const c_char) -> &'a CStr {
+        debug_assert!(!ptr.is_null());
+
+        CStr::from_ptr(ptr)
+    }
+}
+
+impl CStrExt for CStr {}

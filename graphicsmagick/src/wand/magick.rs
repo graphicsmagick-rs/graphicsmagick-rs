@@ -9,7 +9,7 @@ use crate::{
         ImageType, InterlaceType, MetricType, MontageMode, NoiseType, PreviewType, RenderingIntent,
         ResolutionType, ResourceType, VirtualPixelMethod,
     },
-    utils::{assert_initialized, c_arr_to_vec, str_to_c_string},
+    utils::{assert_initialized, c_arr_to_vec, str_to_c_string, CStrExt},
     wand::{DrawingWand, PixelWand},
     MagickCString,
 };
@@ -896,7 +896,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetCopyright() returns the ImageMagick API copyright as a string.
     ///
     pub fn get_copyright() -> &'static CStr {
-        unsafe { CStr::from_ptr(MagickGetCopyright()) }
+        unsafe { CStr::from_ptr_checked_on_debug(MagickGetCopyright()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetfilename>
@@ -912,7 +912,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetHomeURL() returns the ImageMagick home URL.
     ///
     pub fn get_home_url() -> &'static CStr {
-        unsafe { CStr::from_ptr(MagickGetHomeURL()) }
+        unsafe { CStr::from_ptr_checked_on_debug(MagickGetHomeURL()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimage>
@@ -1548,7 +1548,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetPackageName() returns the ImageMagick package name.
     ///
     pub fn get_package_name() -> &'static CStr {
-        unsafe { CStr::from_ptr(MagickGetPackageName()) }
+        unsafe { CStr::from_ptr_checked_on_debug(MagickGetPackageName()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetquantumdepth>
@@ -1558,7 +1558,7 @@ impl<'a> MagickWand<'a> {
     pub fn get_quantum_depth() -> (c_ulong, &'static CStr) {
         let mut depth = 0;
         let c = unsafe { MagickGetQuantumDepth(&mut depth) };
-        (depth, unsafe { CStr::from_ptr(c) })
+        (depth, unsafe { CStr::from_ptr_checked_on_debug(c) })
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetreleasedate>
@@ -1566,7 +1566,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetReleaseDate() returns the ImageMagick release date.
     ///
     pub fn get_release_date() -> &'static CStr {
-        unsafe { CStr::from_ptr(MagickGetReleaseDate()) }
+        unsafe { CStr::from_ptr_checked_on_debug(MagickGetReleaseDate()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetresourcelimit>
@@ -1615,7 +1615,7 @@ impl<'a> MagickWand<'a> {
     pub fn get_version() -> (c_ulong, &'static CStr) {
         let mut version = 0;
         let c = unsafe { MagickGetVersion(&mut version) };
-        (version, unsafe { CStr::from_ptr(c) })
+        (version, unsafe { CStr::from_ptr_checked_on_debug(c) })
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickhaldclutimage>

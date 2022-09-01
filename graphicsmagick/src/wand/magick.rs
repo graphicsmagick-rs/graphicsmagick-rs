@@ -17,6 +17,7 @@ use graphicsmagick_sys::*;
 use std::{
     ffi::CStr,
     marker::PhantomData,
+    mem::MaybeUninit,
     os::raw::{c_double, c_float, c_long, c_uchar, c_uint, c_ulong, c_ushort, c_void},
     ptr::null_mut,
     slice,
@@ -1323,6 +1324,90 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)?;
         Ok((width, height, x, y))
     }
+}
+
+#[derive(Debug)]
+pub struct MagickWandExportSlice<'a, T> {
+    columns: c_ulong,
+    rows: c_ulong,
+    map: &'a str,
+    slice: &'a mut [MaybeUninit<T>],
+
+    /// The number of `T` that will be written to `slice`.
+    len: usize,
+}
+
+#[allow(clippy::len_without_is_empty)]
+impl<'a, T> MagickWandExportSlice<'a, T>
+where
+    T: MagickWandExportType,
+{
+    /// Return `Some` if the `slice` is large enough.
+    /// Otherwise return `None`.
+    pub fn new(
+        columns: c_ulong,
+        rows: c_ulong,
+        map: &'a str,
+        slice: &'a mut [MaybeUninit<T>],
+    ) -> Option<Self> {
+        let size: usize = (columns * rows).try_into().unwrap();
+        let len = size * map.len();
+
+        if slice.len() >= len {
+            Some(Self {
+                columns,
+                rows,
+                map,
+                slice,
+                len,
+            })
+        } else {
+            None
+        }
+    }
+
+    /// The number of `T` that will be written to `slice`.
+    pub const fn len(&self) -> usize {
+        self.len
+    }
+}
+
+impl MagickWand<'_> {
+    /// Check the doc and implementation of [`MagickWand::get_image_pixels`].
+    pub fn write_image_pixels_to<'a, T: MagickWandExportType>(
+        &mut self,
+        x_offset: c_long,
+        y_offset: c_long,
+        input: MagickWandExportSlice<'a, T>,
+    ) -> crate::Result<&mut [T]> {
+        let len = input.len();
+        let map = str_to_c_string(input.map);
+        let storage = T::STORAGE_TYPE;
+        let columns = input.columns;
+        let rows = input.rows;
+
+        let slice = input.slice;
+
+        let status = unsafe {
+            MagickGetImagePixels(
+                self.wand,
+                x_offset,
+                y_offset,
+                columns,
+                rows,
+                map.as_ptr(),
+                storage,
+                slice.as_mut_ptr() as *mut c_uchar,
+            )
+        };
+        self.check_status(status)?;
+
+        // Safety:
+        //
+        // MagickGetImagePixels succeeds, so it should have written
+        // `len` bytes into the slice.
+        Ok(unsafe { &mut *((&mut slice[..len]) as *mut [_] as *mut [T]) })
+    }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepixels>
     ///
@@ -1360,24 +1445,17 @@ impl<'a> MagickWand<'a> {
     ) -> crate::Result<Vec<ExportType>> {
         let size: usize = (columns * rows).try_into().unwrap();
         let len = size * map.len();
-
         let mut pixels = Vec::with_capacity(len);
-        let map = str_to_c_string(map);
-        let storage = ExportType::STORAGE_TYPE;
 
-        let status = unsafe {
-            MagickGetImagePixels(
-                self.wand,
-                x_offset,
-                y_offset,
-                columns,
-                rows,
-                map.as_ptr(),
-                storage,
-                pixels.spare_capacity_mut().as_mut_ptr() as *mut c_uchar,
-            )
+        let input = MagickWandExportSlice {
+            columns,
+            rows,
+            map,
+            slice: pixels.spare_capacity_mut(),
+            len,
         };
-        self.check_status(status)?;
+
+        self.write_image_pixels_to(x_offset, y_offset, input)?;
 
         // Safety:
         //
@@ -1389,7 +1467,9 @@ impl<'a> MagickWand<'a> {
 
         Ok(pixels)
     }
+}
 
+impl<'a> MagickWand<'a> {
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageprofile>
     ///
     /// MagickGetImageProfile() returns the named image profile.

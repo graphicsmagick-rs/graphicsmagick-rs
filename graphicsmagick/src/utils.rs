@@ -113,16 +113,19 @@ where
 }
 
 #[derive(Debug)]
-pub struct MagickCString(MagickAlloc);
+pub struct MagickCString(Option<MagickAlloc>);
 
 impl MagickCString {
-    pub(crate) unsafe fn new(c: *const c_char) -> Option<Self> {
-        MagickAlloc::new(c as *mut c_void).map(Self)
+    pub(crate) unsafe fn new(c: *const c_char) -> Self {
+        Self(MagickAlloc::new(c as *mut c_void))
     }
 
     /// Convert [`MagickCString`] to [`CStr`].
     pub fn as_cstr(&self) -> &CStr {
-        unsafe { CStr::from_ptr(self.0.as_ptr() as *const c_char) }
+        self.0
+            .as_ref()
+            .map(|alloc| unsafe { CStr::from_ptr(alloc.as_ptr() as *const c_char) })
+            .unwrap_or_else(|| unsafe { CStr::from_bytes_with_nul_unchecked(b"\0") })
     }
 
     /// Convert [`MagickCString`] to [`str`].

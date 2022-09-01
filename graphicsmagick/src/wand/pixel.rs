@@ -112,7 +112,7 @@ impl PixelWand {
     ///
     /// PixelGetColorAsString() gets the color of the pixel wand.
     ///
-    pub fn get_color_as_string(&mut self) -> Option<MagickCString> {
+    pub fn get_color_as_string(&mut self) -> MagickCString {
         unsafe { MagickCString::new(PixelGetColorAsString(self.wand)) }
     }
 
@@ -462,7 +462,7 @@ mod tests {
     #[test]
     fn test_pixel_wand_get_color_as_string() {
         let mut pw = new_pixel_wand();
-        pw.get_color_as_string().unwrap();
+        pw.get_color_as_string().to_str().unwrap();
     }
 
     #[test]

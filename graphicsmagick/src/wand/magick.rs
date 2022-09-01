@@ -625,7 +625,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// similar to the output of 'identify -verbose'.
     ///
-    pub fn describe_image(&mut self) -> Option<MagickCString> {
+    pub fn describe_image(&mut self) -> MagickCString {
         unsafe { MagickCString::new(MagickDescribeImage(self.wand)) }
     }
 
@@ -886,7 +886,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// NAME, VERSION, LIB_VERSION, COPYRIGHT, etc.
     ///
-    pub fn get_configure_info(&mut self, name: &str) -> Option<MagickCString> {
+    pub fn get_configure_info(&mut self, name: &str) -> MagickCString {
         let name = str_to_c_string(name);
         unsafe { MagickCString::new(MagickGetConfigureInfo(self.wand, name.as_ptr())) }
     }
@@ -903,7 +903,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetFilename() returns the filename associated with an image sequence.
     ///
-    pub fn get_filename(&self) -> Option<MagickCString> {
+    pub fn get_filename(&self) -> MagickCString {
         unsafe { MagickCString::new(MagickGetFilename(self.wand)) }
     }
 
@@ -928,7 +928,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageAttribute returns an image attribute as a string
     ///
-    pub fn get_image_attribute(&mut self, name: &str) -> Option<MagickCString> {
+    pub fn get_image_attribute(&mut self, name: &str) -> MagickCString {
         let name = str_to_c_string(name);
         unsafe { MagickCString::new(MagickGetImageAttribute(self.wand, name.as_ptr())) }
     }
@@ -1157,7 +1157,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// sequence.
     ///
-    pub fn get_image_filename(&mut self) -> Option<MagickCString> {
+    pub fn get_image_filename(&mut self) -> MagickCString {
         unsafe { MagickCString::new(MagickGetImageFilename(self.wand)) }
     }
 
@@ -1167,7 +1167,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// sequence.
     ///
-    pub fn get_image_format(&mut self) -> Option<MagickCString> {
+    pub fn get_image_format(&mut self) -> MagickCString {
         unsafe { MagickCString::new(MagickGetImageFormat(self.wand)) }
     }
 
@@ -1397,7 +1397,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageProfile() returns the named image profile.
     ///
-    pub fn get_image_profile(&mut self, name: &str) -> Option<MagickCString> {
+    pub fn get_image_profile(&mut self, name: &str) -> MagickCString {
         let mut length = 0;
         let name = str_to_c_string(name);
         unsafe {
@@ -1459,7 +1459,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// pixel stream.
     ///
-    pub fn get_image_signature(&mut self) -> Option<MagickCString> {
+    pub fn get_image_signature(&mut self) -> MagickCString {
         unsafe { MagickCString::new(MagickGetImageSignature(self.wand)) }
     }
 
@@ -2327,7 +2327,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickQueryFonts() returns any font that match the specified pattern.
     ///
-    pub fn query_fonts(pattern: &str) -> Option<Vec<Option<MagickCString>>> {
+    pub fn query_fonts(pattern: &str) -> Option<Vec<MagickCString>> {
         let pattern = str_to_c_string(pattern);
         let mut number_fonts = 0;
         let a = unsafe { MagickQueryFonts(pattern.as_ptr(), &mut number_fonts) };
@@ -2342,7 +2342,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// pattern.
     ///
-    pub fn query_formats(pattern: &str) -> Option<Vec<Option<MagickCString>>> {
+    pub fn query_formats(pattern: &str) -> Option<Vec<MagickCString>> {
         let pattern = str_to_c_string(pattern);
         let mut number_formats = 0;
         let a = unsafe { MagickQueryFormats(pattern.as_ptr(), &mut number_formats) };
@@ -2458,7 +2458,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickRemoveImageProfile() removes the named image profile and returns it.
     ///
-    pub fn remove_image_profile(&mut self, name: &str) -> Option<MagickCString> {
+    pub fn remove_image_profile(&mut self, name: &str) -> MagickCString {
         let name = str_to_c_string(name);
         let mut length = 0;
         unsafe {
@@ -3993,7 +3993,7 @@ mod tests {
     #[test]
     fn test_magick_wand_describe_image() {
         let mut mw = new_logo_magick_wand();
-        mw.describe_image().unwrap();
+        mw.describe_image().to_str().unwrap();
     }
 
     #[test]
@@ -4107,7 +4107,7 @@ mod tests {
     #[test]
     fn test_magick_wand_get_configure_info() {
         let mut mw = new_logo_magick_wand();
-        mw.get_configure_info("VERSION").unwrap();
+        mw.get_configure_info("VERSION").to_str().unwrap();
     }
 
     #[test]
@@ -4118,7 +4118,7 @@ mod tests {
     #[test]
     fn test_magick_wand_get_filename() {
         let mw = new_logo_magick_wand();
-        mw.get_filename().unwrap();
+        mw.get_filename().to_str().unwrap();
     }
 
     #[test]
@@ -4136,7 +4136,7 @@ mod tests {
     #[test]
     fn test_magick_wand_get_image_attribute() {
         let mut mw = new_logo_magick_wand();
-        mw.get_image_attribute("").unwrap();
+        mw.get_image_attribute("").to_str().unwrap();
     }
 
     #[test]
@@ -4240,13 +4240,13 @@ mod tests {
     #[test]
     fn test_magick_wand_get_image_filename() {
         let mut mw = new_logo_magick_wand();
-        mw.get_image_filename().unwrap();
+        mw.get_image_filename().to_str().unwrap();
     }
 
     #[test]
     fn test_magick_wand_get_image_format() {
         let mut mw = new_logo_magick_wand();
-        mw.get_image_format().unwrap();
+        mw.get_image_format().to_str().unwrap();
     }
 
     #[test]
@@ -4353,7 +4353,7 @@ mod tests {
     #[test]
     fn test_magick_wand_get_image_profile() {
         let mut mw = new_logo_magick_wand();
-        mw.get_image_profile("ICM").unwrap();
+        mw.get_image_profile("ICM").to_str().unwrap();
     }
 
     #[test]
@@ -4383,7 +4383,7 @@ mod tests {
     #[test]
     fn test_magick_wand_get_image_signature() {
         let mut mw = new_logo_magick_wand();
-        mw.get_image_signature().unwrap();
+        mw.get_image_signature().to_str().unwrap();
     }
 
     #[test]
@@ -4732,7 +4732,7 @@ mod tests {
     #[test]
     fn test_magick_wand_remove_image_profile() {
         let mut mw = new_logo_magick_wand();
-        mw.remove_image_profile("").unwrap();
+        mw.remove_image_profile("").to_str().unwrap();
     }
 
     #[test]

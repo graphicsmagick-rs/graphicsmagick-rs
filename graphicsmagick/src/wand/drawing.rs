@@ -152,7 +152,7 @@ impl DrawingWand {
     ///
     /// must be deallocated by the user when it is no longer needed.
     ///
-    pub fn get_clip_path(&self) -> Option<MagickCString> {
+    pub fn get_clip_path(&self) -> MagickCString {
         unsafe { MagickCString::new(MagickDrawGetClipPath(self.wand)) }
     }
 
@@ -337,7 +337,7 @@ impl DrawingWand {
     ///
     /// when no longer needed.
     ///
-    pub fn get_font(&self) -> Option<MagickCString> {
+    pub fn get_font(&self) -> MagickCString {
         unsafe { MagickCString::new(MagickDrawGetFont(self.wand)) }
     }
 
@@ -359,7 +359,7 @@ impl DrawingWand {
     ///
     /// The value returned must be freed by the user when it is no longer needed.
     ///
-    pub fn get_font_family(&self) -> Option<MagickCString> {
+    pub fn get_font_family(&self) -> MagickCString {
         unsafe { MagickCString::new(MagickDrawGetFontFamily(self.wand)) }
     }
 
@@ -1531,7 +1531,7 @@ impl DrawingWand {
     ///
     /// once it is no longer required.
     ///
-    pub fn get_text_encoding(&self) -> Option<MagickCString> {
+    pub fn get_text_encoding(&self) -> MagickCString {
         unsafe { MagickCString::new(MagickDrawGetTextEncoding(self.wand)) }
     }
 
@@ -1659,7 +1659,7 @@ mod tests {
     #[test]
     fn test_drawing_wand_get_clip_path() {
         let dw = new_logo_drawing_wand();
-        dw.get_clip_path().unwrap();
+        dw.get_clip_path().to_str().unwrap();
     }
 
     #[test]
@@ -1749,7 +1749,7 @@ mod tests {
     #[test]
     fn test_drawing_wand_get_font() {
         let dw = new_logo_drawing_wand();
-        dw.get_font().unwrap();
+        dw.get_font().to_str().unwrap();
     }
 
     #[test]
@@ -1761,7 +1761,7 @@ mod tests {
     #[test]
     fn test_drawing_wand_get_font_family() {
         let dw = new_logo_drawing_wand();
-        dw.get_font_family().unwrap();
+        dw.get_font_family().to_str().unwrap();
     }
 
     #[test]
@@ -2211,7 +2211,7 @@ mod tests {
     #[test]
     fn test_drawing_wand_get_text_encoding() {
         let dw = new_logo_drawing_wand();
-        dw.get_text_encoding().unwrap();
+        dw.get_text_encoding().to_str().unwrap();
     }
 
     #[test]

@@ -1,8 +1,10 @@
 use graphicsmagick_sys::InitializeMagick;
 use std::{
+    borrow::Cow,
     ffi::{CStr, CString},
     os::raw::{c_char, c_double, c_uint, c_void},
-    ptr::null,
+    ptr::{null, NonNull},
+    str::Utf8Error,
     string::FromUtf8Error,
     sync::Once,
     thread,
@@ -71,22 +73,29 @@ pub(crate) fn str_to_c_string(s: &str) -> CString {
     unsafe { CString::from_vec_unchecked(buf) }
 }
 
-struct MagickAlloc(*const c_void);
+#[derive(Debug)]
+struct MagickAlloc(NonNull<c_void>);
+
+impl MagickAlloc {
+    fn new(ptr: *mut c_void) -> Option<Self> {
+        NonNull::new(ptr).map(Self)
+    }
+
+    fn as_ptr(&self) -> *const c_void {
+        self.0.as_ptr() as *const c_void
+    }
+}
 impl Drop for MagickAlloc {
     fn drop(&mut self) {
-        let c = self.0;
-
-        if !c.is_null() {
-            unsafe {
-                graphicsmagick_sys::MagickFree(c as *mut c_void);
-            }
+        unsafe {
+            graphicsmagick_sys::MagickFree(self.0.as_ptr());
         }
     }
 }
 
 pub(crate) unsafe fn c_str_to_string(c: *const c_char) -> Result<String, FromUtf8Error> {
     // Use MagickAlloc to ensure c is free on unwinding.
-    let _magick_cstring = MagickAlloc(c as *const c_void);
+    let _magick_cstring = MagickAlloc::new(c as *mut c_void);
 
     c_str_to_string_no_free(c)
 }
@@ -111,7 +120,7 @@ where
     }
 
     // Use MagickAlloc to ensure a is free on unwinding.
-    let _magick_vec = MagickAlloc(a as *const c_void);
+    let _magick_vec = MagickAlloc::new(a as *mut c_void);
 
     let mut v = Vec::with_capacity(len);
     for i in 0..len {
@@ -120,4 +129,26 @@ where
     }
 
     Some(v)
+}
+
+#[derive(Debug)]
+pub struct MagickCString(MagickAlloc);
+
+impl MagickCString {
+    pub(crate) unsafe fn new(c: *const c_char) -> Option<Self> {
+        MagickAlloc::new(c as *mut c_void).map(Self)
+    }
+
+    /// Convert the result to `CStr`.
+    pub fn as_cstr(&self) -> &CStr {
+        unsafe { CStr::from_ptr(self.0.as_ptr() as *const c_char) }
+    }
+
+    pub fn to_str(&self) -> Result<&str, Utf8Error> {
+        self.as_cstr().to_str()
+    }
+
+    pub fn to_str_lossy(&self) -> Cow<'_, str> {
+        String::from_utf8_lossy(self.as_cstr().to_bytes())
+    }
 }

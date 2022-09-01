@@ -14,7 +14,7 @@ use graphicsmagick_sys::*;
 use std::{
     os::raw::{c_double, c_uint, c_ulong},
     ptr::null_mut,
-    str::Utf8Error,
+    string::FromUtf8Error,
 };
 
 /// Wrapper of `graphicsmagick_sys::DrawingWand`.
@@ -152,7 +152,7 @@ impl DrawingWand {
     ///
     /// must be deallocated by the user when it is no longer needed.
     ///
-    pub fn get_clip_path(&self) -> Result<String, Utf8Error> {
+    pub fn get_clip_path(&self) -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickDrawGetClipPath(self.wand) };
         c_str_to_string(c)
     }
@@ -338,7 +338,7 @@ impl DrawingWand {
     ///
     /// when no longer needed.
     ///
-    pub fn get_font(&self) -> Result<String, Utf8Error> {
+    pub fn get_font(&self) -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickDrawGetFont(self.wand) };
         c_str_to_string(c)
     }
@@ -361,7 +361,7 @@ impl DrawingWand {
     ///
     /// The value returned must be freed by the user when it is no longer needed.
     ///
-    pub fn get_font_family(&self) -> Result<String, Utf8Error> {
+    pub fn get_font_family(&self) -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickDrawGetFontFamily(self.wand) };
         c_str_to_string(c)
     }
@@ -1534,7 +1534,7 @@ impl DrawingWand {
     ///
     /// once it is no longer required.
     ///
-    pub fn get_text_encoding(&self) -> Result<String, Utf8Error> {
+    pub fn get_text_encoding(&self) -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickDrawGetTextEncoding(self.wand) };
         c_str_to_string(c)
     }

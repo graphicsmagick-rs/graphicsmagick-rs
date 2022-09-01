@@ -20,7 +20,7 @@ use std::{
     os::raw::{c_double, c_float, c_long, c_uchar, c_uint, c_ulong, c_ushort, c_void},
     ptr::null_mut,
     slice,
-    str::Utf8Error,
+    string::FromUtf8Error,
 };
 
 #[cfg(feature = "v1_3_26")]
@@ -626,7 +626,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// similar to the output of 'identify -verbose'.
     ///
-    pub fn describe_image(&mut self) -> Result<String, Utf8Error> {
+    pub fn describe_image(&mut self) -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickDescribeImage(self.wand) };
         c_str_to_string(c)
     }
@@ -888,7 +888,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// NAME, VERSION, LIB_VERSION, COPYRIGHT, etc.
     ///
-    pub fn get_configure_info(&mut self, name: &str) -> Result<String, Utf8Error> {
+    pub fn get_configure_info(&mut self, name: &str) -> Result<String, FromUtf8Error> {
         let name = str_to_c_string(name);
         let c = unsafe { MagickGetConfigureInfo(self.wand, name.as_ptr()) };
         c_str_to_string(c)
@@ -898,7 +898,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetCopyright() returns the ImageMagick API copyright as a string.
     ///
-    pub fn get_copyright() -> Result<String, Utf8Error> {
+    pub fn get_copyright() -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickGetCopyright() };
         c_str_to_string_no_free(c)
     }
@@ -907,7 +907,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetFilename() returns the filename associated with an image sequence.
     ///
-    pub fn get_filename(&self) -> Result<String, Utf8Error> {
+    pub fn get_filename(&self) -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickGetFilename(self.wand) };
         c_str_to_string(c)
     }
@@ -916,7 +916,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetHomeURL() returns the ImageMagick home URL.
     ///
-    pub fn get_home_url() -> Result<String, Utf8Error> {
+    pub fn get_home_url() -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickGetHomeURL() };
         c_str_to_string_no_free(c)
     }
@@ -934,7 +934,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageAttribute returns an image attribute as a string
     ///
-    pub fn get_image_attribute(&mut self, name: &str) -> Result<String, Utf8Error> {
+    pub fn get_image_attribute(&mut self, name: &str) -> Result<String, FromUtf8Error> {
         let name = str_to_c_string(name);
         let c = unsafe { MagickGetImageAttribute(self.wand, name.as_ptr()) };
         c_str_to_string(c)
@@ -1164,7 +1164,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// sequence.
     ///
-    pub fn get_image_filename(&mut self) -> Result<String, Utf8Error> {
+    pub fn get_image_filename(&mut self) -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickGetImageFilename(self.wand) };
         c_str_to_string(c)
     }
@@ -1175,7 +1175,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// sequence.
     ///
-    pub fn get_image_format(&mut self) -> Result<String, Utf8Error> {
+    pub fn get_image_format(&mut self) -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickGetImageFormat(self.wand) };
         c_str_to_string(c)
     }
@@ -1406,7 +1406,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageProfile() returns the named image profile.
     ///
-    pub fn get_image_profile(&mut self, name: &str) -> Result<String, Utf8Error> {
+    pub fn get_image_profile(&mut self, name: &str) -> Result<String, FromUtf8Error> {
         let mut length = 0;
         let name = str_to_c_string(name);
         let c = unsafe { MagickGetImageProfile(self.wand, name.as_ptr(), &mut length) };
@@ -1467,7 +1467,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// pixel stream.
     ///
-    pub fn get_image_signature(&mut self) -> Result<String, Utf8Error> {
+    pub fn get_image_signature(&mut self) -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickGetImageSignature(self.wand) };
         c_str_to_string(c)
     }
@@ -1556,7 +1556,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetPackageName() returns the ImageMagick package name.
     ///
-    pub fn get_package_name() -> Result<String, Utf8Error> {
+    pub fn get_package_name() -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickGetPackageName() };
         c_str_to_string_no_free(c)
     }
@@ -1565,7 +1565,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetQuantumDepth() returns the ImageMagick quantum depth.
     ///
-    pub fn get_quantum_depth() -> (c_ulong, Result<String, Utf8Error>) {
+    pub fn get_quantum_depth() -> (c_ulong, Result<String, FromUtf8Error>) {
         let mut depth = 0;
         let c = unsafe { MagickGetQuantumDepth(&mut depth) };
         (depth, c_str_to_string_no_free(c))
@@ -1575,7 +1575,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetReleaseDate() returns the ImageMagick release date.
     ///
-    pub fn get_release_date() -> Result<String, Utf8Error> {
+    pub fn get_release_date() -> Result<String, FromUtf8Error> {
         let c = unsafe { MagickGetReleaseDate() };
         c_str_to_string_no_free(c)
     }
@@ -1623,7 +1623,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// (MagickLibVersion, MagickVersion)
     ///
-    pub fn get_version() -> (c_ulong, Result<String, Utf8Error>) {
+    pub fn get_version() -> (c_ulong, Result<String, FromUtf8Error>) {
         let mut version = 0;
         let c = unsafe { MagickGetVersion(&mut version) };
         (version, c_str_to_string_no_free(c))
@@ -2338,7 +2338,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickQueryFonts() returns any font that match the specified pattern.
     ///
-    pub fn query_fonts(pattern: &str) -> Option<Vec<Result<String, Utf8Error>>> {
+    pub fn query_fonts(pattern: &str) -> Option<Vec<Result<String, FromUtf8Error>>> {
         let pattern = str_to_c_string(pattern);
         let mut number_fonts = 0;
         let a = unsafe { MagickQueryFonts(pattern.as_ptr(), &mut number_fonts) };
@@ -2351,7 +2351,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// pattern.
     ///
-    pub fn query_formats(pattern: &str) -> Option<Vec<Result<String, Utf8Error>>> {
+    pub fn query_formats(pattern: &str) -> Option<Vec<Result<String, FromUtf8Error>>> {
         let pattern = str_to_c_string(pattern);
         let mut number_formats = 0;
         let a = unsafe { MagickQueryFormats(pattern.as_ptr(), &mut number_formats) };
@@ -2467,7 +2467,7 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickRemoveImageProfile() removes the named image profile and returns it.
     ///
-    pub fn remove_image_profile(&mut self, name: &str) -> Result<String, Utf8Error> {
+    pub fn remove_image_profile(&mut self, name: &str) -> Result<String, FromUtf8Error> {
         let name = str_to_c_string(name);
         let mut length = 0;
         let c = unsafe { MagickRemoveImageProfile(self.wand, name.as_ptr(), &mut length) };

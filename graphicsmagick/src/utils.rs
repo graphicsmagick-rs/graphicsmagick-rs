@@ -3,7 +3,7 @@ use std::{
     ffi::{CStr, CString},
     os::raw::{c_char, c_double, c_uint, c_void},
     ptr::null,
-    str::Utf8Error,
+    string::FromUtf8Error,
     sync::Once,
     thread,
 };
@@ -84,19 +84,22 @@ impl Drop for MagickAlloc {
     }
 }
 
-pub(crate) fn c_str_to_string(c: *const c_char) -> Result<String, Utf8Error> {
+pub(crate) fn c_str_to_string(c: *const c_char) -> Result<String, FromUtf8Error> {
     // Use MagickAlloc to ensure c is free on unwinding.
     let _magick_cstring = MagickAlloc(c as *const c_void);
 
     c_str_to_string_no_free(c)
 }
 
-pub(crate) fn c_str_to_string_no_free(c: *const c_char) -> Result<String, Utf8Error> {
+pub(crate) fn c_str_to_string_no_free(c: *const c_char) -> Result<String, FromUtf8Error> {
     if c.is_null() {
-        return Ok("".to_string());
+        Ok("".to_string())
+    } else {
+        let cstr = unsafe { CStr::from_ptr(c) };
+        let bytes = cstr.to_bytes().to_vec();
+
+        String::from_utf8(bytes)
     }
-    let s = unsafe { CStr::from_ptr(c) }.to_str()?.to_string();
-    Ok(s)
 }
 
 pub(crate) fn c_arr_to_vec<T, U, F>(a: *const T, len: usize, f: F) -> Option<Vec<U>>

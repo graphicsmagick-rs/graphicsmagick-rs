@@ -7,7 +7,7 @@ use graphicsmagick_sys::*;
 use std::{
     os::raw::{c_double, c_ulong},
     ptr::null_mut,
-    str::Utf8Error,
+    string::FromUtf8Error,
 };
 
 /// Wrapper of `graphicsmagick_sys::PixelWand`.
@@ -113,7 +113,7 @@ impl PixelWand {
     ///
     /// PixelGetColorAsString() gets the color of the pixel wand.
     ///
-    pub fn get_color_as_string(&mut self) -> Result<String, Utf8Error> {
+    pub fn get_color_as_string(&mut self) -> Result<String, FromUtf8Error> {
         let c = unsafe { PixelGetColorAsString(self.wand) };
         c_str_to_string(c)
     }

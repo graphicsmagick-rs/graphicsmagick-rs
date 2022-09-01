@@ -2,9 +2,12 @@ use graphicsmagick_sys::InitializeMagick;
 use std::{
     borrow::Cow,
     ffi::{CStr, CString},
+    marker::PhantomData,
     mem,
+    ops::{Deref, DerefMut},
     os::raw::{c_char, c_double, c_uint, c_void},
     ptr::null,
+    slice::{from_raw_parts, from_raw_parts_mut},
     str::Utf8Error,
     sync::Once,
     thread,
@@ -216,3 +219,39 @@ impl<U> Iterator for MagickIter<U> {
 }
 
 impl<U> ExactSizeIterator for MagickIter<U> {}
+
+#[derive(Debug)]
+pub struct MagickBoxSlice<T> {
+    alloc: MagickAlloc,
+    len: usize,
+    phantom: PhantomData<T>,
+}
+
+impl<T> MagickBoxSlice<T> {
+    /// T must be either the same type as U, or be transparent newtype
+    /// of U.
+    /// T must be able to deal with all valid representation of U.
+    pub(crate) unsafe fn new<U>(a: *mut U, len: usize) -> Option<Self> {
+        assert_eq!(mem::size_of::<U>(), mem::size_of::<T>());
+
+        (!a.is_null()).then(|| Self {
+            alloc: MagickAlloc::new(a as *mut c_void),
+            len,
+            phantom: PhantomData,
+        })
+    }
+}
+
+impl<T> Deref for MagickBoxSlice<T> {
+    type Target = [T];
+
+    fn deref(&self) -> &Self::Target {
+        unsafe { from_raw_parts(self.alloc.0 as *const T, self.len) }
+    }
+}
+
+impl<T> DerefMut for MagickBoxSlice<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        unsafe { from_raw_parts_mut(self.alloc.0 as *mut T, self.len) }
+    }
+}

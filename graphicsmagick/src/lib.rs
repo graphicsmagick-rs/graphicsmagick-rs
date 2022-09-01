@@ -15,5 +15,7 @@ pub mod wand;
 
 pub use crate::{
     error::{Error, Result},
-    utils::{has_initialized, initialize, max_rgb, MagickCString, MagickIter, MaxRGB},
+    utils::{
+        has_initialized, initialize, max_rgb, MagickBoxSlice, MagickCString, MagickIter, MaxRGB,
+    },
 };

@@ -150,6 +150,16 @@ impl MagickCString {
     }
 }
 
+impl Drop for MagickCString {
+    fn drop(&mut self) {
+        if !self.0.is_null() {
+            unsafe {
+                graphicsmagick_sys::MagickFree(self.0 as *mut c_void);
+            }
+        }
+    }
+}
+
 pub(crate) trait CStrExt {
     unsafe fn from_ptr_checked_on_debug<'a>(ptr: *const c_char) -> &'a CStr {
         debug_assert!(!ptr.is_null());

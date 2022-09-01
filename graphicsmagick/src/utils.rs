@@ -168,18 +168,28 @@ impl<T> MagickBoxSlice<T> {
             phantom: PhantomData,
         })
     }
+
+    /// Return pointer to the underlying data
+    pub fn as_ptr(&self) -> *const T {
+        self.alloc.0 as *const T
+    }
+
+    /// Return pointer to the underlying data
+    pub fn as_mut_ptr(&mut self) -> *mut T {
+        self.alloc.0 as *mut T
+    }
 }
 
 impl<T> Deref for MagickBoxSlice<T> {
     type Target = [T];
 
     fn deref(&self) -> &Self::Target {
-        unsafe { from_raw_parts(self.alloc.0 as *const T, self.len) }
+        unsafe { from_raw_parts(self.as_ptr(), self.len) }
     }
 }
 
 impl<T> DerefMut for MagickBoxSlice<T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        unsafe { from_raw_parts_mut(self.alloc.0 as *mut T, self.len) }
+        unsafe { from_raw_parts_mut(self.as_mut_ptr(), self.len) }
     }
 }

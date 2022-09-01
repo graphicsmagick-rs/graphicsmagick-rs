@@ -13,6 +13,7 @@ env:
   RUST_BACKTRACE: 1
   RUST_LOG: debug
   RUSTFLAGS: "-D warnings"
+  CARGO_UNSTABLE_SPARSE_REGISTRY: "true"
 
 jobs:
   all:
@@ -85,14 +86,26 @@ jobs:
           sudo apt-get build-dep -y graphicsmagick
           sudo apt-get install -y llvm-dev libclang-dev clang mercurial libfreetype6-dev
 
-      - name: Install GraphicsMagick
+      - name: Configure caching for graphicsmagick
+        id: cache-graphicsmagick
+        uses: actions/cache@v3
+        with:
+          path: /tmp/graphicsmagick
+          key: ${{ matrix.os }}-graphicsmagick-${{ matrix.flag.gm-version }}
+
+      - name: Build GraphicsMagick
+        if: steps.cache-graphicsmagick.outputs.cache-hit != 'true'
         run: |
           hg clone http://hg.code.sf.net/p/graphicsmagick/code /tmp/graphicsmagick
           cd /tmp/graphicsmagick
           hg update -r ${{ matrix.flag.gm-version }}
           ./configure
           make -j $(nproc)
-          sudo make install
+
+      - name: Install GraphicsMagick
+        run: |
+          cd /tmp/graphicsmagick
+          sudo make install -j $(nproc)
 
       - name: Info
         run: |
@@ -102,6 +115,19 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Generate Cargo.lock
+        run: cargo +nightly update
+
+      - name: Configure caching for rust
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ matrix.os }}-cargo-${{ matrix.flag.gm-version }}-${{ matrix.flag.feature }}-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Fmt
         run: cargo +nightly fmt --all -- --check

@@ -114,8 +114,7 @@ impl PixelWand {
     /// PixelGetColorAsString() gets the color of the pixel wand.
     ///
     pub fn get_color_as_string(&mut self) -> Result<String, FromUtf8Error> {
-        let c = unsafe { PixelGetColorAsString(self.wand) };
-        c_str_to_string(c)
+        unsafe { c_str_to_string(PixelGetColorAsString(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcolorcount>

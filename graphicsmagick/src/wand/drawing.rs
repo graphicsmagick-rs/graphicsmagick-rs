@@ -153,8 +153,7 @@ impl DrawingWand {
     /// must be deallocated by the user when it is no longer needed.
     ///
     pub fn get_clip_path(&self) -> Result<String, FromUtf8Error> {
-        let c = unsafe { MagickDrawGetClipPath(self.wand) };
-        c_str_to_string(c)
+        unsafe { c_str_to_string(MagickDrawGetClipPath(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetclippath>
@@ -339,8 +338,7 @@ impl DrawingWand {
     /// when no longer needed.
     ///
     pub fn get_font(&self) -> Result<String, FromUtf8Error> {
-        let c = unsafe { MagickDrawGetFont(self.wand) };
-        c_str_to_string(c)
+        unsafe { c_str_to_string(MagickDrawGetFont(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfont>
@@ -362,8 +360,7 @@ impl DrawingWand {
     /// The value returned must be freed by the user when it is no longer needed.
     ///
     pub fn get_font_family(&self) -> Result<String, FromUtf8Error> {
-        let c = unsafe { MagickDrawGetFontFamily(self.wand) };
-        c_str_to_string(c)
+        unsafe { c_str_to_string(MagickDrawGetFontFamily(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontfamily>
@@ -1535,8 +1532,7 @@ impl DrawingWand {
     /// once it is no longer required.
     ///
     pub fn get_text_encoding(&self) -> Result<String, FromUtf8Error> {
-        let c = unsafe { MagickDrawGetTextEncoding(self.wand) };
-        c_str_to_string(c)
+        unsafe { c_str_to_string(MagickDrawGetTextEncoding(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextencoding>

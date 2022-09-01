@@ -84,18 +84,18 @@ impl Drop for MagickAlloc {
     }
 }
 
-pub(crate) fn c_str_to_string(c: *const c_char) -> Result<String, FromUtf8Error> {
+pub(crate) unsafe fn c_str_to_string(c: *const c_char) -> Result<String, FromUtf8Error> {
     // Use MagickAlloc to ensure c is free on unwinding.
     let _magick_cstring = MagickAlloc(c as *const c_void);
 
     c_str_to_string_no_free(c)
 }
 
-pub(crate) fn c_str_to_string_no_free(c: *const c_char) -> Result<String, FromUtf8Error> {
+pub(crate) unsafe fn c_str_to_string_no_free(c: *const c_char) -> Result<String, FromUtf8Error> {
     if c.is_null() {
         Ok("".to_string())
     } else {
-        let cstr = unsafe { CStr::from_ptr(c) };
+        let cstr = CStr::from_ptr(c);
         let bytes = cstr.to_bytes().to_vec();
 
         String::from_utf8(bytes)

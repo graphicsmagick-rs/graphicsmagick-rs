@@ -120,15 +120,25 @@ impl MagickCString {
         MagickAlloc::new(c as *mut c_void).map(Self)
     }
 
-    /// Convert the result to `CStr`.
+    /// Convert [`MagickCString`] to [`CStr`].
     pub fn as_cstr(&self) -> &CStr {
         unsafe { CStr::from_ptr(self.0.as_ptr() as *const c_char) }
     }
 
+    /// Convert [`MagickCString`] to [`str`].
     pub fn to_str(&self) -> Result<&str, Utf8Error> {
         self.as_cstr().to_str()
     }
 
+    /// Convert [`MagickCString`] to utf-8 string, including
+    /// non utf-8 characters.
+    ///
+    /// If all characters are valid utf-8 character, then
+    /// `Cow::Borrowed` is returned.
+    ///
+    /// Otherwise, `Cow::Owned` is returned where any invalid UTF-8 sequences
+    /// are replaced with [`std::char::REPLACEMENT_CHARACTER`],
+    /// which looks like this: "�"
     pub fn to_str_lossy(&self) -> Cow<'_, str> {
         String::from_utf8_lossy(self.as_cstr().to_bytes())
     }

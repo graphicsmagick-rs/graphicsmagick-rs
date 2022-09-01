@@ -7,14 +7,14 @@ use crate::{
         ClipPathUnits, DecorationType, FillRule, GravityType, LineCap, LineJoin, PaintMethod,
         StretchType, StyleType,
     },
-    utils::{assert_initialized, c_arr_to_vec, c_str_to_string, str_to_c_string},
+    utils::{assert_initialized, c_arr_to_vec, str_to_c_string},
     wand::pixel::PixelWand,
+    MagickCString,
 };
 use graphicsmagick_sys::*;
 use std::{
     os::raw::{c_double, c_uint, c_ulong},
     ptr::null_mut,
-    string::FromUtf8Error,
 };
 
 /// Wrapper of `graphicsmagick_sys::DrawingWand`.
@@ -152,8 +152,8 @@ impl DrawingWand {
     ///
     /// must be deallocated by the user when it is no longer needed.
     ///
-    pub fn get_clip_path(&self) -> Result<String, FromUtf8Error> {
-        unsafe { c_str_to_string(MagickDrawGetClipPath(self.wand)) }
+    pub fn get_clip_path(&self) -> Option<MagickCString> {
+        unsafe { MagickCString::new(MagickDrawGetClipPath(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetclippath>
@@ -337,8 +337,8 @@ impl DrawingWand {
     ///
     /// when no longer needed.
     ///
-    pub fn get_font(&self) -> Result<String, FromUtf8Error> {
-        unsafe { c_str_to_string(MagickDrawGetFont(self.wand)) }
+    pub fn get_font(&self) -> Option<MagickCString> {
+        unsafe { MagickCString::new(MagickDrawGetFont(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfont>
@@ -359,8 +359,8 @@ impl DrawingWand {
     ///
     /// The value returned must be freed by the user when it is no longer needed.
     ///
-    pub fn get_font_family(&self) -> Result<String, FromUtf8Error> {
-        unsafe { c_str_to_string(MagickDrawGetFontFamily(self.wand)) }
+    pub fn get_font_family(&self) -> Option<MagickCString> {
+        unsafe { MagickCString::new(MagickDrawGetFontFamily(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontfamily>
@@ -1531,8 +1531,8 @@ impl DrawingWand {
     ///
     /// once it is no longer required.
     ///
-    pub fn get_text_encoding(&self) -> Result<String, FromUtf8Error> {
-        unsafe { c_str_to_string(MagickDrawGetTextEncoding(self.wand)) }
+    pub fn get_text_encoding(&self) -> Option<MagickCString> {
+        unsafe { MagickCString::new(MagickDrawGetTextEncoding(self.wand)) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextencoding>

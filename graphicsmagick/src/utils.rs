@@ -5,7 +5,6 @@ use std::{
     os::raw::{c_char, c_double, c_uint, c_void},
     ptr::{null, NonNull},
     str::Utf8Error,
-    string::FromUtf8Error,
     sync::Once,
     thread,
 };
@@ -90,24 +89,6 @@ impl Drop for MagickAlloc {
         unsafe {
             graphicsmagick_sys::MagickFree(self.0.as_ptr());
         }
-    }
-}
-
-pub(crate) unsafe fn c_str_to_string(c: *const c_char) -> Result<String, FromUtf8Error> {
-    // Use MagickAlloc to ensure c is free on unwinding.
-    let _magick_cstring = MagickAlloc::new(c as *mut c_void);
-
-    c_str_to_string_no_free(c)
-}
-
-pub(crate) unsafe fn c_str_to_string_no_free(c: *const c_char) -> Result<String, FromUtf8Error> {
-    if c.is_null() {
-        Ok("".to_string())
-    } else {
-        let cstr = CStr::from_ptr(c);
-        let bytes = cstr.to_bytes().to_vec();
-
-        String::from_utf8(bytes)
     }
 }
 

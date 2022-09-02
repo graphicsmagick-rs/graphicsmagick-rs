@@ -180,9 +180,7 @@ impl DrawingWand {
     /// clipping path.
     ///
     pub fn get_clip_rule(&self) -> FillRule {
-        unsafe { MagickDrawGetClipRule(self.wand.as_ptr()) }
-            .try_into()
-            .unwrap()
+        unsafe { MagickDrawGetClipRule(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetcliprule>
@@ -199,9 +197,7 @@ impl DrawingWand {
     /// DrawGetClipUnits() returns the interpretation of clip path units.
     ///
     pub fn get_clip_units(&self) -> ClipPathUnits {
-        unsafe { MagickDrawGetClipUnits(self.wand.as_ptr()) }
-            .try_into()
-            .unwrap()
+        unsafe { MagickDrawGetClipUnits(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetclipunits>
@@ -324,9 +320,7 @@ impl DrawingWand {
     /// DrawGetFillRule() returns the fill rule used while drawing polygons.
     ///
     pub fn get_fill_rule(&self) -> FillRule {
-        unsafe { MagickDrawGetFillRule(self.wand.as_ptr()) }
-            .try_into()
-            .unwrap()
+        unsafe { MagickDrawGetFillRule(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfillrule>
@@ -404,9 +398,7 @@ impl DrawingWand {
     /// DrawGetFontStretch() returns the font stretch used when annotating with text.
     ///
     pub fn get_font_stretch(&self) -> StretchType {
-        unsafe { MagickDrawGetFontStretch(self.wand.as_ptr()) }
-            .try_into()
-            .unwrap()
+        unsafe { MagickDrawGetFontStretch(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontstretch>
@@ -425,9 +417,7 @@ impl DrawingWand {
     /// DrawGetFontStyle() returns the font style used when annotating with text.
     ///
     pub fn get_font_style(&self) -> StyleType {
-        unsafe { MagickDrawGetFontStyle(self.wand.as_ptr()) }
-            .try_into()
-            .unwrap()
+        unsafe { MagickDrawGetFontStyle(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontstyle>
@@ -465,9 +455,7 @@ impl DrawingWand {
     /// with text.
     ///
     pub fn get_gravity(&self) -> GravityType {
-        unsafe { MagickDrawGetGravity(self.wand.as_ptr()) }
-            .try_into()
-            .unwrap()
+        unsafe { MagickDrawGetGravity(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetgravity>
@@ -1384,9 +1372,7 @@ impl DrawingWand {
     /// UndefinedCap, ButtCap, RoundCap, and SquareCap.
     ///
     pub fn get_stroke_line_cap(&self) -> LineCap {
-        unsafe { MagickDrawGetStrokeLineCap(self.wand.as_ptr()) }
-            .try_into()
-            .unwrap()
+        unsafe { MagickDrawGetStrokeLineCap(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokelinecap>
@@ -1413,9 +1399,7 @@ impl DrawingWand {
     /// and BevelJoin.
     ///
     pub fn get_stroke_line_join(&self) -> LineJoin {
-        unsafe { MagickDrawGetStrokeLineJoin(self.wand.as_ptr()) }
-            .try_into()
-            .unwrap()
+        unsafe { MagickDrawGetStrokeLineJoin(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokelinejoin>
@@ -1532,9 +1516,7 @@ impl DrawingWand {
     /// text.
     ///
     pub fn get_text_decoration(&mut self) -> DecorationType {
-        unsafe { MagickDrawGetTextDecoration(self.wand.as_ptr()) }
-            .try_into()
-            .unwrap()
+        unsafe { MagickDrawGetTextDecoration(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextdecoration>

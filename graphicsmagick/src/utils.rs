@@ -6,7 +6,7 @@ use std::{
     mem,
     ops::{Deref, DerefMut},
     os::raw::{c_char, c_double, c_uint, c_void},
-    ptr::null,
+    ptr::{null, NonNull},
     slice::{from_raw_parts, from_raw_parts_mut},
     str::Utf8Error,
     sync::Once,
@@ -91,6 +91,27 @@ impl Drop for MagickAlloc {
             unsafe {
                 graphicsmagick_sys::MagickFree(self.0);
             }
+        }
+    }
+}
+
+#[derive(Debug)]
+#[repr(transparent)]
+pub(crate) struct MagickAutoRelinquish(NonNull<c_void>);
+
+impl MagickAutoRelinquish {
+    pub(crate) unsafe fn new(ptr: *mut c_void) -> Option<Self> {
+        NonNull::new(ptr).map(Self)
+    }
+
+    pub(crate) unsafe fn as_c_str(&self) -> &CStr {
+        CStr::from_ptr(self.0.as_ptr() as *const c_char)
+    }
+}
+impl Drop for MagickAutoRelinquish {
+    fn drop(&mut self) {
+        unsafe {
+            graphicsmagick_sys::MagickFree(self.0.as_ptr());
         }
     }
 }

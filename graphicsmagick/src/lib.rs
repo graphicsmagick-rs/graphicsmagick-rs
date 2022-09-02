@@ -4,8 +4,6 @@
 #![allow(clippy::too_many_arguments)]
 #![doc = include_str!("../README.md")]
 
-#[macro_use]
-mod macros;
 pub mod error;
 #[cfg(test)]
 pub(crate) mod tests;

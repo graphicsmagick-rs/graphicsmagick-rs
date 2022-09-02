@@ -156,5 +156,5 @@ pub enum ExceptionType {
     ConfigureFatalError = graphicsmagick_sys::ExceptionType_ConfigureFatalError,
 
     #[num_enum(default)]
-    Unknown,
+    Unknown = u32::MAX,
 }

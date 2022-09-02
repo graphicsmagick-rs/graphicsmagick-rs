@@ -420,8 +420,7 @@ impl PixelWand {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::{initialize, wand::PixelWand};
+    use crate::{initialize, types::PixelPacket, wand::PixelWand};
 
     fn new_pixel_wand() -> PixelWand {
         initialize();

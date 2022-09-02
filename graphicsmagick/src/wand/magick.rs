@@ -112,8 +112,11 @@ impl MagickWand<'_> {
         Exception::new(severity.into(), description).into()
     }
 
+    /// # Safety
+    ///
+    ///  * `wand` - must points to either NULL, or a valid allocation.
     #[inline]
-    pub fn from_wand(wand: *mut graphicsmagick_sys::MagickWand) -> Option<Self> {
+    pub unsafe fn from_wand(wand: *mut graphicsmagick_sys::MagickWand) -> Option<Self> {
         NonNull::new(wand).map(|wand| MagickWand {
             wand,
             phantom: PhantomData,
@@ -257,7 +260,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn append_images(&mut self, stack: c_uint) -> Option<MagickWand<'_>> {
         let wand = unsafe { MagickAppendImages(self.wand.as_ptr(), stack) };
-        Self::from_wand(wand)
+        unsafe { Self::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickautoorientimage>
@@ -283,7 +286,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn average_images(&mut self) -> Option<MagickWand<'_>> {
         let wand = unsafe { MagickAverageImages(self.wand.as_ptr()) };
-        Self::from_wand(wand)
+        unsafe { Self::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickblackthresholdimage>
@@ -449,7 +452,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn coalesce_images(&mut self) -> Option<MagickWand<'_>> {
         let wand = unsafe { MagickCoalesceImages(self.wand.as_ptr()) };
-        Self::from_wand(wand)
+        unsafe { Self::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcolorfloodfillimage>
@@ -529,7 +532,7 @@ impl<'a> MagickWand<'a> {
                 distortion,
             )
         };
-        Self::from_wand(wand)
+        unsafe { Self::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcompareimages>
@@ -552,7 +555,7 @@ impl<'a> MagickWand<'a> {
                 distortion,
             )
         };
-        Self::from_wand(wand)
+        unsafe { Self::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickcompositeimage>
@@ -642,7 +645,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn deconstruct_images(&mut self) -> Option<MagickWand<'_>> {
         let wand = unsafe { MagickDeconstructImages(self.wand.as_ptr()) };
-        Self::from_wand(wand)
+        unsafe { Self::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickdescribeimage>
@@ -782,7 +785,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn flatten_images(&mut self) -> Option<MagickWand<'_>> {
         let wand = unsafe { MagickFlattenImages(self.wand.as_ptr()) };
-        Self::from_wand(wand)
+        unsafe { Self::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickflipimage>
@@ -845,7 +848,7 @@ impl<'a> MagickWand<'a> {
     pub fn fx_image(&mut self, expression: &str) -> Option<MagickWand<'_>> {
         let expression = str_to_c_string(expression);
         let wand = unsafe { MagickFxImage(self.wand.as_ptr(), expression.as_ptr()) };
-        Self::from_wand(wand)
+        unsafe { Self::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickfximagechannel>
@@ -863,7 +866,7 @@ impl<'a> MagickWand<'a> {
         let wand = unsafe {
             MagickFxImageChannel(self.wand.as_ptr(), channel.into(), expression.as_ptr())
         };
-        Self::from_wand(wand)
+        unsafe { Self::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgammaimage>
@@ -953,7 +956,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn get_image(&mut self) -> Option<MagickWand<'_>> {
         let wand = unsafe { MagickGetImage(self.wand.as_ptr()) };
-        Self::from_wand(wand)
+        unsafe { Self::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageattribute>
@@ -2119,7 +2122,7 @@ impl<'a> MagickWand<'a> {
                 frame.as_ptr(),
             )
         };
-        MagickWand::from_wand(wand)
+        unsafe { MagickWand::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickmorphimages>
@@ -2145,7 +2148,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn mosaic_images(&mut self) -> Option<MagickWand<'_>> {
         let wand = unsafe { MagickMosaicImages(self.wand.as_ptr()) };
-        MagickWand::from_wand(wand)
+        unsafe { MagickWand::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickmotionblurimage>
@@ -2295,7 +2298,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn preview_images(&mut self, preview: PreviewType) -> Option<MagickWand<'_>> {
         let wand = unsafe { MagickPreviewImages(self.wand.as_ptr(), preview.into()) };
-        MagickWand::from_wand(wand)
+        unsafe { MagickWand::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickpreviousimage>
@@ -3627,7 +3630,7 @@ impl<'a> MagickWand<'a> {
         offset: c_long,
     ) -> Option<MagickWand<'_>> {
         let wand = unsafe { MagickSteganoImage(self.wand.as_ptr(), watermark_wand.wand(), offset) };
-        MagickWand::from_wand(wand)
+        unsafe { MagickWand::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickstereoimage>
@@ -3638,7 +3641,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn stereo_image(&mut self, offset_wand: &MagickWand<'_>) -> Option<MagickWand<'_>> {
         let wand = unsafe { MagickStereoImage(self.wand.as_ptr(), offset_wand.wand()) };
-        MagickWand::from_wand(wand)
+        unsafe { MagickWand::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickstripimage>
@@ -3671,7 +3674,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn texture_image(&mut self, texture_wand: &MagickWand<'_>) -> Option<MagickWand<'_>> {
         let wand = unsafe { MagickTextureImage(self.wand.as_ptr(), texture_wand.wand()) };
-        MagickWand::from_wand(wand)
+        unsafe { MagickWand::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickthresholdimage>
@@ -3739,7 +3742,7 @@ impl<'a> MagickWand<'a> {
         let geometry = str_to_c_string(geometry);
         let wand =
             unsafe { MagickTransformImage(self.wand.as_ptr(), crop.as_ptr(), geometry.as_ptr()) };
-        MagickWand::from_wand(wand)
+        unsafe { MagickWand::from_wand(wand) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicktransparentimage>

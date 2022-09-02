@@ -6,6 +6,7 @@ use thiserror::Error as ThisError;
 pub type Result<T> = std::result::Result<T, Error>;
 
 /// Crate error.
+#[non_exhaustive]
 #[derive(ThisError, Debug)]
 pub enum Error {
     /// GraphicsMagick Exception.

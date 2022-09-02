@@ -100,7 +100,7 @@ impl MagickWand<'_> {
             MagickGetException(self.wand.as_ptr(), &mut severity as *mut ExceptionType);
 
         if description_ptr.is_null() {
-            return Exception::new(0.into(), "Unknown exception".to_string()).into();
+            return Exception::new(severity.into(), "Unknown exception".to_string()).into();
         }
         let description =
             slice::from_raw_parts(description_ptr as *const u8, libc::strlen(description_ptr));

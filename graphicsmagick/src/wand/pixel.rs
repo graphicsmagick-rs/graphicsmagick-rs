@@ -28,8 +28,11 @@ impl PixelWand {
         PixelWand { wand }
     }
 
+    /// # Safety
+    ///
+    ///  * `wand` - must points to either NULL, or a valid allocation.
     #[inline]
-    pub fn from_wand(wand: *mut graphicsmagick_sys::PixelWand) -> Option<PixelWand> {
+    pub unsafe fn from_wand(wand: *mut graphicsmagick_sys::PixelWand) -> Option<PixelWand> {
         NonNull::new(wand).map(|wand| PixelWand { wand })
     }
 

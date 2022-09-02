@@ -18,6 +18,7 @@ use std::{
 };
 
 /// Wrapper of `graphicsmagick_sys::DrawingWand`.
+#[derive(Debug)]
 #[repr(transparent)]
 pub struct DrawingWand {
     wand: NonNull<graphicsmagick_sys::DrawingWand>,

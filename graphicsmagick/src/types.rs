@@ -622,13 +622,13 @@ pub enum ResourceType {
     PixelsResource = graphicsmagick_sys::ResourceType_PixelsResource,
     /// Maximum number of worker threads
     ThreadsResource = graphicsmagick_sys::ResourceType_ThreadsResource,
+    #[cfg(feature = "v1_3_21")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_21")))]
     /// Maximum pixel width of an image (Pixels)
-    #[cfg(feature = "v1_3_21")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_21")))]
     WidthResource = graphicsmagick_sys::ResourceType_WidthResource,
-    /// Maximum pixel height of an image (Pixels)
     #[cfg(feature = "v1_3_21")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_21")))]
+    /// Maximum pixel height of an image (Pixels)
     HeightResource = graphicsmagick_sys::ResourceType_HeightResource,
 
     #[num_enum(default)]

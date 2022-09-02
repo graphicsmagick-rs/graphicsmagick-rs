@@ -4,12 +4,10 @@
 
 pub use graphicsmagick_sys::{AffineMatrix, PixelPacket, PointInfo, Quantum};
 
-use num_enum::{IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive};
+use num_enum::{FromPrimitive, IntoPrimitive};
 
 /// <http://www.graphicsmagick.org/api/types.html#channeltype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum ChannelType {
     /// Default
@@ -36,6 +34,9 @@ pub enum ChannelType {
     AllChannels = graphicsmagick_sys::ChannelType_AllChannels,
     /// Color channels represent an intensity
     GrayChannel = graphicsmagick_sys::ChannelType_GrayChannel,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// FilterTypes is used to adjust the filter algorithm used when resizing images.
@@ -47,9 +48,7 @@ pub enum ChannelType {
 /// lines. The only way to be sure is to test the filter with sample images.
 ///
 /// <http://www.graphicsmagick.org/api/types.html#filtertypes>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum FilterTypes {
     /// Unset value.
@@ -84,6 +83,9 @@ pub enum FilterTypes {
     BesselFilter = graphicsmagick_sys::FilterTypes_BesselFilter,
     /// Sinc Filter
     SincFilter = graphicsmagick_sys::FilterTypes_SincFilter,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// CompositeOperator is used to select the image composition algorithm used to compose
@@ -99,9 +101,7 @@ pub enum FilterTypes {
 /// to pixel location (0,0), otherwise 255 (to work properly borderWidth must be 0).
 ///
 /// <http://www.graphicsmagick.org/api/types.html#compositeoperator>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum CompositeOperator {
     /// Unset value.
@@ -214,14 +214,15 @@ pub enum CompositeOperator {
     PinLightCompositeOp = graphicsmagick_sys::CompositeOperator_PinLightCompositeOp,
     ///
     HardMixCompositeOp = graphicsmagick_sys::CompositeOperator_HardMixCompositeOp,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// NoiseType is used as an argument to select the type of noise to be added to the image.
 ///
 /// <http://www.graphicsmagick.org/api/types.html#noisetype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum NoiseType {
     /// Uniform noise
@@ -240,14 +241,15 @@ pub enum NoiseType {
     RandomNoise = graphicsmagick_sys::NoiseType_RandomNoise,
     /// Undefined noise
     UndefinedNoise = graphicsmagick_sys::NoiseType_UndefinedNoise,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// OrientationType specifies the orientation of the image. Useful for when the image is produced via a different ordinate system, the camera was turned on its side, or the page was scanned sideways.
 ///
 /// <http://www.graphicsmagick.org/api/types.html#orientationtype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum OrientationType {
     ///
@@ -268,12 +270,13 @@ pub enum OrientationType {
     RightBottomOrientation = graphicsmagick_sys::OrientationType_RightBottomOrientation,
     ///
     LeftBottomOrientation = graphicsmagick_sys::OrientationType_LeftBottomOrientation,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// Pixel error metrics
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum MetricType {
     ///
@@ -286,6 +289,9 @@ pub enum MetricType {
     PeakSignalToNoiseRatioMetric = graphicsmagick_sys::MetricType_PeakSignalToNoiseRatioMetric,
     ///
     RootMeanSquaredErrorMetric = graphicsmagick_sys::MetricType_RootMeanSquaredErrorMetric,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// The ColorspaceType enumeration is used to specify the colorspace that quantization
@@ -299,9 +305,7 @@ pub enum MetricType {
 /// When encoding an output image, the colorspaces RGBColorspace, CMYKColorspace, and GRAYColorspace may be specified. The CMYKColorspace option is only applicable when writing TIFF, JPEG, and Adobe Photoshop bitmap (PSD) files.
 ///
 /// <http://www.graphicsmagick.org/api/types.html#colorspacetype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum ColorspaceType {
     /// Unset value.
@@ -344,6 +348,9 @@ pub enum ColorspaceType {
     Rec709LumaColorspace = graphicsmagick_sys::ColorspaceType_Rec709LumaColorspace,
     /// YCbCr according to ITU-R 709
     Rec709YCbCrColorspace = graphicsmagick_sys::ColorspaceType_Rec709YCbCrColorspace,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// CompressionType is used to express the desired compression type when encoding an image.
@@ -352,9 +359,7 @@ pub enum ColorspaceType {
 /// a compression type compatable with the image type, which might be no compression at all.
 ///
 /// <http://www.graphicsmagick.org/api/types.html#compressiontype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum CompressionType {
     /// Unset value.
@@ -386,12 +391,13 @@ pub enum CompressionType {
     JPEG2000Compression = graphicsmagick_sys::CompressionType_JPEG2000Compression,
     /// JBIG v1 - ISO/IEC std 11544 / ITU-T rec T.82
     JBIG1Compression = graphicsmagick_sys::CompressionType_JBIG1Compression,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// DisposeType
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum DisposeType {
     ///
@@ -402,6 +408,9 @@ pub enum DisposeType {
     BackgroundDispose = graphicsmagick_sys::DisposeType_BackgroundDispose,
     ///
     PreviousDispose = graphicsmagick_sys::DisposeType_PreviousDispose,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// GravityType specifies positioning of an object (e.g. text, image) within a bounding
@@ -411,9 +420,7 @@ pub enum DisposeType {
 /// NorthWestGravity.
 ///
 /// <http://www.graphicsmagick.org/api/types.html#gravitytype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum GravityType {
     /// Don't use gravity.
@@ -438,6 +445,9 @@ pub enum GravityType {
     SouthEastGravity = graphicsmagick_sys::GravityType_SouthEastGravity,
     ///
     StaticGravity = graphicsmagick_sys::GravityType_StaticGravity,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// InterlaceType specifies the ordering of the red, green, and blue pixel information in
@@ -449,9 +459,7 @@ pub enum GravityType {
 /// Use LineInterlace or PlaneInterlace to create an interlaced GIF or progressive JPEG image.
 ///
 /// <http://www.graphicsmagick.org/api/types.html#interlacetype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum InterlaceType {
     /// Unset value.
@@ -465,12 +473,13 @@ pub enum InterlaceType {
     /// Similar to plane interlaing except that the different planes are saved to
     /// individual files (e.g. image.R, image.G, and image.B)
     PartitionInterlace = graphicsmagick_sys::InterlaceType_PartitionInterlace,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// <http://www.graphicsmagick.org/api/types.html#storagetype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum StorageType {
     ///
@@ -485,6 +494,9 @@ pub enum StorageType {
     FloatPixel = graphicsmagick_sys::StorageType_FloatPixel,
     ///
     DoublePixel = graphicsmagick_sys::StorageType_DoublePixel,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// Rendering intent is a concept defined by ICC Spec ICC.1:1998-09, "File Format for Color
@@ -496,9 +508,7 @@ pub enum StorageType {
 /// application will set the rendering intent dynamically at runtime or embedding time."
 ///
 /// <http://www.graphicsmagick.org/api/types.html#renderingintent>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum RenderingIntent {
     /// Unset value.
@@ -514,14 +524,15 @@ pub enum RenderingIntent {
     AbsoluteIntent = graphicsmagick_sys::RenderingIntent_AbsoluteIntent,
     /// Relative colorimetric
     RelativeIntent = graphicsmagick_sys::RenderingIntent_RelativeIntent,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// ImageType indicates the type classification of the image.
 ///
 /// <http://www.graphicsmagick.org/api/types.html#imagetype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum ImageType {
     /// Unset value.
@@ -546,14 +557,15 @@ pub enum ImageType {
     ColorSeparationMatteType = graphicsmagick_sys::ImageType_ColorSeparationMatteType,
     ///
     OptimizeType = graphicsmagick_sys::ImageType_OptimizeType,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// By default, GraphicsMagick defines resolutions in pixels per inch. ResolutionType provides a means to adjust this.
 /// <http://www.graphicsmagick.org/api/types.html#resolutiontype>
 ///
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum ResolutionType {
     /// Unset value.
@@ -563,14 +575,15 @@ pub enum ResolutionType {
     /// Density specifications are specified in units of pixels per centimeter (metric units).
     PixelsPerCentimeterResolution =
         graphicsmagick_sys::ResolutionType_PixelsPerCentimeterResolution,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// Enum declaractions.
 ///
 /// <http://www.graphicsmagick.org/api/types.html#virtualpixelmethod>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum VirtualPixelMethod {
     ///
@@ -584,14 +597,15 @@ pub enum VirtualPixelMethod {
     MirrorVirtualPixelMethod = graphicsmagick_sys::VirtualPixelMethod_MirrorVirtualPixelMethod,
     ///
     TileVirtualPixelMethod = graphicsmagick_sys::VirtualPixelMethod_TileVirtualPixelMethod,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// Typedef declarations.
 ///
 /// <http://www.graphicsmagick.org/api/types.html#resourcetype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum ResourceType {
     /// Undefined value
@@ -616,12 +630,13 @@ pub enum ResourceType {
     #[cfg(feature = "v1_3_22")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_22")))]
     HeightResource = graphicsmagick_sys::ResourceType_HeightResource,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// MontageMode
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum MontageMode {
     ///
@@ -632,12 +647,13 @@ pub enum MontageMode {
     UnframeMode = graphicsmagick_sys::MontageMode_UnframeMode,
     ///
     ConcatenateMode = graphicsmagick_sys::MontageMode_ConcatenateMode,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// PreviewType
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum PreviewType {
     ///
@@ -700,12 +716,13 @@ pub enum PreviewType {
     CharcoalDrawingPreview = graphicsmagick_sys::PreviewType_CharcoalDrawingPreview,
     ///
     JPEGPreview = graphicsmagick_sys::PreviewType_JPEGPreview,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// <http://www.graphicsmagick.org/api/types.html#fillrule>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum FillRule {
     ///
@@ -714,12 +731,13 @@ pub enum FillRule {
     EvenOddRule = graphicsmagick_sys::FillRule_EvenOddRule,
     ///
     NonZeroRule = graphicsmagick_sys::FillRule_NonZeroRule,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// <http://www.graphicsmagick.org/api/types.html#clippathunits>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum ClipPathUnits {
     ///
@@ -728,15 +746,16 @@ pub enum ClipPathUnits {
     UserSpaceOnUse = graphicsmagick_sys::ClipPathUnits_UserSpaceOnUse,
     ///
     ObjectBoundingBox = graphicsmagick_sys::ClipPathUnits_ObjectBoundingBox,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// PaintMethod specifies how pixel colors are to be replaced in the image. It is used to select
 /// the pixel-filling algorithm employed.
 ///
 /// <http://www.graphicsmagick.org/api/types.html#paintmethod>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum PaintMethod {
     /// Replace pixel color at point.
@@ -749,12 +768,13 @@ pub enum PaintMethod {
     FillToBorderMethod = graphicsmagick_sys::PaintMethod_FillToBorderMethod,
     /// Replace colors for all pixels in image with pen color.
     ResetMethod = graphicsmagick_sys::PaintMethod_ResetMethod,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// <http://www.graphicsmagick.org/api/types.html#stretchtype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum StretchType {
     ///
@@ -777,12 +797,13 @@ pub enum StretchType {
     UltraExpandedStretch = graphicsmagick_sys::StretchType_UltraExpandedStretch,
     ///
     AnyStretch = graphicsmagick_sys::StretchType_AnyStretch,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// <http://www.graphicsmagick.org/api/types.html#styletype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum StyleType {
     ///
@@ -793,12 +814,13 @@ pub enum StyleType {
     ObliqueStyle = graphicsmagick_sys::StyleType_ObliqueStyle,
     ///
     AnyStyle = graphicsmagick_sys::StyleType_AnyStyle,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// LineCap
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum LineCap {
     ///
@@ -809,12 +831,13 @@ pub enum LineCap {
     RoundCap = graphicsmagick_sys::LineCap_RoundCap,
     ///
     SquareCap = graphicsmagick_sys::LineCap_SquareCap,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// LineJoin
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum LineJoin {
     ///
@@ -825,12 +848,13 @@ pub enum LineJoin {
     RoundJoin = graphicsmagick_sys::LineJoin_RoundJoin,
     ///
     BevelJoin = graphicsmagick_sys::LineJoin_BevelJoin,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }
 
 /// <http://www.graphicsmagick.org/api/types.html#decorationtype>
-#[derive(
-    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
-)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum DecorationType {
     ///
@@ -841,4 +865,7 @@ pub enum DecorationType {
     OverlineDecoration = graphicsmagick_sys::DecorationType_OverlineDecoration,
     ///
     LineThroughDecoration = graphicsmagick_sys::DecorationType_LineThroughDecoration,
+
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }

@@ -59,6 +59,7 @@ def_magickwand_export_type!(StorageType_FloatPixel, c_float);
 def_magickwand_export_type!(StorageType_DoublePixel, c_double);
 
 /// Wrapper of `graphicsmagick_sys::MagickWand`.
+#[repr(transparent)]
 pub struct MagickWand<'a> {
     wand: NonNull<graphicsmagick_sys::MagickWand>,
     phantom: PhantomData<&'a [u8]>,

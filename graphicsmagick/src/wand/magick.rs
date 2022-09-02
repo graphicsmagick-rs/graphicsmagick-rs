@@ -19,7 +19,7 @@ use std::{
     marker::PhantomData,
     mem::MaybeUninit,
     os::raw::{c_double, c_float, c_long, c_uchar, c_uint, c_ulong, c_ushort, c_void},
-    ptr::null_mut,
+    ptr::NonNull,
     slice,
 };
 
@@ -60,7 +60,7 @@ def_magickwand_export_type!(StorageType_DoublePixel, c_double);
 
 /// Wrapper of `graphicsmagick_sys::MagickWand`.
 pub struct MagickWand<'a> {
-    wand: *mut graphicsmagick_sys::MagickWand,
+    wand: NonNull<graphicsmagick_sys::MagickWand>,
     phantom: PhantomData<&'a [u8]>,
 }
 
@@ -74,8 +74,7 @@ impl MagickWand<'_> {
     pub fn new() -> Self {
         assert_initialized();
 
-        let wand = unsafe { NewMagickWand() };
-        assert_ne!(wand, null_mut(), "NewMagickWand return NULL");
+        let wand = NonNull::new(unsafe { NewMagickWand() }).expect("NewMagickWand return NULL");
 
         MagickWand {
             wand,
@@ -95,7 +94,8 @@ impl MagickWand<'_> {
     unsafe fn get_error(&mut self) -> crate::Error {
         let mut severity: ExceptionType = 0;
 
-        let description_ptr = MagickGetException(self.wand, &mut severity as *mut ExceptionType);
+        let description_ptr =
+            MagickGetException(self.wand.as_ptr(), &mut severity as *mut ExceptionType);
 
         if description_ptr.is_null() {
             return Exception::new(0.into(), "Unknown exception".to_string()).into();
@@ -112,31 +112,27 @@ impl MagickWand<'_> {
 
     #[inline]
     pub fn from_wand(wand: *mut graphicsmagick_sys::MagickWand) -> Option<Self> {
-        if wand.is_null() {
-            None
-        } else {
-            Some(MagickWand {
-                wand,
-                phantom: PhantomData,
-            })
-        }
+        NonNull::new(wand).map(|wand| MagickWand {
+            wand,
+            phantom: PhantomData,
+        })
     }
 
     #[inline]
     pub fn wand(&self) -> *const graphicsmagick_sys::MagickWand {
-        self.wand
+        self.wand.as_ptr() as *const _
     }
 
     #[inline]
     pub fn wand_mut(&mut self) -> *mut graphicsmagick_sys::MagickWand {
-        self.wand
+        self.wand.as_ptr()
     }
 }
 
 impl Drop for MagickWand<'_> {
     fn drop(&mut self) {
         unsafe {
-            DestroyMagickWand(self.wand);
+            DestroyMagickWand(self.wand.as_ptr());
         }
     }
 }
@@ -144,7 +140,8 @@ impl Drop for MagickWand<'_> {
 impl Clone for MagickWand<'_> {
     fn clone(&self) -> Self {
         MagickWand {
-            wand: unsafe { CloneMagickWand(self.wand) },
+            wand: NonNull::new(unsafe { CloneMagickWand(self.wand.as_ptr()) })
+                .expect("CloneMagickWand returns NULL"),
             phantom: PhantomData,
         }
     }
@@ -179,7 +176,8 @@ impl<'a> MagickWand<'a> {
     ) -> crate::Result<&mut Self> {
         assert_ne!(width, 0, "width must be positive");
         assert_ne!(height, 0, "height must be positive");
-        let status = unsafe { MagickAdaptiveThresholdImage(self.wand, width, height, offset) };
+        let status =
+            unsafe { MagickAdaptiveThresholdImage(self.wand.as_ptr(), width, height, offset) };
         self.check_status(status)
     }
 
@@ -188,7 +186,7 @@ impl<'a> MagickWand<'a> {
     /// MagickAddImage() adds the specified images at the current image location.
     ///
     pub fn add_image(&mut self, add_wand: &MagickWand<'_>) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickAddImage(self.wand, add_wand.wand) };
+        let status = unsafe { MagickAddImage(self.wand.as_ptr(), add_wand.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -197,7 +195,7 @@ impl<'a> MagickWand<'a> {
     /// MagickAddNoiseImage() adds random noise to the image.
     ///
     pub fn add_noise_image(&mut self, noise_type: NoiseType) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickAddNoiseImage(self.wand, noise_type.into()) };
+        let status = unsafe { MagickAddNoiseImage(self.wand.as_ptr(), noise_type.into()) };
         self.check_status(status)
     }
 
@@ -211,7 +209,7 @@ impl<'a> MagickWand<'a> {
         &mut self,
         drawing_wand: &DrawingWand,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickAffineTransformImage(self.wand, drawing_wand.wand()) };
+        let status = unsafe { MagickAffineTransformImage(self.wand.as_ptr(), drawing_wand.wand()) };
         self.check_status(status)
     }
 
@@ -229,7 +227,14 @@ impl<'a> MagickWand<'a> {
     ) -> crate::Result<&mut Self> {
         let text = str_to_c_string(text);
         let status = unsafe {
-            MagickAnnotateImage(self.wand, drawing_wand.wand(), x, y, angle, text.as_ptr())
+            MagickAnnotateImage(
+                self.wand.as_ptr(),
+                drawing_wand.wand(),
+                x,
+                y,
+                angle,
+                text.as_ptr(),
+            )
         };
         self.check_status(status)
     }
@@ -240,7 +245,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn animate_images(&mut self, server_name: &str) -> crate::Result<&mut Self> {
         let server_name = str_to_c_string(server_name);
-        let status = unsafe { MagickAnimateImages(self.wand, server_name.as_ptr()) };
+        let status = unsafe { MagickAnimateImages(self.wand.as_ptr(), server_name.as_ptr()) };
         self.check_status(status)
     }
 
@@ -249,7 +254,7 @@ impl<'a> MagickWand<'a> {
     /// MagickAppendImages() append a set of images.
     ///
     pub fn append_images(&mut self, stack: c_uint) -> Option<MagickWand<'_>> {
-        let wand = unsafe { MagickAppendImages(self.wand, stack) };
+        let wand = unsafe { MagickAppendImages(self.wand.as_ptr(), stack) };
         Self::from_wand(wand)
     }
 
@@ -265,7 +270,8 @@ impl<'a> MagickWand<'a> {
         &mut self,
         current_orientation: OrientationType,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickAutoOrientImage(self.wand, current_orientation.into()) };
+        let status =
+            unsafe { MagickAutoOrientImage(self.wand.as_ptr(), current_orientation.into()) };
         self.check_status(status)
     }
 
@@ -274,7 +280,7 @@ impl<'a> MagickWand<'a> {
     /// MagickAverageImages() average a set of images.
     ///
     pub fn average_images(&mut self) -> Option<MagickWand<'_>> {
-        let wand = unsafe { MagickAverageImages(self.wand) };
+        let wand = unsafe { MagickAverageImages(self.wand.as_ptr()) };
         Self::from_wand(wand)
     }
 
@@ -287,7 +293,7 @@ impl<'a> MagickWand<'a> {
     /// threshold unchanged.
     ///
     pub fn black_threshold_image(&mut self, threshold: &PixelWand) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickBlackThresholdImage(self.wand, threshold.wand()) };
+        let status = unsafe { MagickBlackThresholdImage(self.wand.as_ptr(), threshold.wand()) };
         self.check_status(status)
     }
 
@@ -302,7 +308,7 @@ impl<'a> MagickWand<'a> {
     /// radius of 0 and BlurImage() selects a suitable radius for you.
     ///
     pub fn blur_image(&mut self, radius: c_double, sigma: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickBlurImage(self.wand, radius, sigma) };
+        let status = unsafe { MagickBlurImage(self.wand.as_ptr(), radius, sigma) };
         self.check_status(status)
     }
 
@@ -318,7 +324,8 @@ impl<'a> MagickWand<'a> {
         width: c_ulong,
         height: c_ulong,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickBorderImage(self.wand, border_color.wand(), width, height) };
+        let status =
+            unsafe { MagickBorderImage(self.wand.as_ptr(), border_color.wand(), width, height) };
         self.check_status(status)
     }
 
@@ -352,7 +359,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn cdl_image(&mut self, cdl: &str) -> crate::Result<&mut Self> {
         let cdl = str_to_c_string(cdl);
-        let status = unsafe { MagickCdlImage(self.wand, cdl.as_ptr()) };
+        let status = unsafe { MagickCdlImage(self.wand.as_ptr(), cdl.as_ptr()) };
         self.check_status(status)
     }
 
@@ -365,7 +372,7 @@ impl<'a> MagickWand<'a> {
         radius: c_double,
         sigma: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickCharcoalImage(self.wand, radius, sigma) };
+        let status = unsafe { MagickCharcoalImage(self.wand.as_ptr(), radius, sigma) };
         self.check_status(status)
     }
 
@@ -382,7 +389,7 @@ impl<'a> MagickWand<'a> {
         x: c_long,
         y: c_long,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickChopImage(self.wand, width, height, x, y) };
+        let status = unsafe { MagickChopImage(self.wand.as_ptr(), width, height, x, y) };
         self.check_status(status)
     }
 
@@ -392,7 +399,7 @@ impl<'a> MagickWand<'a> {
     //    /// MagickClearException() clears the last wand exception.
     //    ///
     //    pub fn clear_exception(&mut self) {
-    //        let status = unsafe { MagickClearException(self.wand) };
+    //        let status = unsafe { MagickClearException(self.wand.as_ptr()) };
     //    }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickclipimage>
@@ -402,7 +409,7 @@ impl<'a> MagickWand<'a> {
     /// present.
     ///
     pub fn clip_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickClipImage(self.wand) };
+        let status = unsafe { MagickClipImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -418,8 +425,9 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn clip_path_image(&mut self, path_name: &str, inside: bool) -> crate::Result<&mut Self> {
         let path_name = str_to_c_string(path_name);
-        let status =
-            unsafe { MagickClipPathImage(self.wand, path_name.as_ptr(), inside as c_uint) };
+        let status = unsafe {
+            MagickClipPathImage(self.wand.as_ptr(), path_name.as_ptr(), inside as c_uint)
+        };
         self.check_status(status)
     }
 
@@ -438,7 +446,7 @@ impl<'a> MagickWand<'a> {
     /// composited with the next image in the sequence.
     ///
     pub fn coalesce_images(&mut self) -> Option<MagickWand<'_>> {
-        let wand = unsafe { MagickCoalesceImages(self.wand) };
+        let wand = unsafe { MagickCoalesceImages(self.wand.as_ptr()) };
         Self::from_wand(wand)
     }
 
@@ -461,7 +469,14 @@ impl<'a> MagickWand<'a> {
         y: c_long,
     ) -> crate::Result<&mut Self> {
         let status = unsafe {
-            MagickColorFloodfillImage(self.wand, fill.wand(), fuzz, border_color.wand(), x, y)
+            MagickColorFloodfillImage(
+                self.wand.as_ptr(),
+                fill.wand(),
+                fuzz,
+                border_color.wand(),
+                x,
+                y,
+            )
         };
         self.check_status(status)
     }
@@ -475,7 +490,8 @@ impl<'a> MagickWand<'a> {
         colorize: &PixelWand,
         opacity: &PixelWand,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickColorizeImage(self.wand, colorize.wand(), opacity.wand()) };
+        let status =
+            unsafe { MagickColorizeImage(self.wand.as_ptr(), colorize.wand(), opacity.wand()) };
         self.check_status(status)
     }
 
@@ -485,7 +501,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn comment_image(&mut self, comment: &str) -> crate::Result<&mut Self> {
         let comment = str_to_c_string(comment);
-        let status = unsafe { MagickCommentImage(self.wand, comment.as_ptr()) };
+        let status = unsafe { MagickCommentImage(self.wand.as_ptr(), comment.as_ptr()) };
         self.check_status(status)
     }
 
@@ -504,8 +520,8 @@ impl<'a> MagickWand<'a> {
     ) -> Option<MagickWand<'_>> {
         let wand = unsafe {
             MagickCompareImageChannels(
-                self.wand,
-                reference.wand,
+                self.wand.as_ptr(),
+                reference.wand.as_ptr(),
                 channel.into(),
                 metric.into(),
                 distortion,
@@ -526,8 +542,14 @@ impl<'a> MagickWand<'a> {
         metric: MetricType,
         distortion: &mut c_double,
     ) -> Option<MagickWand<'_>> {
-        let wand =
-            unsafe { MagickCompareImages(self.wand, reference.wand, metric.into(), distortion) };
+        let wand = unsafe {
+            MagickCompareImages(
+                self.wand.as_ptr(),
+                reference.wand.as_ptr(),
+                metric.into(),
+                distortion,
+            )
+        };
         Self::from_wand(wand)
     }
 
@@ -544,8 +566,15 @@ impl<'a> MagickWand<'a> {
         x: c_long,
         y: c_long,
     ) -> crate::Result<&mut Self> {
-        let status =
-            unsafe { MagickCompositeImage(self.wand, composite_wand.wand, compose.into(), x, y) };
+        let status = unsafe {
+            MagickCompositeImage(
+                self.wand.as_ptr(),
+                composite_wand.wand.as_ptr(),
+                compose.into(),
+                x,
+                y,
+            )
+        };
         self.check_status(status)
     }
 
@@ -558,7 +587,7 @@ impl<'a> MagickWand<'a> {
     /// increase the image contrast otherwise the contrast is reduced.
     ///
     pub fn contrast_image(&mut self, sharpen: c_uint) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickContrastImage(self.wand, sharpen) };
+        let status = unsafe { MagickContrastImage(self.wand.as_ptr(), sharpen) };
         self.check_status(status)
     }
 
@@ -567,8 +596,9 @@ impl<'a> MagickWand<'a> {
     /// MagickConvolveImage() applies a custom convolution kernel to the image.
     ///
     pub fn convolve_image(&mut self, kernel: &[c_double]) -> crate::Result<&mut Self> {
-        let status =
-            unsafe { MagickConvolveImage(self.wand, kernel.len() as c_ulong, kernel.as_ptr()) };
+        let status = unsafe {
+            MagickConvolveImage(self.wand.as_ptr(), kernel.len() as c_ulong, kernel.as_ptr())
+        };
         self.check_status(status)
     }
 
@@ -583,7 +613,7 @@ impl<'a> MagickWand<'a> {
         x: c_long,
         y: c_long,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickCropImage(self.wand, width, height, x, y) };
+        let status = unsafe { MagickCropImage(self.wand.as_ptr(), width, height, x, y) };
         self.check_status(status)
     }
 
@@ -596,7 +626,7 @@ impl<'a> MagickWand<'a> {
     /// a psychodelic effect.
     ///
     pub fn cycle_colormap_image(&mut self, displace: c_long) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickCycleColormapImage(self.wand, displace) };
+        let status = unsafe { MagickCycleColormapImage(self.wand.as_ptr(), displace) };
         self.check_status(status)
     }
 
@@ -609,7 +639,7 @@ impl<'a> MagickWand<'a> {
     /// discovers.
     ///
     pub fn deconstruct_images(&mut self) -> Option<MagickWand<'_>> {
-        let wand = unsafe { MagickDeconstructImages(self.wand) };
+        let wand = unsafe { MagickDeconstructImages(self.wand.as_ptr()) };
         Self::from_wand(wand)
     }
 
@@ -624,7 +654,7 @@ impl<'a> MagickWand<'a> {
     /// similar to the output of 'identify -verbose'.
     ///
     pub fn describe_image(&mut self) -> MagickCString {
-        unsafe { MagickCString::new(MagickDescribeImage(self.wand)) }
+        unsafe { MagickCString::new(MagickDescribeImage(self.wand.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickdespeckleimage>
@@ -634,7 +664,7 @@ impl<'a> MagickWand<'a> {
     /// perserving the edges of the original image.
     ///
     pub fn despeckle_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickDespeckleImage(self.wand) };
+        let status = unsafe { MagickDespeckleImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -644,7 +674,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn display_image(&mut self, server_name: &str) -> crate::Result<&mut Self> {
         let server_name = str_to_c_string(server_name);
-        let status = unsafe { MagickDisplayImage(self.wand, server_name.as_ptr()) };
+        let status = unsafe { MagickDisplayImage(self.wand.as_ptr(), server_name.as_ptr()) };
         self.check_status(status)
     }
 
@@ -656,7 +686,7 @@ impl<'a> MagickWand<'a> {
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn display_images(&mut self, server_name: &str) -> crate::Result<&mut Self> {
         let server_name = str_to_c_string(server_name);
-        let status = unsafe { MagickDisplayImages(self.wand, server_name.as_ptr()) };
+        let status = unsafe { MagickDisplayImages(self.wand.as_ptr(), server_name.as_ptr()) };
         self.check_status(status)
     }
 
@@ -665,7 +695,7 @@ impl<'a> MagickWand<'a> {
     /// MagickDrawImage() draws vectors on the image as described by DrawingWand.
     ///
     pub fn draw_image(&mut self, drawing_wand: &DrawingWand) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickDrawImage(self.wand, drawing_wand.wand()) };
+        let status = unsafe { MagickDrawImage(self.wand.as_ptr(), drawing_wand.wand()) };
         self.check_status(status)
     }
 
@@ -678,7 +708,7 @@ impl<'a> MagickWand<'a> {
     /// radius for you.
     ///
     pub fn edge_image(&mut self, radius: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickEdgeImage(self.wand, radius) };
+        let status = unsafe { MagickEdgeImage(self.wand.as_ptr(), radius) };
         self.check_status(status)
     }
 
@@ -695,7 +725,7 @@ impl<'a> MagickWand<'a> {
     /// radius for you.
     ///
     pub fn emboss_image(&mut self, radius: c_double, sigma: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickEmbossImage(self.wand, radius, sigma) };
+        let status = unsafe { MagickEmbossImage(self.wand.as_ptr(), radius, sigma) };
         self.check_status(status)
     }
 
@@ -706,7 +736,7 @@ impl<'a> MagickWand<'a> {
     /// noisy image.
     ///
     pub fn enhance_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickEnhanceImage(self.wand) };
+        let status = unsafe { MagickEnhanceImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -715,7 +745,7 @@ impl<'a> MagickWand<'a> {
     /// MagickEqualizeImage() equalizes the image histogram.
     ///
     pub fn equalize_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickEqualizeImage(self.wand) };
+        let status = unsafe { MagickEqualizeImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -738,7 +768,7 @@ impl<'a> MagickWand<'a> {
         x: ssize_t,
         y: ssize_t,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickExtentImage(self.wand, width, height, x, y) };
+        let status = unsafe { MagickExtentImage(self.wand.as_ptr(), width, height, x, y) };
         self.check_status(status)
     }
 
@@ -749,7 +779,7 @@ impl<'a> MagickWand<'a> {
     /// combining Photoshop layers into a single image.
     ///
     pub fn flatten_images(&mut self) -> Option<MagickWand<'_>> {
-        let wand = unsafe { MagickFlattenImages(self.wand) };
+        let wand = unsafe { MagickFlattenImages(self.wand.as_ptr()) };
         Self::from_wand(wand)
     }
 
@@ -760,7 +790,7 @@ impl<'a> MagickWand<'a> {
     /// around the central x-axis.
     ///
     pub fn flip_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickFlipImage(self.wand) };
+        let status = unsafe { MagickFlipImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -771,7 +801,7 @@ impl<'a> MagickWand<'a> {
     /// around the central y-axis.
     ///
     pub fn flop_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickFlopImage(self.wand) };
+        let status = unsafe { MagickFlopImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -795,7 +825,7 @@ impl<'a> MagickWand<'a> {
     ) -> crate::Result<&mut Self> {
         let status = unsafe {
             MagickFrameImage(
-                self.wand,
+                self.wand.as_ptr(),
                 matte_color.wand(),
                 width,
                 height,
@@ -812,7 +842,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn fx_image(&mut self, expression: &str) -> Option<MagickWand<'_>> {
         let expression = str_to_c_string(expression);
-        let wand = unsafe { MagickFxImage(self.wand, expression.as_ptr()) };
+        let wand = unsafe { MagickFxImage(self.wand.as_ptr(), expression.as_ptr()) };
         Self::from_wand(wand)
     }
 
@@ -828,7 +858,9 @@ impl<'a> MagickWand<'a> {
         expression: &str,
     ) -> Option<MagickWand<'_>> {
         let expression = str_to_c_string(expression);
-        let wand = unsafe { MagickFxImageChannel(self.wand, channel.into(), expression.as_ptr()) };
+        let wand = unsafe {
+            MagickFxImageChannel(self.wand.as_ptr(), channel.into(), expression.as_ptr())
+        };
         Self::from_wand(wand)
     }
 
@@ -849,7 +881,7 @@ impl<'a> MagickWand<'a> {
     /// value of 0.
     ///
     pub fn gamma_image(&mut self, gamma: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickGammaImage(self.wand, gamma) };
+        let status = unsafe { MagickGammaImage(self.wand.as_ptr(), gamma) };
         self.check_status(status)
     }
 
@@ -874,7 +906,7 @@ impl<'a> MagickWand<'a> {
         channel: ChannelType,
         gamma: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickGammaImageChannel(self.wand, channel.into(), gamma) };
+        let status = unsafe { MagickGammaImageChannel(self.wand.as_ptr(), channel.into(), gamma) };
         self.check_status(status)
     }
 
@@ -886,7 +918,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn get_configure_info(&mut self, name: &str) -> MagickCString {
         let name = str_to_c_string(name);
-        unsafe { MagickCString::new(MagickGetConfigureInfo(self.wand, name.as_ptr())) }
+        unsafe { MagickCString::new(MagickGetConfigureInfo(self.wand.as_ptr(), name.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetcopyright>
@@ -902,7 +934,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetFilename() returns the filename associated with an image sequence.
     ///
     pub fn get_filename(&self) -> MagickCString {
-        unsafe { MagickCString::new(MagickGetFilename(self.wand)) }
+        unsafe { MagickCString::new(MagickGetFilename(self.wand.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgethomeurl>
@@ -918,7 +950,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImage() clones the image at the current image index.
     ///
     pub fn get_image(&mut self) -> Option<MagickWand<'_>> {
-        let wand = unsafe { MagickGetImage(self.wand) };
+        let wand = unsafe { MagickGetImage(self.wand.as_ptr()) };
         Self::from_wand(wand)
     }
 
@@ -928,7 +960,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn get_image_attribute(&mut self, name: &str) -> MagickCString {
         let name = str_to_c_string(name);
-        unsafe { MagickCString::new(MagickGetImageAttribute(self.wand, name.as_ptr())) }
+        unsafe { MagickCString::new(MagickGetImageAttribute(self.wand.as_ptr(), name.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagebackgroundcolor>
@@ -937,8 +969,9 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn get_image_background_color(&mut self) -> crate::Result<PixelWand> {
         let mut background_color = PixelWand::new();
-        let status =
-            unsafe { MagickGetImageBackgroundColor(self.wand, background_color.wand_mut()) };
+        let status = unsafe {
+            MagickGetImageBackgroundColor(self.wand.as_ptr(), background_color.wand_mut())
+        };
         self.check_status(status)?;
         Ok(background_color)
     }
@@ -956,7 +989,7 @@ impl<'a> MagickWand<'a> {
     pub fn get_image_blue_primary(&mut self) -> crate::Result<(c_double, c_double)> {
         let mut x = 0.;
         let mut y = 0.;
-        let status = unsafe { MagickGetImageBluePrimary(self.wand, &mut x, &mut y) };
+        let status = unsafe { MagickGetImageBluePrimary(self.wand.as_ptr(), &mut x, &mut y) };
         self.check_status(status)?;
         Ok((x, y))
     }
@@ -967,7 +1000,8 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn get_image_border_color(&mut self) -> crate::Result<PixelWand> {
         let mut border_color = PixelWand::new();
-        let status = unsafe { MagickGetImageBorderColor(self.wand, border_color.wand_mut()) };
+        let status =
+            unsafe { MagickGetImageBorderColor(self.wand.as_ptr(), border_color.wand_mut()) };
         self.check_status(status)?;
         Ok(border_color)
     }
@@ -997,7 +1031,14 @@ impl<'a> MagickWand<'a> {
         let mut x = 0;
         let mut y = 0;
         let status = unsafe {
-            MagickGetImageBoundingBox(self.wand, fuzz, &mut width, &mut height, &mut x, &mut y)
+            MagickGetImageBoundingBox(
+                self.wand.as_ptr(),
+                fuzz,
+                &mut width,
+                &mut height,
+                &mut x,
+                &mut y,
+            )
         };
         self.check_status(status)?;
         Ok((width, height, x, y))
@@ -1008,7 +1049,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageChannelDepth() gets the depth for a particular image channel.
     ///
     pub fn get_image_channel_depth(&mut self, channel: ChannelType) -> u64 {
-        unsafe { MagickGetImageChannelDepth(self.wand, channel.into()) }
+        unsafe { MagickGetImageChannelDepth(self.wand.as_ptr(), channel.into()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagechannelextrema>
@@ -1028,7 +1069,12 @@ impl<'a> MagickWand<'a> {
         let mut minima = 0;
         let mut maxima = 0;
         let status = unsafe {
-            MagickGetImageChannelExtrema(self.wand, channel.into(), &mut minima, &mut maxima)
+            MagickGetImageChannelExtrema(
+                self.wand.as_ptr(),
+                channel.into(),
+                &mut minima,
+                &mut maxima,
+            )
         };
         self.check_status(status)?;
         Ok((minima, maxima))
@@ -1052,7 +1098,7 @@ impl<'a> MagickWand<'a> {
         let mut standard_deviation = 0.;
         let status = unsafe {
             MagickGetImageChannelMean(
-                self.wand,
+                self.wand.as_ptr(),
                 channel.into(),
                 &mut mean,
                 &mut standard_deviation,
@@ -1070,7 +1116,8 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn get_image_colormap_color(&mut self, index: c_ulong) -> crate::Result<PixelWand> {
         let mut color = PixelWand::new();
-        let status = unsafe { MagickGetImageColormapColor(self.wand, index, color.wand_mut()) };
+        let status =
+            unsafe { MagickGetImageColormapColor(self.wand.as_ptr(), index, color.wand_mut()) };
         self.check_status(status)?;
         Ok(color)
     }
@@ -1080,7 +1127,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageColors() gets the number of unique colors in the image.
     ///
     pub fn get_image_colors(&mut self) -> u64 {
-        unsafe { MagickGetImageColors(self.wand) }
+        unsafe { MagickGetImageColors(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecolorspace>
@@ -1088,7 +1135,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageColorspace() gets the image colorspace.
     ///
     pub fn get_image_colorspace(&mut self) -> ColorspaceType {
-        unsafe { MagickGetImageColorspace(self.wand) }.into()
+        unsafe { MagickGetImageColorspace(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecompose>
@@ -1098,7 +1145,7 @@ impl<'a> MagickWand<'a> {
     /// image.
     ///
     pub fn get_image_compose(&mut self) -> CompositeOperator {
-        unsafe { MagickGetImageCompose(self.wand) }.into()
+        unsafe { MagickGetImageCompose(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecompression>
@@ -1106,7 +1153,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageCompression() gets the image compression.
     ///
     pub fn get_image_compression(&mut self) -> CompressionType {
-        unsafe { MagickGetImageCompression(self.wand) }.into()
+        unsafe { MagickGetImageCompression(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedelay>
@@ -1114,7 +1161,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageDelay() gets the image delay.
     ///
     pub fn get_image_delay(&mut self) -> c_ulong {
-        unsafe { MagickGetImageDelay(self.wand) }
+        unsafe { MagickGetImageDelay(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedepth>
@@ -1122,7 +1169,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageDepth() gets the image depth.
     ///
     pub fn get_image_depth(&mut self) -> c_ulong {
-        unsafe { MagickGetImageDepth(self.wand) }
+        unsafe { MagickGetImageDepth(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageextrema>
@@ -1136,7 +1183,7 @@ impl<'a> MagickWand<'a> {
     pub fn get_image_extrema(&mut self) -> crate::Result<(c_ulong, c_ulong)> {
         let mut min = 0;
         let mut max = 0;
-        let status = unsafe { MagickGetImageExtrema(self.wand, &mut min, &mut max) };
+        let status = unsafe { MagickGetImageExtrema(self.wand.as_ptr(), &mut min, &mut max) };
         self.check_status(status)?;
         Ok((min, max))
     }
@@ -1146,7 +1193,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageDispose() gets the image disposal method.
     ///
     pub fn get_image_dispose(&mut self) -> DisposeType {
-        unsafe { MagickGetImageDispose(self.wand) }.into()
+        unsafe { MagickGetImageDispose(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagefilename>
@@ -1156,7 +1203,7 @@ impl<'a> MagickWand<'a> {
     /// sequence.
     ///
     pub fn get_image_filename(&mut self) -> MagickCString {
-        unsafe { MagickCString::new(MagickGetImageFilename(self.wand)) }
+        unsafe { MagickCString::new(MagickGetImageFilename(self.wand.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageformat>
@@ -1166,7 +1213,7 @@ impl<'a> MagickWand<'a> {
     /// sequence.
     ///
     pub fn get_image_format(&mut self) -> MagickCString {
-        unsafe { MagickCString::new(MagickGetImageFormat(self.wand)) }
+        unsafe { MagickCString::new(MagickGetImageFormat(self.wand.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagefuzz>
@@ -1180,7 +1227,7 @@ impl<'a> MagickWand<'a> {
     /// implicitly set this value.
     ///
     pub fn get_image_fuzz(&mut self) -> c_double {
-        unsafe { MagickGetImageFuzz(self.wand) }
+        unsafe { MagickGetImageFuzz(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegamma>
@@ -1188,7 +1235,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageGamma() gets the image gamma.
     ///
     pub fn get_image_gamma(&mut self) -> c_double {
-        unsafe { MagickGetImageGamma(self.wand) }
+        unsafe { MagickGetImageGamma(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegravity>
@@ -1198,7 +1245,7 @@ impl<'a> MagickWand<'a> {
     #[cfg(feature = "v1_3_22")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_22")))]
     pub fn get_image_gravity(&mut self) -> GravityType {
-        unsafe { MagickGetImageGravity(self.wand) }.into()
+        unsafe { MagickGetImageGravity(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegreenprimary>
@@ -1212,7 +1259,7 @@ impl<'a> MagickWand<'a> {
     pub fn get_image_green_primary(&mut self) -> crate::Result<(c_double, c_double)> {
         let mut x = 0.;
         let mut y = 0.;
-        let status = unsafe { MagickGetImageGreenPrimary(self.wand, &mut x, &mut y) };
+        let status = unsafe { MagickGetImageGreenPrimary(self.wand.as_ptr(), &mut x, &mut y) };
         self.check_status(status)?;
         Ok((x, y))
     }
@@ -1222,7 +1269,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageHeight() returns the image height.
     ///
     pub fn get_image_height(&mut self) -> c_ulong {
-        unsafe { MagickGetImageHeight(self.wand) }
+        unsafe { MagickGetImageHeight(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagehistogram>
@@ -1233,7 +1280,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn get_image_histogram(&mut self) -> Option<MagickBoxSlice<PixelWand>> {
         let mut number_colors = 0;
-        let wands = unsafe { MagickGetImageHistogram(self.wand, &mut number_colors) };
+        let wands = unsafe { MagickGetImageHistogram(self.wand.as_ptr(), &mut number_colors) };
         unsafe { MagickBoxSlice::new(wands, number_colors.try_into().unwrap()) }
     }
 
@@ -1242,7 +1289,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageIndex() returns the index of the current image.
     ///
     pub fn get_image_index(&mut self) -> usize {
-        unsafe { MagickGetImageIndex(self.wand) as usize }
+        unsafe { MagickGetImageIndex(self.wand.as_ptr()) as usize }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageinterlacescheme>
@@ -1250,7 +1297,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageInterlaceScheme() gets the image interlace scheme.
     ///
     pub fn get_image_interlace_scheme(&mut self) -> InterlaceType {
-        unsafe { MagickGetImageInterlaceScheme(self.wand) }.into()
+        unsafe { MagickGetImageInterlaceScheme(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageiterations>
@@ -1260,7 +1307,7 @@ impl<'a> MagickWand<'a> {
     #[cfg(feature = "v1_3_26")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
     pub fn get_image_iterations(&mut self) -> c_ulong {
-        unsafe { MagickGetImageIterations(self.wand) }
+        unsafe { MagickGetImageIterations(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagemattecolor>
@@ -1269,7 +1316,8 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn get_image_matte_color(&mut self) -> crate::Result<PixelWand> {
         let mut matte_color = PixelWand::new();
-        let status = unsafe { MagickGetImageMatteColor(self.wand, matte_color.wand_mut()) };
+        let status =
+            unsafe { MagickGetImageMatteColor(self.wand.as_ptr(), matte_color.wand_mut()) };
         self.check_status(status)?;
         Ok(matte_color)
     }
@@ -1299,7 +1347,7 @@ impl<'a> MagickWand<'a> {
     #[cfg(feature = "v1_3_26")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
     pub fn get_image_orientation(&mut self) -> OrientationType {
-        unsafe { MagickGetImageOrientation(self.wand) }.into()
+        unsafe { MagickGetImageOrientation(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepage>
@@ -1317,8 +1365,9 @@ impl<'a> MagickWand<'a> {
         let mut height = 0;
         let mut x = 0;
         let mut y = 0;
-        let status =
-            unsafe { MagickGetImagePage(self.wand, &mut width, &mut height, &mut x, &mut y) };
+        let status = unsafe {
+            MagickGetImagePage(self.wand.as_ptr(), &mut width, &mut height, &mut x, &mut y)
+        };
         self.check_status(status)?;
         Ok((width, height, x, y))
     }
@@ -1388,7 +1437,7 @@ impl MagickWand<'_> {
 
         let status = unsafe {
             MagickGetImagePixels(
-                self.wand,
+                self.wand.as_ptr(),
                 x_offset,
                 y_offset,
                 columns,
@@ -1476,7 +1525,9 @@ impl<'a> MagickWand<'a> {
         let mut length = 0;
         let name = str_to_c_string(name);
         unsafe {
-            MagickCString::new(MagickGetImageProfile(self.wand, name.as_ptr(), &mut length).cast())
+            MagickCString::new(
+                MagickGetImageProfile(self.wand.as_ptr(), name.as_ptr(), &mut length).cast(),
+            )
         }
     }
 
@@ -1491,7 +1542,7 @@ impl<'a> MagickWand<'a> {
     pub fn get_image_red_primary(&mut self) -> crate::Result<(c_double, c_double)> {
         let mut x = 0.;
         let mut y = 0.;
-        let status = unsafe { MagickGetImageRedPrimary(self.wand, &mut x, &mut y) };
+        let status = unsafe { MagickGetImageRedPrimary(self.wand.as_ptr(), &mut x, &mut y) };
         self.check_status(status)?;
         Ok((x, y))
     }
@@ -1501,7 +1552,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageRenderingIntent() gets the image rendering intent.
     ///
     pub fn get_image_rendering_intent(&mut self) -> RenderingIntent {
-        unsafe { MagickGetImageRenderingIntent(self.wand) }.into()
+        unsafe { MagickGetImageRenderingIntent(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageresolution>
@@ -1515,7 +1566,7 @@ impl<'a> MagickWand<'a> {
     pub fn get_image_resolution(&mut self) -> crate::Result<(c_double, c_double)> {
         let mut x = 0.;
         let mut y = 0.;
-        let status = unsafe { MagickGetImageResolution(self.wand, &mut x, &mut y) };
+        let status = unsafe { MagickGetImageResolution(self.wand.as_ptr(), &mut x, &mut y) };
         self.check_status(status)?;
         Ok((x, y))
     }
@@ -1525,7 +1576,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageScene() gets the image scene.
     ///
     pub fn get_image_scene(&mut self) -> c_ulong {
-        unsafe { MagickGetImageScene(self.wand) }
+        unsafe { MagickGetImageScene(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesignature>
@@ -1535,7 +1586,7 @@ impl<'a> MagickWand<'a> {
     /// pixel stream.
     ///
     pub fn get_image_signature(&mut self) -> MagickCString {
-        unsafe { MagickCString::new(MagickGetImageSignature(self.wand)) }
+        unsafe { MagickCString::new(MagickGetImageSignature(self.wand.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesize>
@@ -1543,7 +1594,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageSize() returns the image size.
     ///
     pub fn get_image_size(&mut self) -> c_long {
-        unsafe { MagickGetImageSize(self.wand) }
+        unsafe { MagickGetImageSize(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagetype>
@@ -1551,7 +1602,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageType() gets the image type.
     ///
     pub fn get_image_type(&mut self) -> ImageType {
-        unsafe { MagickGetImageType(self.wand) }.into()
+        unsafe { MagickGetImageType(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesavedtype>
@@ -1563,7 +1614,7 @@ impl<'a> MagickWand<'a> {
     /// by MagickGetImageType().
     ///
     pub fn get_image_saved_type(&mut self) -> ImageType {
-        unsafe { MagickGetImageSavedType(self.wand) }.into()
+        unsafe { MagickGetImageSavedType(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageunits>
@@ -1571,7 +1622,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageUnits() gets the image units of resolution.
     ///
     pub fn get_image_units(&mut self) -> ResolutionType {
-        unsafe { MagickGetImageUnits(self.wand) }.into()
+        unsafe { MagickGetImageUnits(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagevirtualpixelmethod>
@@ -1581,7 +1632,7 @@ impl<'a> MagickWand<'a> {
     /// sepcified image.
     ///
     pub fn get_image_virtual_pixel_method(&mut self) -> VirtualPixelMethod {
-        unsafe { MagickGetImageVirtualPixelMethod(self.wand) }.into()
+        unsafe { MagickGetImageVirtualPixelMethod(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagewhitepoint>
@@ -1595,7 +1646,7 @@ impl<'a> MagickWand<'a> {
     pub fn get_image_white_point(&mut self) -> crate::Result<(c_double, c_double)> {
         let mut x = 0.;
         let mut y = 0.;
-        let status = unsafe { MagickGetImageWhitePoint(self.wand, &mut x, &mut y) };
+        let status = unsafe { MagickGetImageWhitePoint(self.wand.as_ptr(), &mut x, &mut y) };
         self.check_status(status)?;
         Ok((x, y))
     }
@@ -1605,7 +1656,7 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageWidth() returns the image width.
     ///
     pub fn get_image_width(&mut self) -> c_ulong {
-        unsafe { MagickGetImageWidth(self.wand) }
+        unsafe { MagickGetImageWidth(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetnumberimages>
@@ -1615,7 +1666,7 @@ impl<'a> MagickWand<'a> {
     /// magick wand.
     ///
     pub fn get_number_images(&mut self) -> c_ulong {
-        unsafe { MagickGetNumberImages(self.wand) }
+        unsafe { MagickGetNumberImages(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetpackagename>
@@ -1658,7 +1709,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn get_sampling_factors(&mut self) -> Option<MagickBoxSlice<c_double>> {
         let mut number_factors = 0;
-        let a = unsafe { MagickGetSamplingFactors(self.wand, &mut number_factors) };
+        let a = unsafe { MagickGetSamplingFactors(self.wand.as_ptr(), &mut number_factors) };
         unsafe { MagickBoxSlice::new(a, number_factors.try_into().unwrap()) }
     }
 
@@ -1673,7 +1724,7 @@ impl<'a> MagickWand<'a> {
     pub fn get_size(&self) -> (c_ulong, c_ulong) {
         let mut columns = 0;
         let mut rows = 0;
-        unsafe { MagickGetSize(self.wand, &mut columns, &mut rows) };
+        unsafe { MagickGetSize(self.wand.as_ptr(), &mut columns, &mut rows) };
         (columns, rows)
     }
 
@@ -1732,7 +1783,7 @@ impl<'a> MagickWand<'a> {
     /// Workflowers.
     ///
     pub fn hald_clut_image(&mut self, clut_wand: &MagickWand<'_>) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickHaldClutImage(self.wand, clut_wand.wand) };
+        let status = unsafe { MagickHaldClutImage(self.wand.as_ptr(), clut_wand.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -1750,7 +1801,7 @@ impl<'a> MagickWand<'a> {
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn has_colormap(&mut self) -> crate::Result<bool> {
         let mut colormap = 0;
-        let status = unsafe { MagickHasColormap(self.wand, &mut colormap) };
+        let status = unsafe { MagickHasColormap(self.wand.as_ptr(), &mut colormap) };
         self.check_status(status)?;
         Ok(colormap != 0)
     }
@@ -1762,7 +1813,7 @@ impl<'a> MagickWand<'a> {
     /// traversing the list in the forward direction
     ///
     pub fn has_next_image(&mut self) -> bool {
-        (unsafe { MagickHasNextImage(self.wand) }) == 1
+        (unsafe { MagickHasNextImage(self.wand.as_ptr()) }) == 1
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickhaspreviousimage>
@@ -1772,7 +1823,7 @@ impl<'a> MagickWand<'a> {
     /// traversing the list in the reverse direction
     ///
     pub fn has_previous_image(&mut self) -> bool {
-        (unsafe { MagickHasPreviousImage(self.wand) }) == 0
+        (unsafe { MagickHasPreviousImage(self.wand.as_ptr()) }) == 0
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickimplodeimage>
@@ -1786,7 +1837,7 @@ impl<'a> MagickWand<'a> {
     /// pointer to the new image.
     ///
     pub fn implode_image(&mut self, radius: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickImplodeImage(self.wand, radius) };
+        let status = unsafe { MagickImplodeImage(self.wand.as_ptr(), radius) };
         self.check_status(status)
     }
 
@@ -1804,7 +1855,7 @@ impl<'a> MagickWand<'a> {
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn is_gray_image(&mut self) -> crate::Result<bool> {
         let mut gray_image = 0;
-        let status = unsafe { MagickIsGrayImage(self.wand, &mut gray_image) };
+        let status = unsafe { MagickIsGrayImage(self.wand.as_ptr(), &mut gray_image) };
         self.check_status(status)?;
         Ok(gray_image == 0)
     }
@@ -1823,7 +1874,7 @@ impl<'a> MagickWand<'a> {
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn is_monochrome_image(&mut self) -> crate::Result<bool> {
         let mut monochrome = 0;
-        let status = unsafe { MagickIsMonochromeImage(self.wand, &mut monochrome) };
+        let status = unsafe { MagickIsMonochromeImage(self.wand.as_ptr(), &mut monochrome) };
         self.check_status(status)?;
         Ok(monochrome == 0)
     }
@@ -1842,7 +1893,7 @@ impl<'a> MagickWand<'a> {
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn is_opaque_image(&mut self) -> crate::Result<bool> {
         let mut opaque = 0;
-        let status = unsafe { MagickIsOpaqueImage(self.wand, &mut opaque) };
+        let status = unsafe { MagickIsOpaqueImage(self.wand.as_ptr(), &mut opaque) };
         self.check_status(status)?;
         Ok(opaque == 0)
     }
@@ -1865,7 +1916,7 @@ impl<'a> MagickWand<'a> {
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
     pub fn is_palette_image(&mut self) -> crate::Result<bool> {
         let mut palette = 0;
-        let status = unsafe { MagickIsPaletteImage(self.wand, &mut palette) };
+        let status = unsafe { MagickIsPaletteImage(self.wand.as_ptr(), &mut palette) };
         self.check_status(status)?;
         Ok(palette == 0)
     }
@@ -1876,7 +1927,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn label_image(&mut self, label: &str) -> crate::Result<&mut Self> {
         let label = str_to_c_string(label);
-        let status = unsafe { MagickLabelImage(self.wand, label.as_ptr()) };
+        let status = unsafe { MagickLabelImage(self.wand.as_ptr(), label.as_ptr()) };
         self.check_status(status)
     }
 
@@ -1904,7 +1955,8 @@ impl<'a> MagickWand<'a> {
         gamma: c_double,
         white_point: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickLevelImage(self.wand, black_point, gamma, white_point) };
+        let status =
+            unsafe { MagickLevelImage(self.wand.as_ptr(), black_point, gamma, white_point) };
         self.check_status(status)
     }
 
@@ -1934,7 +1986,13 @@ impl<'a> MagickWand<'a> {
         white_point: c_double,
     ) -> crate::Result<&mut Self> {
         let status = unsafe {
-            MagickLevelImageChannel(self.wand, channel.into(), black_point, gamma, white_point)
+            MagickLevelImageChannel(
+                self.wand.as_ptr(),
+                channel.into(),
+                black_point,
+                gamma,
+                white_point,
+            )
         };
         self.check_status(status)
     }
@@ -1946,7 +2004,7 @@ impl<'a> MagickWand<'a> {
     /// proportionally to twice its original size.
     ///
     pub fn magnify_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickMagnifyImage(self.wand) };
+        let status = unsafe { MagickMagnifyImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -1961,7 +2019,7 @@ impl<'a> MagickWand<'a> {
         map_wand: &MagickWand<'_>,
         dither: c_uint,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickMapImage(self.wand, map_wand.wand(), dither) };
+        let status = unsafe { MagickMapImage(self.wand.as_ptr(), map_wand.wand(), dither) };
         self.check_status(status)
     }
 
@@ -1984,7 +2042,7 @@ impl<'a> MagickWand<'a> {
         y: c_long,
     ) -> crate::Result<&mut Self> {
         let status = unsafe {
-            MagickMatteFloodfillImage(self.wand, opacity, fuzz, border_color.wand(), x, y)
+            MagickMatteFloodfillImage(self.wand.as_ptr(), opacity, fuzz, border_color.wand(), x, y)
         };
         self.check_status(status)
     }
@@ -1998,7 +2056,7 @@ impl<'a> MagickWand<'a> {
     /// neighboring pixels as defined by radius.
     ///
     pub fn median_filter_image(&mut self, radius: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickMedianFilterImage(self.wand, radius) };
+        let status = unsafe { MagickMedianFilterImage(self.wand.as_ptr(), radius) };
         self.check_status(status)
     }
 
@@ -2009,7 +2067,7 @@ impl<'a> MagickWand<'a> {
     /// proportionally to one-half its original size
     ///
     pub fn minify_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickMinifyImage(self.wand) };
+        let status = unsafe { MagickMinifyImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -2025,7 +2083,8 @@ impl<'a> MagickWand<'a> {
         saturation: c_double,
         hue: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickModulateImage(self.wand, brightness, saturation, hue) };
+        let status =
+            unsafe { MagickModulateImage(self.wand.as_ptr(), brightness, saturation, hue) };
         self.check_status(status)
     }
 
@@ -2050,7 +2109,7 @@ impl<'a> MagickWand<'a> {
         let frame = str_to_c_string(frame);
         let wand = unsafe {
             MagickMontageImage(
-                self.wand,
+                self.wand.as_ptr(),
                 drawing_wand.wand(),
                 tile_geometry.as_ptr(),
                 thumbnail_geometry.as_ptr(),
@@ -2070,7 +2129,7 @@ impl<'a> MagickWand<'a> {
     /// meta-morphosis from one image to the next.
     ///
     pub fn morph_images(&mut self, number_frames: c_ulong) -> MagickWand<'_> {
-        let _status = unsafe { MagickMorphImages(self.wand, number_frames) };
+        let _status = unsafe { MagickMorphImages(self.wand.as_ptr(), number_frames) };
         todo!()
     }
 
@@ -2083,7 +2142,7 @@ impl<'a> MagickWand<'a> {
     /// the location defined by the page offset of the image.
     ///
     pub fn mosaic_images(&mut self) -> Option<MagickWand<'_>> {
-        let wand = unsafe { MagickMosaicImages(self.wand) };
+        let wand = unsafe { MagickMosaicImages(self.wand.as_ptr()) };
         MagickWand::from_wand(wand)
     }
 
@@ -2105,7 +2164,7 @@ impl<'a> MagickWand<'a> {
         sigma: c_double,
         angle: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickMotionBlurImage(self.wand, radius, sigma, angle) };
+        let status = unsafe { MagickMotionBlurImage(self.wand.as_ptr(), radius, sigma, angle) };
         self.check_status(status)
     }
 
@@ -2122,7 +2181,7 @@ impl<'a> MagickWand<'a> {
     /// value of 0.
     ///
     pub fn negate_image(&mut self, gray: c_uint) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickNegateImage(self.wand, gray) };
+        let status = unsafe { MagickNegateImage(self.wand.as_ptr(), gray) };
         self.check_status(status)
     }
 
@@ -2145,7 +2204,7 @@ impl<'a> MagickWand<'a> {
         channel: ChannelType,
         gray: c_uint,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickNegateImageChannel(self.wand, channel.into(), gray) };
+        let status = unsafe { MagickNegateImageChannel(self.wand.as_ptr(), channel.into(), gray) };
         self.check_status(status)
     }
 
@@ -2158,7 +2217,7 @@ impl<'a> MagickWand<'a> {
     /// returned if the wand did not iterate to a next image.
     ///
     pub fn next_image(&mut self) -> bool {
-        (unsafe { MagickNextImage(self.wand) }) == 1
+        (unsafe { MagickNextImage(self.wand.as_ptr()) }) == 1
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicknormalizeimage>
@@ -2172,7 +2231,7 @@ impl<'a> MagickWand<'a> {
     /// value of 0.
     ///
     pub fn normalize_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickNormalizeImage(self.wand) };
+        let status = unsafe { MagickNormalizeImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -2185,7 +2244,7 @@ impl<'a> MagickWand<'a> {
     /// in a circular region defined by radius.
     ///
     pub fn oil_paint_image(&mut self, radius: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickOilPaintImage(self.wand, radius) };
+        let status = unsafe { MagickOilPaintImage(self.wand.as_ptr(), radius) };
         self.check_status(status)
     }
 
@@ -2201,7 +2260,8 @@ impl<'a> MagickWand<'a> {
         fill: &PixelWand,
         fuzz: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickOpaqueImage(self.wand, target.wand(), fill.wand(), fuzz) };
+        let status =
+            unsafe { MagickOpaqueImage(self.wand.as_ptr(), target.wand(), fill.wand(), fuzz) };
         self.check_status(status)
     }
 
@@ -2217,7 +2277,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn ping_image(&mut self, filename: &str) -> crate::Result<&mut Self> {
         let filename = str_to_c_string(filename);
-        let status = unsafe { MagickPingImage(self.wand, filename.as_ptr()) };
+        let status = unsafe { MagickPingImage(self.wand.as_ptr(), filename.as_ptr()) };
         self.check_status(status)
     }
 
@@ -2232,7 +2292,7 @@ impl<'a> MagickWand<'a> {
     /// operation.
     ///
     pub fn preview_images(&mut self, preview: PreviewType) -> Option<MagickWand<'_>> {
-        let wand = unsafe { MagickPreviewImages(self.wand, preview.into()) };
+        let wand = unsafe { MagickPreviewImages(self.wand.as_ptr(), preview.into()) };
         MagickWand::from_wand(wand)
     }
 
@@ -2243,7 +2303,7 @@ impl<'a> MagickWand<'a> {
     /// wand.
     ///
     pub fn previous_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickPreviousImage(self.wand) };
+        let status = unsafe { MagickPreviousImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -2266,7 +2326,12 @@ impl<'a> MagickWand<'a> {
         let name = str_to_c_string(name);
         let profile = str_to_c_string(profile);
         let status = unsafe {
-            MagickProfileImage(self.wand, name.as_ptr(), profile.as_ptr().cast(), length)
+            MagickProfileImage(
+                self.wand.as_ptr(),
+                name.as_ptr(),
+                profile.as_ptr().cast(),
+                length,
+            )
         };
         self.check_status(status)
     }
@@ -2300,7 +2365,7 @@ impl<'a> MagickWand<'a> {
         );
         let status = unsafe {
             MagickQuantizeImage(
-                self.wand,
+                self.wand.as_ptr(),
                 number_colors,
                 colorspace.into(),
                 tree_depth,
@@ -2340,7 +2405,7 @@ impl<'a> MagickWand<'a> {
         );
         let status = unsafe {
             MagickQuantizeImages(
-                self.wand,
+                self.wand.as_ptr(),
                 number_colors,
                 colorspace.into(),
                 tree_depth,
@@ -2377,7 +2442,9 @@ impl<'a> MagickWand<'a> {
         text: &str,
     ) -> crate::Result<[f64; 7]> {
         let text = str_to_c_string(text);
-        let ds = unsafe { MagickQueryFontMetrics(self.wand, drawing_wand.wand(), text.as_ptr()) };
+        let ds = unsafe {
+            MagickQueryFontMetrics(self.wand.as_ptr(), drawing_wand.wand(), text.as_ptr())
+        };
         if ds.is_null() {
             return Err(unsafe { self.get_error() });
         }
@@ -2427,7 +2494,7 @@ impl<'a> MagickWand<'a> {
     /// MagickRadialBlurImage() radial blurs an image.
     ///
     pub fn radial_blur_image(&mut self, angle: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickRadialBlurImage(self.wand, angle) };
+        let status = unsafe { MagickRadialBlurImage(self.wand.as_ptr(), angle) };
         self.check_status(status)
     }
 
@@ -2449,7 +2516,8 @@ impl<'a> MagickWand<'a> {
         y: c_long,
         raise_flag: c_uint,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickRaiseImage(self.wand, width, height, x, y, raise_flag) };
+        let status =
+            unsafe { MagickRaiseImage(self.wand.as_ptr(), width, height, x, y, raise_flag) };
         self.check_status(status)
     }
 
@@ -2459,7 +2527,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn read_image(&mut self, filename: &str) -> crate::Result<&mut Self> {
         let filename = str_to_c_string(filename);
-        let status = unsafe { MagickReadImage(self.wand, filename.as_ptr()) };
+        let status = unsafe { MagickReadImage(self.wand.as_ptr(), filename.as_ptr()) };
         self.check_status(status)
     }
 
@@ -2470,7 +2538,7 @@ impl<'a> MagickWand<'a> {
     pub fn read_image_blob(&mut self, blob: &'a [u8]) -> crate::Result<&mut Self> {
         let length = blob.len() as size_t;
         let blob = blob.as_ptr();
-        let status = unsafe { MagickReadImageBlob(self.wand, blob, length) };
+        let status = unsafe { MagickReadImageBlob(self.wand.as_ptr(), blob, length) };
         self.check_status(status)
     }
 
@@ -2482,7 +2550,7 @@ impl<'a> MagickWand<'a> {
     //    /// descriptor.
     //    ///
     //    pub fn read_image_file(&mut self, file: &mut File) -> crate::Result<&mut Self> {
-    //        // let status = unsafe { MagickReadImageFile(self.wand, file) };
+    //        // let status = unsafe { MagickReadImageFile(self.wand.as_ptr(), file) };
     //    }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickreducenoiseimage>
@@ -2496,7 +2564,7 @@ impl<'a> MagickWand<'a> {
     /// a radius of 0 and ReduceNoise() selects a suitable radius for you.
     ///
     pub fn reduce_noise_image(&mut self, radius: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickReduceNoiseImage(self.wand, radius) };
+        let status = unsafe { MagickReduceNoiseImage(self.wand.as_ptr(), radius) };
         self.check_status(status)
     }
 
@@ -2505,7 +2573,7 @@ impl<'a> MagickWand<'a> {
     /// MagickRemoveImage() removes an image from the image list.
     ///
     pub fn remove_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickRemoveImage(self.wand) };
+        let status = unsafe { MagickRemoveImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -2520,7 +2588,8 @@ impl<'a> MagickWand<'a> {
     pub fn remove_image_option(&mut self, format: &str, key: &str) -> crate::Result<&mut Self> {
         let format = str_to_c_string(format);
         let key = str_to_c_string(key);
-        let status = unsafe { MagickRemoveImageOption(self.wand, format.as_ptr(), key.as_ptr()) };
+        let status =
+            unsafe { MagickRemoveImageOption(self.wand.as_ptr(), format.as_ptr(), key.as_ptr()) };
         self.check_status(status)
     }
 
@@ -2533,7 +2602,7 @@ impl<'a> MagickWand<'a> {
         let mut length = 0;
         unsafe {
             MagickCString::new(
-                MagickRemoveImageProfile(self.wand, name.as_ptr(), &mut length).cast(),
+                MagickRemoveImageProfile(self.wand.as_ptr(), name.as_ptr(), &mut length).cast(),
             )
         }
     }
@@ -2547,7 +2616,7 @@ impl<'a> MagickWand<'a> {
     /// container.
     ///
     pub fn reset_iterator(&mut self) {
-        unsafe { MagickResetIterator(self.wand) };
+        unsafe { MagickResetIterator(self.wand.as_ptr()) };
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickresampleimage>
@@ -2578,7 +2647,13 @@ impl<'a> MagickWand<'a> {
         blur: c_double,
     ) -> crate::Result<&mut Self> {
         let status = unsafe {
-            MagickResampleImage(self.wand, x_resolution, y_resolution, filter.into(), blur)
+            MagickResampleImage(
+                self.wand.as_ptr(),
+                x_resolution,
+                y_resolution,
+                filter.into(),
+                blur,
+            )
         };
         self.check_status(status)
     }
@@ -2612,7 +2687,8 @@ impl<'a> MagickWand<'a> {
         filter: FilterTypes,
         blur: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickResizeImage(self.wand, columns, rows, filter.into(), blur) };
+        let status =
+            unsafe { MagickResizeImage(self.wand.as_ptr(), columns, rows, filter.into(), blur) };
         self.check_status(status)
     }
 
@@ -2621,7 +2697,7 @@ impl<'a> MagickWand<'a> {
     /// MagickRollImage() offsets an image as defined by x_offset and y_offset.
     ///
     pub fn roll_image(&mut self, x_offset: c_long, y_offset: c_long) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickRollImage(self.wand, x_offset, y_offset) };
+        let status = unsafe { MagickRollImage(self.wand.as_ptr(), x_offset, y_offset) };
         self.check_status(status)
     }
 
@@ -2638,7 +2714,7 @@ impl<'a> MagickWand<'a> {
         background: &PixelWand,
         degrees: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickRotateImage(self.wand, background.wand(), degrees) };
+        let status = unsafe { MagickRotateImage(self.wand.as_ptr(), background.wand(), degrees) };
         self.check_status(status)
     }
 
@@ -2651,7 +2727,7 @@ impl<'a> MagickWand<'a> {
     /// any additional color into the scaled image.
     ///
     pub fn sample_image(&mut self, columns: c_ulong, rows: c_ulong) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSampleImage(self.wand, columns, rows) };
+        let status = unsafe { MagickSampleImage(self.wand.as_ptr(), columns, rows) };
         self.check_status(status)
     }
 
@@ -2660,7 +2736,7 @@ impl<'a> MagickWand<'a> {
     /// MagickScaleImage() scales the size of an image to the given dimensions.
     ///
     pub fn scale_image(&mut self, columns: c_ulong, rows: c_ulong) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickScaleImage(self.wand, columns, rows) };
+        let status = unsafe { MagickScaleImage(self.wand.as_ptr(), columns, rows) };
         self.check_status(status)
     }
 
@@ -2673,7 +2749,7 @@ impl<'a> MagickWand<'a> {
     /// in the image.
     ///
     pub fn separate_image_channel(&mut self, channel: ChannelType) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSeparateImageChannel(self.wand, channel.into()) };
+        let status = unsafe { MagickSeparateImageChannel(self.wand.as_ptr(), channel.into()) };
         self.check_status(status)
     }
 
@@ -2790,7 +2866,7 @@ impl<'a> MagickWand<'a> {
     /// compared with other formats.
     ///
     pub fn set_compression_quality(&mut self, quality: c_ulong) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetCompressionQuality(self.wand, quality) };
+        let status = unsafe { MagickSetCompressionQuality(self.wand.as_ptr(), quality) };
         self.check_status(status)
     }
 
@@ -2804,7 +2880,7 @@ impl<'a> MagickWand<'a> {
     //     /// advance by the user.
     //     ///
     //     pub fn set_depth(&mut self,  depth: size_t) -> crate::Result<&mut Self> {
-    //         let status = unsafe { MagickSetDepth(self.wand,  depth) };
+    //         let status = unsafe { MagickSetDepth(self.wand.as_ptr(),  depth) };
     //         self.check_status(status)
     //     }
 
@@ -2814,7 +2890,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn set_filename(&mut self, filename: &str) -> crate::Result<&mut Self> {
         let filename = str_to_c_string(filename);
-        let status = unsafe { MagickSetFilename(self.wand, filename.as_ptr()) };
+        let status = unsafe { MagickSetFilename(self.wand.as_ptr(), filename.as_ptr()) };
         self.check_status(status)
     }
 
@@ -2834,7 +2910,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn set_format(&mut self, format: &str) -> crate::Result<&mut Self> {
         let format = str_to_c_string(format);
-        let status = unsafe { MagickSetFormat(self.wand, format.as_ptr()) };
+        let status = unsafe { MagickSetFormat(self.wand.as_ptr(), format.as_ptr()) };
         self.check_status(status)
     }
 
@@ -2847,7 +2923,7 @@ impl<'a> MagickWand<'a> {
     /// wand.
     ///
     pub fn set_image(&mut self, set_wand: &MagickWand<'_>) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImage(self.wand, set_wand.wand) };
+        let status = unsafe { MagickSetImage(self.wand.as_ptr(), set_wand.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -2858,7 +2934,8 @@ impl<'a> MagickWand<'a> {
     pub fn set_image_attribute(&mut self, name: &str, value: &str) -> crate::Result<&mut Self> {
         let name = str_to_c_string(name);
         let value = str_to_c_string(value);
-        let status = unsafe { MagickSetImageAttribute(self.wand, name.as_ptr(), value.as_ptr()) };
+        let status =
+            unsafe { MagickSetImageAttribute(self.wand.as_ptr(), name.as_ptr(), value.as_ptr()) };
         self.check_status(status)
     }
 
@@ -2870,7 +2947,8 @@ impl<'a> MagickWand<'a> {
         &mut self,
         background: &PixelWand,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageBackgroundColor(self.wand, background.wand()) };
+        let status =
+            unsafe { MagickSetImageBackgroundColor(self.wand.as_ptr(), background.wand()) };
         self.check_status(status)
     }
 
@@ -2879,7 +2957,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageBluePrimary() sets the image chromaticity blue primary point.
     ///
     pub fn set_image_blue_primary(&mut self, x: c_double, y: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageBluePrimary(self.wand, x, y) };
+        let status = unsafe { MagickSetImageBluePrimary(self.wand.as_ptr(), x, y) };
         self.check_status(status)
     }
 
@@ -2888,7 +2966,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageBorderColor() sets the image border color.
     ///
     pub fn set_image_border_color(&mut self, border: &PixelWand) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageBorderColor(self.wand, border.wand()) };
+        let status = unsafe { MagickSetImageBorderColor(self.wand.as_ptr(), border.wand()) };
         self.check_status(status)
     }
 
@@ -2903,7 +2981,8 @@ impl<'a> MagickWand<'a> {
         index: c_ulong,
         color: &PixelWand,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageColormapColor(self.wand, index, color.wand()) };
+        let status =
+            unsafe { MagickSetImageColormapColor(self.wand.as_ptr(), index, color.wand()) };
         self.check_status(status)
     }
 
@@ -2921,7 +3000,7 @@ impl<'a> MagickWand<'a> {
             ColorspaceType::UndefinedColorspace,
             "colorspace cant be undefined"
         );
-        let status = unsafe { MagickSetImageColorspace(self.wand, colorspace.into()) };
+        let status = unsafe { MagickSetImageColorspace(self.wand.as_ptr(), colorspace.into()) };
         self.check_status(status)
     }
 
@@ -2934,7 +3013,7 @@ impl<'a> MagickWand<'a> {
     /// MagickMontageImage() method.
     ///
     pub fn set_image_compose(&mut self, compose: CompositeOperator) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageCompose(self.wand, compose.into()) };
+        let status = unsafe { MagickSetImageCompose(self.wand.as_ptr(), compose.into()) };
         self.check_status(status)
     }
 
@@ -2946,7 +3025,7 @@ impl<'a> MagickWand<'a> {
         &mut self,
         compression: CompressionType,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageCompression(self.wand, compression.into()) };
+        let status = unsafe { MagickSetImageCompression(self.wand.as_ptr(), compression.into()) };
         self.check_status(status)
     }
 
@@ -2955,7 +3034,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageDelay() sets the image delay.
     ///
     pub fn set_image_delay(&mut self, delay: c_ulong) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageDelay(self.wand, delay) };
+        let status = unsafe { MagickSetImageDelay(self.wand.as_ptr(), delay) };
         self.check_status(status)
     }
 
@@ -2968,7 +3047,8 @@ impl<'a> MagickWand<'a> {
         channel: ChannelType,
         depth: c_ulong,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageChannelDepth(self.wand, channel.into(), depth) };
+        let status =
+            unsafe { MagickSetImageChannelDepth(self.wand.as_ptr(), channel.into(), depth) };
         self.check_status(status)
     }
 
@@ -2977,7 +3057,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageDepth() sets the image depth.
     ///
     pub fn set_image_depth(&mut self, depth: c_ulong) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageDepth(self.wand, depth) };
+        let status = unsafe { MagickSetImageDepth(self.wand.as_ptr(), depth) };
         self.check_status(status)
     }
 
@@ -2986,7 +3066,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageDispose() sets the image disposal method.
     ///
     pub fn set_image_dispose(&mut self, dispose: DisposeType) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageDispose(self.wand, dispose.into()) };
+        let status = unsafe { MagickSetImageDispose(self.wand.as_ptr(), dispose.into()) };
         self.check_status(status)
     }
 
@@ -2998,7 +3078,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn set_image_filename(&mut self, filename: &str) -> crate::Result<&mut Self> {
         let filename = str_to_c_string(filename);
-        let status = unsafe { MagickSetImageFilename(self.wand, filename.as_ptr()) };
+        let status = unsafe { MagickSetImageFilename(self.wand.as_ptr(), filename.as_ptr()) };
         self.check_status(status)
     }
 
@@ -3010,7 +3090,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn set_image_format(&mut self, format: &str) -> crate::Result<&mut Self> {
         let format = str_to_c_string(format);
-        let status = unsafe { MagickSetImageFormat(self.wand, format.as_ptr()) };
+        let status = unsafe { MagickSetImageFormat(self.wand.as_ptr(), format.as_ptr()) };
         self.check_status(status)
     }
 
@@ -3025,7 +3105,7 @@ impl<'a> MagickWand<'a> {
     /// implicitly set this value.
     ///
     pub fn set_image_fuzz(&mut self, fuzz: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageFuzz(self.wand, fuzz) };
+        let status = unsafe { MagickSetImageFuzz(self.wand.as_ptr(), fuzz) };
         self.check_status(status)
     }
 
@@ -3034,7 +3114,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageGamma() sets the image gamma.
     ///
     pub fn set_image_gamma(&mut self, gamma: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageGamma(self.wand, gamma) };
+        let status = unsafe { MagickSetImageGamma(self.wand.as_ptr(), gamma) };
         self.check_status(status)
     }
 
@@ -3059,7 +3139,7 @@ impl<'a> MagickWand<'a> {
     #[cfg(feature = "v1_3_22")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_22")))]
     pub fn set_image_gravity(&mut self, gravity: GravityType) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageGravity(self.wand, gravity.into()) };
+        let status = unsafe { MagickSetImageGravity(self.wand.as_ptr(), gravity.into()) };
         self.check_status(status)
     }
 
@@ -3074,7 +3154,7 @@ impl<'a> MagickWand<'a> {
         x: c_double,
         y: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageGreenPrimary(self.wand, x, y) };
+        let status = unsafe { MagickSetImageGreenPrimary(self.wand.as_ptr(), x, y) };
         self.check_status(status)
     }
 
@@ -3085,7 +3165,7 @@ impl<'a> MagickWand<'a> {
     /// specified with the index parameter.
     ///
     pub fn set_image_index(&mut self, index: c_long) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageIndex(self.wand, index) };
+        let status = unsafe { MagickSetImageIndex(self.wand.as_ptr(), index) };
         self.check_status(status)
     }
 
@@ -3101,7 +3181,8 @@ impl<'a> MagickWand<'a> {
         &mut self,
         interlace_scheme: InterlaceType,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageInterlaceScheme(self.wand, interlace_scheme.into()) };
+        let status =
+            unsafe { MagickSetImageInterlaceScheme(self.wand.as_ptr(), interlace_scheme.into()) };
         self.check_status(status)
     }
 
@@ -3112,7 +3193,7 @@ impl<'a> MagickWand<'a> {
     #[cfg(feature = "v1_3_26")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
     pub fn set_image_iterations(&mut self, iterations: c_ulong) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageIterations(self.wand, iterations) };
+        let status = unsafe { MagickSetImageIterations(self.wand.as_ptr(), iterations) };
         self.check_status(status)
     }
 
@@ -3121,7 +3202,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageMatteColor() sets the image matte color.
     ///
     pub fn set_image_matte_color(&mut self, matte: &PixelWand) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageMatteColor(self.wand, matte.wand()) };
+        let status = unsafe { MagickSetImageMatteColor(self.wand.as_ptr(), matte.wand()) };
         self.check_status(status)
     }
 
@@ -3143,7 +3224,12 @@ impl<'a> MagickWand<'a> {
         let key = str_to_c_string(key);
         let value = str_to_c_string(value);
         let status = unsafe {
-            MagickSetImageOption(self.wand, format.as_ptr(), key.as_ptr(), value.as_ptr())
+            MagickSetImageOption(
+                self.wand.as_ptr(),
+                format.as_ptr(),
+                key.as_ptr(),
+                value.as_ptr(),
+            )
         };
         self.check_status(status)
     }
@@ -3160,7 +3246,8 @@ impl<'a> MagickWand<'a> {
         &mut self,
         new_orientation: OrientationType,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageOrientation(self.wand, new_orientation.into()) };
+        let status =
+            unsafe { MagickSetImageOrientation(self.wand.as_ptr(), new_orientation.into()) };
         self.check_status(status)
     }
 
@@ -3179,7 +3266,7 @@ impl<'a> MagickWand<'a> {
         x: c_long,
         y: c_long,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImagePage(self.wand, width, height, x, y) };
+        let status = unsafe { MagickSetImagePage(self.wand.as_ptr(), width, height, x, y) };
         self.check_status(status)
     }
 
@@ -3210,7 +3297,7 @@ impl<'a> MagickWand<'a> {
     //        storage: StorageType,
     //        pixels: &mut c_uchar,
     //    ) -> crate::Result<&mut Self> {
-    //        // let status = unsafe { MagickSetImagePixels(self.wand,  x_offset,  y_offset,  columns,  rows, map,  storage, pixels) };
+    //        // let status = unsafe { MagickSetImagePixels(self.wand.as_ptr(),  x_offset,  y_offset,  columns,  rows, map,  storage, pixels) };
     //    }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageprofile>
@@ -3232,7 +3319,12 @@ impl<'a> MagickWand<'a> {
         let name = str_to_c_string(name);
         let profile = str_to_c_string(profile);
         let status = unsafe {
-            MagickSetImageProfile(self.wand, name.as_ptr(), profile.as_ptr().cast(), length)
+            MagickSetImageProfile(
+                self.wand.as_ptr(),
+                name.as_ptr(),
+                profile.as_ptr().cast(),
+                length,
+            )
         };
         self.check_status(status)
     }
@@ -3242,7 +3334,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageRedPrimary() sets the image chromaticity red primary point.
     ///
     pub fn set_image_red_primary(&mut self, x: c_double, y: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageRedPrimary(self.wand, x, y) };
+        let status = unsafe { MagickSetImageRedPrimary(self.wand.as_ptr(), x, y) };
         self.check_status(status)
     }
 
@@ -3254,7 +3346,8 @@ impl<'a> MagickWand<'a> {
         &mut self,
         rendering_intent: RenderingIntent,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageRenderingIntent(self.wand, rendering_intent.into()) };
+        let status =
+            unsafe { MagickSetImageRenderingIntent(self.wand.as_ptr(), rendering_intent.into()) };
         self.check_status(status)
     }
 
@@ -3267,7 +3360,8 @@ impl<'a> MagickWand<'a> {
         x_resolution: c_double,
         y_resolution: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageResolution(self.wand, x_resolution, y_resolution) };
+        let status =
+            unsafe { MagickSetImageResolution(self.wand.as_ptr(), x_resolution, y_resolution) };
         self.check_status(status)
     }
 
@@ -3276,7 +3370,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageScene() sets the image scene.
     ///
     pub fn set_image_scene(&mut self, scene: c_ulong) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageScene(self.wand, scene) };
+        let status = unsafe { MagickSetImageScene(self.wand.as_ptr(), scene) };
         self.check_status(status)
     }
 
@@ -3285,7 +3379,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageType() sets the image type.
     ///
     pub fn set_image_type(&mut self, image_type: ImageType) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageType(self.wand, image_type.into()) };
+        let status = unsafe { MagickSetImageType(self.wand.as_ptr(), image_type.into()) };
         self.check_status(status)
     }
 
@@ -3296,7 +3390,7 @@ impl<'a> MagickWand<'a> {
     /// image is saved.
     ///
     pub fn set_image_saved_type(&mut self, image_type: ImageType) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageSavedType(self.wand, image_type.into()) };
+        let status = unsafe { MagickSetImageSavedType(self.wand.as_ptr(), image_type.into()) };
         self.check_status(status)
     }
 
@@ -3305,7 +3399,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageUnits() sets the image units of resolution.
     ///
     pub fn set_image_units(&mut self, units: ResolutionType) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageUnits(self.wand, units.into()) };
+        let status = unsafe { MagickSetImageUnits(self.wand.as_ptr(), units.into()) };
         self.check_status(status)
     }
 
@@ -3317,7 +3411,7 @@ impl<'a> MagickWand<'a> {
         &mut self,
         method: VirtualPixelMethod,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageVirtualPixelMethod(self.wand, method.into()) };
+        let status = unsafe { MagickSetImageVirtualPixelMethod(self.wand.as_ptr(), method.into()) };
         self.check_status(status)
     }
 
@@ -3331,7 +3425,8 @@ impl<'a> MagickWand<'a> {
         &mut self,
         interlace_scheme: InterlaceType,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetInterlaceScheme(self.wand, interlace_scheme.into()) };
+        let status =
+            unsafe { MagickSetInterlaceScheme(self.wand.as_ptr(), interlace_scheme.into()) };
         self.check_status(status)
     }
 
@@ -3356,7 +3451,7 @@ impl<'a> MagickWand<'a> {
         x_resolution: c_double,
         y_resolution: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetResolution(self.wand, x_resolution, y_resolution) };
+        let status = unsafe { MagickSetResolution(self.wand.as_ptr(), x_resolution, y_resolution) };
         self.check_status(status)
     }
 
@@ -3373,7 +3468,7 @@ impl<'a> MagickWand<'a> {
     /// the image resolution setting after an image has been read.
     ///
     pub fn set_resolution_units(&mut self, units: ResolutionType) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetResolutionUnits(self.wand, units.into()) };
+        let status = unsafe { MagickSetResolutionUnits(self.wand.as_ptr(), units.into()) };
         self.check_status(status)
     }
 
@@ -3394,7 +3489,11 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn set_sampling_factors(&mut self, factors: &[c_double]) -> crate::Result<&mut Self> {
         let status = unsafe {
-            MagickSetSamplingFactors(self.wand, factors.len() as c_ulong, factors.as_ptr())
+            MagickSetSamplingFactors(
+                self.wand.as_ptr(),
+                factors.len() as c_ulong,
+                factors.as_ptr(),
+            )
         };
         self.check_status(status)
     }
@@ -3406,7 +3505,7 @@ impl<'a> MagickWand<'a> {
     /// read a raw image format such as RGB, GRAY, or CMYK.
     ///
     pub fn set_size(&mut self, columns: c_ulong, rows: c_ulong) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetSize(self.wand, columns, rows) };
+        let status = unsafe { MagickSetSize(self.wand.as_ptr(), columns, rows) };
         self.check_status(status)
     }
 
@@ -3415,7 +3514,7 @@ impl<'a> MagickWand<'a> {
     /// MagickSetImageWhitePoint() sets the image chromaticity white point.
     ///
     pub fn set_image_white_point(&mut self, x: c_double, y: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSetImageWhitePoint(self.wand, x, y) };
+        let status = unsafe { MagickSetImageWhitePoint(self.wand.as_ptr(), x, y) };
         self.check_status(status)
     }
 
@@ -3425,7 +3524,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn set_passphrase(&mut self, passphrase: &str) -> crate::Result<&mut Self> {
         let passphrase = str_to_c_string(passphrase);
-        let status = unsafe { MagickSetPassphrase(self.wand, passphrase.as_ptr()) };
+        let status = unsafe { MagickSetPassphrase(self.wand.as_ptr(), passphrase.as_ptr()) };
         self.check_status(status)
     }
 
@@ -3440,7 +3539,7 @@ impl<'a> MagickWand<'a> {
     /// radius of 0 and SharpenImage() selects a suitable radius for you.
     ///
     pub fn sharpen_image(&mut self, radius: c_double, sigma: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSharpenImage(self.wand, radius, sigma) };
+        let status = unsafe { MagickSharpenImage(self.wand.as_ptr(), radius, sigma) };
         self.check_status(status)
     }
 
@@ -3453,7 +3552,7 @@ impl<'a> MagickWand<'a> {
     /// new image.
     ///
     pub fn shave_image(&mut self, columns: c_ulong, rows: c_ulong) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickShaveImage(self.wand, columns, rows) };
+        let status = unsafe { MagickShaveImage(self.wand.as_ptr(), columns, rows) };
         self.check_status(status)
     }
 
@@ -3479,7 +3578,8 @@ impl<'a> MagickWand<'a> {
         x_shear: c_double,
         y_shear: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickShearImage(self.wand, background.wand(), x_shear, y_shear) };
+        let status =
+            unsafe { MagickShearImage(self.wand.as_ptr(), background.wand(), x_shear, y_shear) };
         self.check_status(status)
     }
 
@@ -3494,7 +3594,7 @@ impl<'a> MagickWand<'a> {
     /// measure of the extent of the solarization.
     ///
     pub fn solarize_image(&mut self, threshold: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSolarizeImage(self.wand, threshold) };
+        let status = unsafe { MagickSolarizeImage(self.wand.as_ptr(), threshold) };
         self.check_status(status)
     }
 
@@ -3505,7 +3605,7 @@ impl<'a> MagickWand<'a> {
     /// pixel in a block defined by the radius parameter.
     ///
     pub fn spread_image(&mut self, radius: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSpreadImage(self.wand, radius) };
+        let status = unsafe { MagickSpreadImage(self.wand.as_ptr(), radius) };
         self.check_status(status)
     }
 
@@ -3524,7 +3624,7 @@ impl<'a> MagickWand<'a> {
         watermark_wand: &MagickWand<'_>,
         offset: c_long,
     ) -> Option<MagickWand<'_>> {
-        let wand = unsafe { MagickSteganoImage(self.wand, watermark_wand.wand(), offset) };
+        let wand = unsafe { MagickSteganoImage(self.wand.as_ptr(), watermark_wand.wand(), offset) };
         MagickWand::from_wand(wand)
     }
 
@@ -3535,7 +3635,7 @@ impl<'a> MagickWand<'a> {
     /// is the composite of a left and right image of a stereo pair
     ///
     pub fn stereo_image(&mut self, offset_wand: &MagickWand<'_>) -> Option<MagickWand<'_>> {
-        let wand = unsafe { MagickStereoImage(self.wand, offset_wand.wand()) };
+        let wand = unsafe { MagickStereoImage(self.wand.as_ptr(), offset_wand.wand()) };
         MagickWand::from_wand(wand)
     }
 
@@ -3544,7 +3644,7 @@ impl<'a> MagickWand<'a> {
     /// MagickStripImage() removes all profiles and text attributes from the image.
     ///
     pub fn strip_image(&mut self) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickStripImage(self.wand) };
+        let status = unsafe { MagickStripImage(self.wand.as_ptr()) };
         self.check_status(status)
     }
 
@@ -3557,7 +3657,7 @@ impl<'a> MagickWand<'a> {
     /// You get a more dramatic effect as the degrees move from 1 to 360.
     ///
     pub fn swirl_image(&mut self, degrees: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickSwirlImage(self.wand, degrees) };
+        let status = unsafe { MagickSwirlImage(self.wand.as_ptr(), degrees) };
         self.check_status(status)
     }
 
@@ -3568,7 +3668,7 @@ impl<'a> MagickWand<'a> {
     /// image canvas.
     ///
     pub fn texture_image(&mut self, texture_wand: &MagickWand<'_>) -> Option<MagickWand<'_>> {
-        let wand = unsafe { MagickTextureImage(self.wand, texture_wand.wand()) };
+        let wand = unsafe { MagickTextureImage(self.wand.as_ptr(), texture_wand.wand()) };
         MagickWand::from_wand(wand)
     }
 
@@ -3581,7 +3681,7 @@ impl<'a> MagickWand<'a> {
     /// high-contrast, two color image.
     ///
     pub fn threshold_image(&mut self, threshold: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickThresholdImage(self.wand, threshold) };
+        let status = unsafe { MagickThresholdImage(self.wand.as_ptr(), threshold) };
         self.check_status(status)
     }
 
@@ -3598,7 +3698,8 @@ impl<'a> MagickWand<'a> {
         channel: ChannelType,
         threshold: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickThresholdImageChannel(self.wand, channel.into(), threshold) };
+        let status =
+            unsafe { MagickThresholdImageChannel(self.wand.as_ptr(), channel.into(), threshold) };
         self.check_status(status)
     }
 
@@ -3617,7 +3718,7 @@ impl<'a> MagickWand<'a> {
         tint: &PixelWand,
         opacity: &PixelWand,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickTintImage(self.wand, tint.wand(), opacity.wand()) };
+        let status = unsafe { MagickTintImage(self.wand.as_ptr(), tint.wand(), opacity.wand()) };
         self.check_status(status)
     }
 
@@ -3634,7 +3735,8 @@ impl<'a> MagickWand<'a> {
     pub fn transform_image(&mut self, crop: &str, geometry: &str) -> Option<MagickWand<'_>> {
         let crop = str_to_c_string(crop);
         let geometry = str_to_c_string(geometry);
-        let wand = unsafe { MagickTransformImage(self.wand, crop.as_ptr(), geometry.as_ptr()) };
+        let wand =
+            unsafe { MagickTransformImage(self.wand.as_ptr(), crop.as_ptr(), geometry.as_ptr()) };
         MagickWand::from_wand(wand)
     }
 
@@ -3650,7 +3752,8 @@ impl<'a> MagickWand<'a> {
         opacity: Quantum,
         fuzz: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickTransparentImage(self.wand, target.wand(), opacity, fuzz) };
+        let status =
+            unsafe { MagickTransparentImage(self.wand.as_ptr(), target.wand(), opacity, fuzz) };
         self.check_status(status)
     }
 
@@ -3659,7 +3762,7 @@ impl<'a> MagickWand<'a> {
     /// MagickTrimImage() remove edges that are the background color from the image.
     ///
     pub fn trim_image(&mut self, fuzz: c_double) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickTrimImage(self.wand, fuzz) };
+        let status = unsafe { MagickTrimImage(self.wand.as_ptr(), fuzz) };
         self.check_status(status)
     }
 
@@ -3680,7 +3783,8 @@ impl<'a> MagickWand<'a> {
         amount: c_double,
         threshold: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickUnsharpMaskImage(self.wand, radius, sigma, amount, threshold) };
+        let status =
+            unsafe { MagickUnsharpMaskImage(self.wand.as_ptr(), radius, sigma, amount, threshold) };
         self.check_status(status)
     }
 
@@ -3697,7 +3801,7 @@ impl<'a> MagickWand<'a> {
         amplitude: c_double,
         wave_length: c_double,
     ) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickWaveImage(self.wand, amplitude, wave_length) };
+        let status = unsafe { MagickWaveImage(self.wand.as_ptr(), amplitude, wave_length) };
         self.check_status(status)
     }
 
@@ -3710,7 +3814,7 @@ impl<'a> MagickWand<'a> {
     /// unchanged.
     ///
     pub fn white_threshold_image(&mut self, threshold: &PixelWand) -> crate::Result<&mut Self> {
-        let status = unsafe { MagickWhiteThresholdImage(self.wand, threshold.wand()) };
+        let status = unsafe { MagickWhiteThresholdImage(self.wand.as_ptr(), threshold.wand()) };
         self.check_status(status)
     }
 
@@ -3720,7 +3824,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn write_image(&mut self, filename: &str) -> crate::Result<&mut Self> {
         let filename = str_to_c_string(filename);
-        let status = unsafe { MagickWriteImage(self.wand, filename.as_ptr()) };
+        let status = unsafe { MagickWriteImage(self.wand.as_ptr(), filename.as_ptr()) };
         self.check_status(status)
     }
 
@@ -3740,7 +3844,7 @@ impl<'a> MagickWand<'a> {
     //        file: &mut File,
     //        adjoin: c_uint,
     //    ) -> crate::Result<&mut Self> {
-    //        // let status = unsafe { MagickWriteImagesFile(self.wand, file,  adjoin) };
+    //        // let status = unsafe { MagickWriteImagesFile(self.wand.as_ptr(), file,  adjoin) };
     //    }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimageblob>
@@ -3763,7 +3867,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn write_image_blob(&mut self) -> Option<MagickBoxSlice<u8>> {
         let mut length = 0;
-        let ptr = unsafe { MagickWriteImageBlob(self.wand, &mut length) };
+        let ptr = unsafe { MagickWriteImageBlob(self.wand.as_ptr(), &mut length) };
         unsafe { MagickBoxSlice::new(ptr, length.try_into().unwrap()) }
     }
 
@@ -3773,7 +3877,7 @@ impl<'a> MagickWand<'a> {
     //    /// MagickWriteImageFile() writes an image to an open file descriptor.
     //    ///
     //    pub fn write_image_file(&mut self, file: &mut File) -> crate::Result<&mut Self> {
-    //        // let status = unsafe { MagickWriteImageFile(self.wand, file) };
+    //        // let status = unsafe { MagickWriteImageFile(self.wand.as_ptr(), file) };
     //    }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickwriteimages>
@@ -3786,7 +3890,7 @@ impl<'a> MagickWand<'a> {
     ///
     pub fn write_images(&mut self, filename: &str, adjoin: c_uint) -> crate::Result<&mut Self> {
         let filename = str_to_c_string(filename);
-        let status = unsafe { MagickWriteImages(self.wand, filename.as_ptr(), adjoin) };
+        let status = unsafe { MagickWriteImages(self.wand.as_ptr(), filename.as_ptr(), adjoin) };
         self.check_status(status)
     }
 }

@@ -3921,7 +3921,7 @@ mod tests {
 
     fn new_logo_magick_wand() -> MagickWand<'static> {
         let mut mw = new_magick_wand();
-        mw.read_image(logo_unicode_path().leak()).unwrap();
+        mw.read_image(&logo_unicode_path()).unwrap();
         mw
     }
 

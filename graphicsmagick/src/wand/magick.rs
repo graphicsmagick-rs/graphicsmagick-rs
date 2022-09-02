@@ -6,8 +6,8 @@ use crate::{
     error::Exception,
     types::{
         ChannelType, ColorspaceType, CompositeOperator, CompressionType, DisposeType, FilterTypes,
-        ImageType, InterlaceType, MetricType, MontageMode, NoiseType, PreviewType, RenderingIntent,
-        ResolutionType, ResourceType, VirtualPixelMethod,
+        ImageType, InterlaceType, MetricType, MontageMode, NoiseType, PreviewType, Quantum,
+        RenderingIntent, ResolutionType, ResourceType, VirtualPixelMethod,
     },
     utils::{assert_initialized, str_to_c_string, CStrExt},
     wand::{DrawingWand, PixelWand},

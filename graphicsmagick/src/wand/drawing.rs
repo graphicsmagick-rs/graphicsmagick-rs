@@ -14,18 +14,18 @@ use crate::{
 use graphicsmagick_sys::*;
 use std::{
     os::raw::{c_double, c_uint, c_ulong},
-    ptr::null_mut,
+    ptr::NonNull,
 };
 
 /// Wrapper of `graphicsmagick_sys::DrawingWand`.
 pub struct DrawingWand {
-    wand: *mut graphicsmagick_sys::DrawingWand,
+    wand: NonNull<graphicsmagick_sys::DrawingWand>,
 }
 
 impl Drop for DrawingWand {
     fn drop(&mut self) {
         unsafe {
-            MagickDestroyDrawingWand(self.wand);
+            MagickDestroyDrawingWand(self.wand.as_ptr());
         }
     }
 }
@@ -33,7 +33,8 @@ impl Drop for DrawingWand {
 impl Clone for DrawingWand {
     fn clone(&self) -> Self {
         DrawingWand {
-            wand: unsafe { MagickCloneDrawingWand(self.wand) },
+            wand: NonNull::new(unsafe { MagickCloneDrawingWand(self.wand.as_ptr()) })
+                .expect("MagickCloneDrawingWand returns NULL"),
         }
     }
 }
@@ -48,20 +49,20 @@ impl DrawingWand {
     pub fn new() -> Self {
         assert_initialized();
 
-        let wand = unsafe { MagickNewDrawingWand() };
-        assert_ne!(wand, null_mut(), "NewDrawingWand return NULL");
+        let wand =
+            NonNull::new(unsafe { MagickNewDrawingWand() }).expect("NewDrawingWand return NULL");
 
         DrawingWand { wand }
     }
 
     #[inline]
     pub fn wand(&self) -> *const graphicsmagick_sys::DrawingWand {
-        self.wand
+        self.wand.as_ptr() as *const _
     }
 
     #[inline]
     pub fn wand_mut(&mut self) -> *mut graphicsmagick_sys::DrawingWand {
-        self.wand
+        self.wand.as_ptr()
     }
 }
 
@@ -72,7 +73,7 @@ impl DrawingWand {
     ///
     pub fn annotation(&mut self, x: c_double, y: c_double, text: &str) -> &mut Self {
         let text = str_to_c_string(text);
-        unsafe { MagickDrawAnnotation(self.wand, x, y, text.as_ptr().cast()) };
+        unsafe { MagickDrawAnnotation(self.wand.as_ptr(), x, y, text.as_ptr().cast()) };
         self
     }
 
@@ -85,7 +86,7 @@ impl DrawingWand {
     /// transform is adjusted rather than replaced.
     ///
     pub fn affine(&mut self, affine: &AffineMatrix) -> &mut Self {
-        unsafe { MagickDrawAffine(self.wand, affine) };
+        unsafe { MagickDrawAffine(self.wand.as_ptr(), affine) };
         self
     }
 
@@ -116,7 +117,7 @@ impl DrawingWand {
         sd: c_double,
         ed: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawArc(self.wand, sx, sy, ex, ey, sd, ed) };
+        unsafe { MagickDrawArc(self.wand.as_ptr(), sx, sy, ex, ey, sd, ed) };
         self
     }
 
@@ -125,7 +126,7 @@ impl DrawingWand {
     /// DrawBezier() draws a bezier curve through a set of points on the image.
     ///
     pub fn bezier(&mut self, number_coordinates: c_ulong, coordinates: &PointInfo) -> &mut Self {
-        unsafe { MagickDrawBezier(self.wand, number_coordinates, coordinates) };
+        unsafe { MagickDrawBezier(self.wand.as_ptr(), number_coordinates, coordinates) };
         self
     }
 
@@ -134,7 +135,7 @@ impl DrawingWand {
     /// DrawCircle() draws a circle on the image.
     ///
     pub fn circle(&mut self, ox: c_double, oy: c_double, px: c_double, py: c_double) -> &mut Self {
-        unsafe { MagickDrawCircle(self.wand, ox, oy, px, py) };
+        unsafe { MagickDrawCircle(self.wand.as_ptr(), ox, oy, px, py) };
         self
     }
 
@@ -143,7 +144,7 @@ impl DrawingWand {
     //    /// DrawClearException() clears any existing exception from the drawing wand.
     //    ///
     //    pub fn clear_exception(&mut self) -> crate::Result<&mut Self> {
-    //        let status = unsafe { MagickDrawClearException(self.wand) };
+    //        let status = unsafe { MagickDrawClearException(self.wand.as_ptr()) };
     //    }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetclippath>
@@ -153,7 +154,7 @@ impl DrawingWand {
     /// must be deallocated by the user when it is no longer needed.
     ///
     pub fn get_clip_path(&self) -> MagickCString {
-        unsafe { MagickCString::new(MagickDrawGetClipPath(self.wand)) }
+        unsafe { MagickCString::new(MagickDrawGetClipPath(self.wand.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetclippath>
@@ -166,7 +167,7 @@ impl DrawingWand {
     ///
     pub fn set_clip_path(&mut self, clip_path: &str) -> &mut Self {
         let clip_path = str_to_c_string(clip_path);
-        unsafe { MagickDrawSetClipPath(self.wand, clip_path.as_ptr()) };
+        unsafe { MagickDrawSetClipPath(self.wand.as_ptr(), clip_path.as_ptr()) };
         self
     }
 
@@ -177,7 +178,7 @@ impl DrawingWand {
     /// clipping path.
     ///
     pub fn get_clip_rule(&self) -> FillRule {
-        unsafe { MagickDrawGetClipRule(self.wand) }.into()
+        unsafe { MagickDrawGetClipRule(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetcliprule>
@@ -185,7 +186,7 @@ impl DrawingWand {
     /// DrawSetClipRule() set the polygon fill rule to be used by the clipping path.
     ///
     pub fn set_clip_rule(&mut self, fill_rule: FillRule) -> &mut Self {
-        unsafe { MagickDrawSetClipRule(self.wand, fill_rule.into()) };
+        unsafe { MagickDrawSetClipRule(self.wand.as_ptr(), fill_rule.into()) };
         self
     }
 
@@ -194,7 +195,7 @@ impl DrawingWand {
     /// DrawGetClipUnits() returns the interpretation of clip path units.
     ///
     pub fn get_clip_units(&self) -> ClipPathUnits {
-        unsafe { MagickDrawGetClipUnits(self.wand) }.into()
+        unsafe { MagickDrawGetClipUnits(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetclipunits>
@@ -202,7 +203,7 @@ impl DrawingWand {
     /// DrawSetClipUnits() sets the interpretation of clip path units.
     ///
     pub fn set_clip_units(&mut self, clip_units: ClipPathUnits) -> &mut Self {
-        unsafe { MagickDrawSetClipUnits(self.wand, clip_units.into()) };
+        unsafe { MagickDrawSetClipUnits(self.wand.as_ptr(), clip_units.into()) };
         self
     }
 
@@ -225,7 +226,7 @@ impl DrawingWand {
     /// ResetMethod: Recolor all pixels.
     ///
     pub fn color(&mut self, x: c_double, y: c_double, paint_method: PaintMethod) -> &mut Self {
-        unsafe { MagickDrawColor(self.wand, x, y, paint_method.into()) };
+        unsafe { MagickDrawColor(self.wand.as_ptr(), x, y, paint_method.into()) };
         self
     }
 
@@ -235,7 +236,7 @@ impl DrawingWand {
     ///
     pub fn comment(&mut self, comment: &str) -> &mut Self {
         let comment = str_to_c_string(comment);
-        unsafe { MagickDrawComment(self.wand, comment.as_ptr()) };
+        unsafe { MagickDrawComment(self.wand.as_ptr(), comment.as_ptr()) };
         self
     }
 
@@ -252,7 +253,7 @@ impl DrawingWand {
         start: c_double,
         end: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawEllipse(self.wand, ox, oy, rx, ry, start, end) };
+        unsafe { MagickDrawEllipse(self.wand.as_ptr(), ox, oy, rx, ry, start, end) };
         self
     }
 
@@ -262,7 +263,7 @@ impl DrawingWand {
     ///
     pub fn get_fill_color(&self) -> PixelWand {
         let mut pw = PixelWand::new();
-        unsafe { MagickDrawGetFillColor(self.wand, pw.wand_mut()) };
+        unsafe { MagickDrawGetFillColor(self.wand.as_ptr(), pw.wand_mut()) };
         pw
     }
 
@@ -271,7 +272,7 @@ impl DrawingWand {
     /// DrawSetFillColor() sets the fill color to be used for drawing filled objects.
     ///
     pub fn set_fill_color(&mut self, fill_wand: &PixelWand) -> &mut Self {
-        unsafe { MagickDrawSetFillColor(self.wand, fill_wand.wand()) };
+        unsafe { MagickDrawSetFillColor(self.wand.as_ptr(), fill_wand.wand()) };
         self
     }
 
@@ -287,7 +288,7 @@ impl DrawingWand {
     ///
     pub fn set_fill_pattern_url(&mut self, fill_url: &str) -> &mut Self {
         let fill_url = str_to_c_string(fill_url);
-        unsafe { MagickDrawSetFillPatternURL(self.wand, fill_url.as_ptr()) };
+        unsafe { MagickDrawSetFillPatternURL(self.wand.as_ptr(), fill_url.as_ptr()) };
         self
     }
 
@@ -298,7 +299,7 @@ impl DrawingWand {
     /// color or fill texture.  Fully opaque is 1.0.
     ///
     pub fn get_fill_opacity(&self) -> c_double {
-        unsafe { MagickDrawGetFillOpacity(self.wand) }
+        unsafe { MagickDrawGetFillOpacity(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfillopacity>
@@ -308,7 +309,7 @@ impl DrawingWand {
     /// color or fill texture.  Fully opaque is 1.0.
     ///
     pub fn set_fill_opacity(&mut self, fill_opacity: c_double) -> &mut Self {
-        unsafe { MagickDrawSetFillOpacity(self.wand, fill_opacity) };
+        unsafe { MagickDrawSetFillOpacity(self.wand.as_ptr(), fill_opacity) };
         self
     }
 
@@ -317,7 +318,7 @@ impl DrawingWand {
     /// DrawGetFillRule() returns the fill rule used while drawing polygons.
     ///
     pub fn get_fill_rule(&self) -> FillRule {
-        unsafe { MagickDrawGetFillRule(self.wand) }.into()
+        unsafe { MagickDrawGetFillRule(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfillrule>
@@ -325,7 +326,7 @@ impl DrawingWand {
     /// DrawSetFillRule() sets the fill rule to use while drawing polygons.
     ///
     pub fn set_fill_rule(&mut self, fill_rule: FillRule) -> &mut Self {
-        unsafe { MagickDrawSetFillRule(self.wand, fill_rule.into()) };
+        unsafe { MagickDrawSetFillRule(self.wand.as_ptr(), fill_rule.into()) };
         self
     }
 
@@ -338,7 +339,7 @@ impl DrawingWand {
     /// when no longer needed.
     ///
     pub fn get_font(&self) -> MagickCString {
-        unsafe { MagickCString::new(MagickDrawGetFont(self.wand)) }
+        unsafe { MagickCString::new(MagickDrawGetFont(self.wand.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfont>
@@ -349,7 +350,7 @@ impl DrawingWand {
     ///
     pub fn set_font(&mut self, font_name: &str) -> &mut Self {
         let font_name = str_to_c_string(font_name);
-        unsafe { MagickDrawSetFont(self.wand, font_name.as_ptr()) };
+        unsafe { MagickDrawSetFont(self.wand.as_ptr(), font_name.as_ptr()) };
         self
     }
 
@@ -360,7 +361,7 @@ impl DrawingWand {
     /// The value returned must be freed by the user when it is no longer needed.
     ///
     pub fn get_font_family(&self) -> MagickCString {
-        unsafe { MagickCString::new(MagickDrawGetFontFamily(self.wand)) }
+        unsafe { MagickCString::new(MagickDrawGetFontFamily(self.wand.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontfamily>
@@ -369,7 +370,7 @@ impl DrawingWand {
     ///
     pub fn set_font_family(&mut self, font_family: &str) -> &mut Self {
         let font_family = str_to_c_string(font_family);
-        unsafe { MagickDrawSetFontFamily(self.wand, font_family.as_ptr()) };
+        unsafe { MagickDrawSetFontFamily(self.wand.as_ptr(), font_family.as_ptr()) };
         self
     }
 
@@ -378,7 +379,7 @@ impl DrawingWand {
     /// DrawGetFontSize() returns the font pointsize used when annotating with text.
     ///
     pub fn get_font_size(&self) -> c_double {
-        unsafe { MagickDrawGetFontSize(self.wand) }
+        unsafe { MagickDrawGetFontSize(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontsize>
@@ -386,7 +387,7 @@ impl DrawingWand {
     /// DrawSetFontSize() sets the font pointsize to use when annotating with text.
     ///
     pub fn set_font_size(&mut self, point_size: c_double) -> &mut Self {
-        unsafe { MagickDrawSetFontSize(self.wand, point_size) };
+        unsafe { MagickDrawSetFontSize(self.wand.as_ptr(), point_size) };
         self
     }
 
@@ -395,7 +396,7 @@ impl DrawingWand {
     /// DrawGetFontStretch() returns the font stretch used when annotating with text.
     ///
     pub fn get_font_stretch(&self) -> StretchType {
-        unsafe { MagickDrawGetFontStretch(self.wand) }.into()
+        unsafe { MagickDrawGetFontStretch(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontstretch>
@@ -405,7 +406,7 @@ impl DrawingWand {
     /// The AnyStretch enumeration acts as a wild-card &quot;don't care&quot; option.
     ///
     pub fn set_font_stretch(&mut self, font_stretch: StretchType) -> &mut Self {
-        unsafe { MagickDrawSetFontStretch(self.wand, font_stretch.into()) };
+        unsafe { MagickDrawSetFontStretch(self.wand.as_ptr(), font_stretch.into()) };
         self
     }
 
@@ -414,7 +415,7 @@ impl DrawingWand {
     /// DrawGetFontStyle() returns the font style used when annotating with text.
     ///
     pub fn get_font_style(&self) -> StyleType {
-        unsafe { MagickDrawGetFontStyle(self.wand) }.into()
+        unsafe { MagickDrawGetFontStyle(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontstyle>
@@ -424,7 +425,7 @@ impl DrawingWand {
     /// The AnyStyle enumeration acts as a wild-card &quot;don't care&quot; option.
     ///
     pub fn set_font_style(&mut self, style: StyleType) -> &mut Self {
-        unsafe { MagickDrawSetFontStyle(self.wand, style.into()) };
+        unsafe { MagickDrawSetFontStyle(self.wand.as_ptr(), style.into()) };
         self
     }
 
@@ -433,7 +434,7 @@ impl DrawingWand {
     /// DrawGetFontWeight() returns the font weight used when annotating with text.
     ///
     pub fn get_font_weight(&self) -> c_ulong {
-        unsafe { MagickDrawGetFontWeight(self.wand) }
+        unsafe { MagickDrawGetFontWeight(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetfontweight>
@@ -441,7 +442,7 @@ impl DrawingWand {
     /// DrawSetFontWeight() sets the font weight to use when annotating with text.
     ///
     pub fn set_font_weight(&mut self, font_weight: c_ulong) -> &mut Self {
-        unsafe { MagickDrawSetFontWeight(self.wand, font_weight) };
+        unsafe { MagickDrawSetFontWeight(self.wand.as_ptr(), font_weight) };
         self
     }
 
@@ -452,7 +453,7 @@ impl DrawingWand {
     /// with text.
     ///
     pub fn get_gravity(&self) -> GravityType {
-        unsafe { MagickDrawGetGravity(self.wand) }.into()
+        unsafe { MagickDrawGetGravity(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetgravity>
@@ -462,7 +463,7 @@ impl DrawingWand {
     /// with text.
     ///
     pub fn set_gravity(&mut self, gravity: GravityType) -> &mut Self {
-        unsafe { MagickDrawSetGravity(self.wand, gravity.into()) };
+        unsafe { MagickDrawSetGravity(self.wand.as_ptr(), gravity.into()) };
         self
     }
 
@@ -476,7 +477,7 @@ impl DrawingWand {
     // /// size.
     // ///
     // pub fn composite(&mut self,  composite_operator: CompositeOperator,  x: c_double,  y: c_double,  width: c_double,  height: c_double, image: &Image) {
-    // let status = unsafe { MagickDrawComposite(self.wand,  composite_operator,  x,  y,  width,  height, image) };
+    // let status = unsafe { MagickDrawComposite(self.wand.as_ptr(),  composite_operator,  x,  y,  width,  height, image) };
     // }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawline>
@@ -486,7 +487,7 @@ impl DrawingWand {
     /// stroke opacity, and stroke width.
     ///
     pub fn line(&mut self, sx: c_double, sy: c_double, ex: c_double, ey: c_double) -> &mut Self {
-        unsafe { MagickDrawLine(self.wand, sx, sy, ex, ey) };
+        unsafe { MagickDrawLine(self.wand.as_ptr(), sx, sy, ex, ey) };
         self
     }
 
@@ -513,7 +514,7 @@ impl DrawingWand {
     /// ResetMethod: Select all pixels.
     ///
     pub fn matte(&mut self, x: c_double, y: c_double, paint_method: PaintMethod) -> &mut Self {
-        unsafe { MagickDrawMatte(self.wand, x, y, paint_method.into()) };
+        unsafe { MagickDrawMatte(self.wand.as_ptr(), x, y, paint_method.into()) };
         self
     }
 
@@ -528,7 +529,7 @@ impl DrawingWand {
     /// moveto point).
     ///
     pub fn path_close(&mut self) -> &mut Self {
-        unsafe { MagickDrawPathClose(self.wand) };
+        unsafe { MagickDrawPathClose(self.wand.as_ptr()) };
         self
     }
 
@@ -553,7 +554,7 @@ impl DrawingWand {
         x: c_double,
         y: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawPathCurveToAbsolute(self.wand, x1, y1, x2, y2, x, y) };
+        unsafe { MagickDrawPathCurveToAbsolute(self.wand.as_ptr(), x1, y1, x2, y2, x, y) };
         self
     }
 
@@ -578,7 +579,7 @@ impl DrawingWand {
         x: c_double,
         y: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawPathCurveToRelative(self.wand, x1, y1, x2, y2, x, y) };
+        unsafe { MagickDrawPathCurveToRelative(self.wand.as_ptr(), x1, y1, x2, y2, x, y) };
         self
     }
 
@@ -599,7 +600,7 @@ impl DrawingWand {
         x: c_double,
         y: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawPathCurveToQuadraticBezierAbsolute(self.wand, x1, y1, x, y) };
+        unsafe { MagickDrawPathCurveToQuadraticBezierAbsolute(self.wand.as_ptr(), x1, y1, x, y) };
         self
     }
 
@@ -620,7 +621,7 @@ impl DrawingWand {
         x: c_double,
         y: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawPathCurveToQuadraticBezierRelative(self.wand, x1, y1, x, y) };
+        unsafe { MagickDrawPathCurveToQuadraticBezierRelative(self.wand.as_ptr(), x1, y1, x, y) };
         self
     }
 
@@ -655,7 +656,7 @@ impl DrawingWand {
         x: c_double,
         y: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawPathCurveToQuadraticBezierSmoothAbsolute(self.wand, x, y) };
+        unsafe { MagickDrawPathCurveToQuadraticBezierSmoothAbsolute(self.wand.as_ptr(), x, y) };
         self
     }
 
@@ -690,7 +691,7 @@ impl DrawingWand {
         x: c_double,
         y: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawPathCurveToQuadraticBezierSmoothRelative(self.wand, x, y) };
+        unsafe { MagickDrawPathCurveToQuadraticBezierSmoothRelative(self.wand.as_ptr(), x, y) };
         self
     }
 
@@ -725,7 +726,7 @@ impl DrawingWand {
         x: c_double,
         y: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawPathCurveToSmoothAbsolute(self.wand, x, y2, x, y) };
+        unsafe { MagickDrawPathCurveToSmoothAbsolute(self.wand.as_ptr(), x, y2, x, y) };
         self
     }
 
@@ -760,7 +761,7 @@ impl DrawingWand {
         x: c_double,
         y: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawPathCurveToSmoothRelative(self.wand, x2, y2, x, y) };
+        unsafe { MagickDrawPathCurveToSmoothRelative(self.wand.as_ptr(), x2, y2, x, y) };
         self
     }
 
@@ -798,7 +799,7 @@ impl DrawingWand {
     ) -> &mut Self {
         unsafe {
             MagickDrawPathEllipticArcAbsolute(
-                self.wand,
+                self.wand.as_ptr(),
                 rx,
                 ry,
                 x_axis_rotation,
@@ -845,7 +846,7 @@ impl DrawingWand {
     ) -> &mut Self {
         unsafe {
             MagickDrawPathEllipticArcRelative(
-                self.wand,
+                self.wand.as_ptr(),
                 rx,
                 ry,
                 x_axis_rotation,
@@ -863,7 +864,7 @@ impl DrawingWand {
     /// DrawPathFinish() terminates the current path.
     ///
     pub fn path_finish(&mut self) -> &mut Self {
-        unsafe { MagickDrawPathFinish(self.wand) };
+        unsafe { MagickDrawPathFinish(self.wand.as_ptr()) };
         self
     }
 
@@ -876,7 +877,7 @@ impl DrawingWand {
     /// the new current point.
     ///
     pub fn path_line_to_absolute(&mut self, x: c_double, y: c_double) -> &mut Self {
-        unsafe { MagickDrawPathLineToAbsolute(self.wand, x, y) };
+        unsafe { MagickDrawPathLineToAbsolute(self.wand.as_ptr(), x, y) };
         self
     }
 
@@ -889,7 +890,7 @@ impl DrawingWand {
     /// the new current point.
     ///
     pub fn path_line_to_relative(&mut self, x: c_double, y: c_double) -> &mut Self {
-        unsafe { MagickDrawPathLineToRelative(self.wand, x, y) };
+        unsafe { MagickDrawPathLineToRelative(self.wand.as_ptr(), x, y) };
         self
     }
 
@@ -902,7 +903,7 @@ impl DrawingWand {
     /// point then becomes the new current point.
     ///
     pub fn path_line_to_horizontal_absolute(&mut self, x: c_double) -> &mut Self {
-        unsafe { MagickDrawPathLineToHorizontalAbsolute(self.wand, x) };
+        unsafe { MagickDrawPathLineToHorizontalAbsolute(self.wand.as_ptr(), x) };
         self
     }
 
@@ -915,7 +916,7 @@ impl DrawingWand {
     /// point then becomes the new current point.
     ///
     pub fn path_line_to_horizontal_relative(&mut self, x: c_double) -> &mut Self {
-        unsafe { MagickDrawPathLineToHorizontalRelative(self.wand, x) };
+        unsafe { MagickDrawPathLineToHorizontalRelative(self.wand.as_ptr(), x) };
         self
     }
 
@@ -928,7 +929,7 @@ impl DrawingWand {
     /// point then becomes the new current point.
     ///
     pub fn path_line_to_vertical_absolute(&mut self, y: c_double) -> &mut Self {
-        unsafe { MagickDrawPathLineToVerticalAbsolute(self.wand, y) };
+        unsafe { MagickDrawPathLineToVerticalAbsolute(self.wand.as_ptr(), y) };
         self
     }
 
@@ -941,7 +942,7 @@ impl DrawingWand {
     /// point then becomes the new current point.
     ///
     pub fn path_line_to_vertical_relative(&mut self, y: c_double) -> &mut Self {
-        unsafe { MagickDrawPathLineToVerticalRelative(self.wand, y) };
+        unsafe { MagickDrawPathLineToVerticalRelative(self.wand.as_ptr(), y) };
         self
     }
 
@@ -954,7 +955,7 @@ impl DrawingWand {
     /// specified coordinate.
     ///
     pub fn path_move_to_absolute(&mut self, x: c_double, y: c_double) -> &mut Self {
-        unsafe { MagickDrawPathMoveToAbsolute(self.wand, x, y) };
+        unsafe { MagickDrawPathMoveToAbsolute(self.wand.as_ptr(), x, y) };
         self
     }
 
@@ -967,7 +968,7 @@ impl DrawingWand {
     /// specified coordinate.
     ///
     pub fn path_move_to_relative(&mut self, x: c_double, y: c_double) -> &mut Self {
-        unsafe { MagickDrawPathMoveToRelative(self.wand, x, y) };
+        unsafe { MagickDrawPathMoveToRelative(self.wand.as_ptr(), x, y) };
         self
     }
 
@@ -984,7 +985,7 @@ impl DrawingWand {
     /// function by themselves.
     ///
     pub fn path_start(&mut self) -> &mut Self {
-        unsafe { MagickDrawPathStart(self.wand) };
+        unsafe { MagickDrawPathStart(self.wand.as_ptr()) };
         self
     }
 
@@ -993,7 +994,7 @@ impl DrawingWand {
     //    /// DrawPeekGraphicContext() returns the current graphic drawing_wand.
     //    ///
     //    pub fn peek_graphic_context(&self) -> &DrawInfo {
-    //        let status = unsafe { MagickDrawPeekGraphicContext(self.wand) };
+    //        let status = unsafe { MagickDrawPeekGraphicContext(self.wand.as_ptr()) };
     //        todo!()
     //    }
 
@@ -1004,7 +1005,7 @@ impl DrawingWand {
     /// thickness at the specified coordinates.
     ///
     pub fn point(&mut self, x: c_double, y: c_double) -> &mut Self {
-        unsafe { MagickDrawPoint(self.wand, x, y) };
+        unsafe { MagickDrawPoint(self.wand.as_ptr(), x, y) };
         self
     }
 
@@ -1015,7 +1016,7 @@ impl DrawingWand {
     /// fill color or texture, using the specified array of coordinates.
     ///
     pub fn polygon(&mut self, number_coordinates: c_ulong, coordinates: &PointInfo) -> &mut Self {
-        unsafe { MagickDrawPolygon(self.wand, number_coordinates, coordinates) };
+        unsafe { MagickDrawPolygon(self.wand.as_ptr(), number_coordinates, coordinates) };
         self
     }
 
@@ -1026,7 +1027,7 @@ impl DrawingWand {
     /// fill color or texture, using the specified array of coordinates.
     ///
     pub fn polyline(&mut self, number_coordinates: c_ulong, coordinates: &PointInfo) -> &mut Self {
-        unsafe { MagickDrawPolyline(self.wand, number_coordinates, coordinates) };
+        unsafe { MagickDrawPolyline(self.wand.as_ptr(), number_coordinates, coordinates) };
         self
     }
 
@@ -1035,7 +1036,7 @@ impl DrawingWand {
     /// DrawPopClipPath() terminates a clip path definition.
     ///
     pub fn pop_clip_path(&mut self) -> &mut Self {
-        unsafe { MagickDrawPopClipPath(self.wand) };
+        unsafe { MagickDrawPopClipPath(self.wand.as_ptr()) };
         self
     }
 
@@ -1044,7 +1045,7 @@ impl DrawingWand {
     /// DrawPopDefs() terminates a definition list
     ///
     pub fn pop_defs(&mut self) -> &mut Self {
-        unsafe { MagickDrawPopDefs(self.wand) };
+        unsafe { MagickDrawPopDefs(self.wand.as_ptr()) };
         self
     }
 
@@ -1059,7 +1060,7 @@ impl DrawingWand {
     /// proper form to pop all drawing_wands which have been pushed.
     ///
     pub fn pop_graphic_context(&mut self) -> &mut Self {
-        unsafe { MagickDrawPopGraphicContext(self.wand) };
+        unsafe { MagickDrawPopGraphicContext(self.wand.as_ptr()) };
         self
     }
 
@@ -1068,7 +1069,7 @@ impl DrawingWand {
     /// DrawPopPattern() terminates a pattern definition.
     ///
     pub fn pop_pattern(&mut self) -> &mut Self {
-        unsafe { MagickDrawPopPattern(self.wand) };
+        unsafe { MagickDrawPopPattern(self.wand.as_ptr()) };
         self
     }
 
@@ -1082,7 +1083,7 @@ impl DrawingWand {
     ///
     pub fn push_clip_path(&mut self, clip_path_id: &str) -> &mut Self {
         let clip_path_id = str_to_c_string(clip_path_id);
-        unsafe { MagickDrawPushClipPath(self.wand, clip_path_id.as_ptr()) };
+        unsafe { MagickDrawPushClipPath(self.wand.as_ptr(), clip_path_id.as_ptr()) };
         self
     }
 
@@ -1095,7 +1096,7 @@ impl DrawingWand {
     /// may safely be processed earlier for the sake of efficiency.
     ///
     pub fn push_defs(&mut self) -> &mut Self {
-        unsafe { MagickDrawPushDefs(self.wand) };
+        unsafe { MagickDrawPushDefs(self.wand.as_ptr()) };
         self
     }
 
@@ -1112,7 +1113,7 @@ impl DrawingWand {
     /// equivalent Push.
     ///
     pub fn push_graphic_context(&mut self) -> &mut Self {
-        unsafe { MagickDrawPushGraphicContext(self.wand) };
+        unsafe { MagickDrawPushGraphicContext(self.wand.as_ptr()) };
         self
     }
 
@@ -1139,7 +1140,9 @@ impl DrawingWand {
         height: c_double,
     ) -> &mut Self {
         let pattern_id = str_to_c_string(pattern_id);
-        unsafe { MagickDrawPushPattern(self.wand, pattern_id.as_ptr(), x, y, width, height) };
+        unsafe {
+            MagickDrawPushPattern(self.wand.as_ptr(), pattern_id.as_ptr(), x, y, width, height)
+        };
         self
     }
 
@@ -1156,7 +1159,7 @@ impl DrawingWand {
         x2: c_double,
         y2: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawRectangle(self.wand, x1, y1, x2, y2) };
+        unsafe { MagickDrawRectangle(self.wand.as_ptr(), x1, y1, x2, y2) };
         self
     }
 
@@ -1167,7 +1170,7 @@ impl DrawingWand {
     //    /// This function is deprecated.  Use MagickDrawImage() instead.
     //    ///
     //    pub fn render(&self) {
-    //        unsafe { MagickDrawRender(self.wand) };
+    //        unsafe { MagickDrawRender(self.wand.as_ptr()) };
     //    }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawrotate>
@@ -1175,7 +1178,7 @@ impl DrawingWand {
     /// DrawRotate() applies the specified rotation to the current coordinate space.
     ///
     pub fn rotate(&mut self, degrees: c_double) -> &mut Self {
-        unsafe { MagickDrawRotate(self.wand, degrees) };
+        unsafe { MagickDrawRotate(self.wand.as_ptr(), degrees) };
         self
     }
 
@@ -1196,7 +1199,7 @@ impl DrawingWand {
         rx: c_double,
         ry: c_double,
     ) -> &mut Self {
-        unsafe { MagickDrawRoundRectangle(self.wand, x1, y1, x2, y2, rx, ry) };
+        unsafe { MagickDrawRoundRectangle(self.wand.as_ptr(), x1, y1, x2, y2, rx, ry) };
         self
     }
 
@@ -1207,7 +1210,7 @@ impl DrawingWand {
     /// vertical directions to the current coordinate space.
     ///
     pub fn scale(&mut self, x: c_double, y: c_double) -> &mut Self {
-        unsafe { MagickDrawScale(self.wand, x, y) };
+        unsafe { MagickDrawScale(self.wand.as_ptr(), x, y) };
         self
     }
 
@@ -1218,7 +1221,7 @@ impl DrawingWand {
     /// direction.
     ///
     pub fn skew_x(&mut self, degrees: c_double) -> &mut Self {
-        unsafe { MagickDrawSkewX(self.wand, degrees) };
+        unsafe { MagickDrawSkewX(self.wand.as_ptr(), degrees) };
         self
     }
 
@@ -1229,7 +1232,7 @@ impl DrawingWand {
     /// direction.
     ///
     pub fn skew_y(&mut self, degrees: c_double) -> &mut Self {
-        unsafe { MagickDrawSkewY(self.wand, degrees) };
+        unsafe { MagickDrawSkewY(self.wand.as_ptr(), degrees) };
         self
     }
 
@@ -1239,7 +1242,7 @@ impl DrawingWand {
     // /// DrawSetStopColor() sets the stop color and offset for gradients
     // ///
     // pub fn set_stop_color(&mut self, stop_color: &PixelPacket, offset: c_double) {
-    // // unsafe { MagickDrawSetStopColor(self.wand, stop_color, offset) };
+    // // unsafe { MagickDrawSetStopColor(self.wand.as_ptr(), stop_color, offset) };
     // }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawgetstrokecolor>
@@ -1248,7 +1251,7 @@ impl DrawingWand {
     ///
     pub fn get_stroke_color(&self) -> PixelWand {
         let mut pw = PixelWand::new();
-        unsafe { MagickDrawGetStrokeColor(self.wand, pw.wand_mut()) };
+        unsafe { MagickDrawGetStrokeColor(self.wand.as_ptr(), pw.wand_mut()) };
         pw
     }
 
@@ -1257,7 +1260,7 @@ impl DrawingWand {
     /// DrawSetStrokeColor() sets the color used for stroking object outlines.
     ///
     pub fn set_stroke_color(&mut self, stroke_wand: &PixelWand) -> &mut Self {
-        unsafe { MagickDrawSetStrokeColor(self.wand, stroke_wand.wand()) };
+        unsafe { MagickDrawSetStrokeColor(self.wand.as_ptr(), stroke_wand.wand()) };
         self
     }
 
@@ -1267,7 +1270,7 @@ impl DrawingWand {
     ///
     pub fn set_stroke_pattern_url(&mut self, stroke_url: &str) -> &mut Self {
         let stroke_url = str_to_c_string(stroke_url);
-        unsafe { MagickDrawSetStrokePatternURL(self.wand, stroke_url.as_ptr()) };
+        unsafe { MagickDrawSetStrokePatternURL(self.wand.as_ptr(), stroke_url.as_ptr()) };
         self
     }
 
@@ -1282,7 +1285,7 @@ impl DrawingWand {
     /// underlying canvas color should be used.
     ///
     pub fn get_stroke_antialias(&self) -> c_uint {
-        unsafe { MagickDrawGetStrokeAntialias(self.wand) }
+        unsafe { MagickDrawGetStrokeAntialias(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokeantialias>
@@ -1296,7 +1299,7 @@ impl DrawingWand {
     /// underlying canvas color should be used.
     ///
     pub fn set_stroke_antialias(&mut self, stroke_antialias: c_uint) -> &mut Self {
-        unsafe { MagickDrawSetStrokeAntialias(self.wand, stroke_antialias) };
+        unsafe { MagickDrawSetStrokeAntialias(self.wand.as_ptr(), stroke_antialias) };
         self
     }
 
@@ -1310,7 +1313,7 @@ impl DrawingWand {
     ///
     pub fn get_stroke_dash_array(&self) -> Option<MagickBoxSlice<c_double>> {
         let mut number_elements = 0;
-        let a = unsafe { MagickDrawGetStrokeDashArray(self.wand, &mut number_elements) };
+        let a = unsafe { MagickDrawGetStrokeDashArray(self.wand.as_ptr(), &mut number_elements) };
         unsafe { MagickBoxSlice::new(a, number_elements.try_into().unwrap()) }
     }
 
@@ -1331,7 +1334,9 @@ impl DrawingWand {
     /// A typical stroke dash array might contain the members 5 3 2.
     ///
     pub fn set_stroke_dash_array(&mut self, dash: &[c_double]) -> &mut Self {
-        unsafe { MagickDrawSetStrokeDashArray(self.wand, dash.len() as c_ulong, dash.as_ptr()) };
+        unsafe {
+            MagickDrawSetStrokeDashArray(self.wand.as_ptr(), dash.len() as c_ulong, dash.as_ptr())
+        };
         self
     }
 
@@ -1342,7 +1347,7 @@ impl DrawingWand {
     /// start the dash.
     ///
     pub fn get_stroke_dash_offset(&self) -> c_double {
-        unsafe { MagickDrawGetStrokeDashOffset(self.wand) }
+        unsafe { MagickDrawGetStrokeDashOffset(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokedashoffset>
@@ -1352,7 +1357,7 @@ impl DrawingWand {
     /// start the dash.
     ///
     pub fn set_stroke_dash_offset(&mut self, dash_offset: c_double) -> &mut Self {
-        unsafe { MagickDrawSetStrokeDashOffset(self.wand, dash_offset) };
+        unsafe { MagickDrawSetStrokeDashOffset(self.wand.as_ptr(), dash_offset) };
         self
     }
 
@@ -1365,7 +1370,7 @@ impl DrawingWand {
     /// UndefinedCap, ButtCap, RoundCap, and SquareCap.
     ///
     pub fn get_stroke_line_cap(&self) -> LineCap {
-        unsafe { MagickDrawGetStrokeLineCap(self.wand) }.into()
+        unsafe { MagickDrawGetStrokeLineCap(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokelinecap>
@@ -1377,7 +1382,7 @@ impl DrawingWand {
     /// UndefinedCap, ButtCap, RoundCap, and SquareCap.
     ///
     pub fn set_stroke_line_cap(&mut self, linecap: LineCap) -> &mut Self {
-        unsafe { MagickDrawSetStrokeLineCap(self.wand, linecap.into()) };
+        unsafe { MagickDrawSetStrokeLineCap(self.wand.as_ptr(), linecap.into()) };
         self
     }
 
@@ -1392,7 +1397,7 @@ impl DrawingWand {
     /// and BevelJoin.
     ///
     pub fn get_stroke_line_join(&self) -> LineJoin {
-        unsafe { MagickDrawGetStrokeLineJoin(self.wand) }.into()
+        unsafe { MagickDrawGetStrokeLineJoin(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokelinejoin>
@@ -1406,7 +1411,7 @@ impl DrawingWand {
     /// and BevelJoin.
     ///
     pub fn set_stroke_line_join(&mut self, linejoin: LineJoin) -> &mut Self {
-        unsafe { MagickDrawSetStrokeLineJoin(self.wand, linejoin.into()) };
+        unsafe { MagickDrawSetStrokeLineJoin(self.wand.as_ptr(), linejoin.into()) };
         self
     }
 
@@ -1423,7 +1428,7 @@ impl DrawingWand {
     /// limit on the ratio of the miter length to the 'lineWidth'.
     ///
     pub fn get_stroke_miter_limit(&self) -> c_ulong {
-        unsafe { MagickDrawGetStrokeMiterLimit(self.wand) }
+        unsafe { MagickDrawGetStrokeMiterLimit(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokemiterlimit>
@@ -1439,7 +1444,7 @@ impl DrawingWand {
     /// limit on the ratio of the miter length to the 'lineWidth'.
     ///
     pub fn set_stroke_miter_limit(&mut self, miterlimit: c_ulong) -> &mut Self {
-        unsafe { MagickDrawSetStrokeMiterLimit(self.wand, miterlimit) };
+        unsafe { MagickDrawSetStrokeMiterLimit(self.wand.as_ptr(), miterlimit) };
         self
     }
 
@@ -1448,7 +1453,7 @@ impl DrawingWand {
     /// DrawGetStrokeOpacity() returns the opacity of stroked object outlines.
     ///
     pub fn get_stroke_opacity(&self) -> c_double {
-        unsafe { MagickDrawGetStrokeOpacity(self.wand) }
+        unsafe { MagickDrawGetStrokeOpacity(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokeopacity>
@@ -1456,7 +1461,7 @@ impl DrawingWand {
     /// DrawSetStrokeOpacity() specifies the opacity of stroked object outlines.
     ///
     pub fn set_stroke_opacity(&mut self, stroke_opacity: c_double) -> &mut Self {
-        unsafe { MagickDrawSetStrokeOpacity(self.wand, stroke_opacity) };
+        unsafe { MagickDrawSetStrokeOpacity(self.wand.as_ptr(), stroke_opacity) };
         self
     }
 
@@ -1467,7 +1472,7 @@ impl DrawingWand {
     /// outlines.
     ///
     pub fn get_stroke_width(&self) -> f64 {
-        unsafe { MagickDrawGetStrokeWidth(self.wand) }
+        unsafe { MagickDrawGetStrokeWidth(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsetstrokewidth>
@@ -1477,7 +1482,7 @@ impl DrawingWand {
     /// outlines.
     ///
     pub fn set_stroke_width(&mut self, stroke_width: c_double) -> &mut Self {
-        unsafe { MagickDrawSetStrokeWidth(self.wand, stroke_width) };
+        unsafe { MagickDrawSetStrokeWidth(self.wand.as_ptr(), stroke_width) };
         self
     }
 
@@ -1488,7 +1493,7 @@ impl DrawingWand {
     /// determines whether text is antialiased.  Text is antialiased by default.
     ///
     pub fn get_text_antialias(&self) -> c_uint {
-        unsafe { MagickDrawGetTextAntialias(self.wand) }
+        unsafe { MagickDrawGetTextAntialias(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextantialias>
@@ -1498,7 +1503,7 @@ impl DrawingWand {
     /// antialiased by default.
     ///
     pub fn set_text_antialias(&mut self, text_antialias: c_uint) -> &mut Self {
-        unsafe { MagickDrawSetTextAntialias(self.wand, text_antialias) };
+        unsafe { MagickDrawSetTextAntialias(self.wand.as_ptr(), text_antialias) };
         self
     }
 
@@ -1509,7 +1514,7 @@ impl DrawingWand {
     /// text.
     ///
     pub fn get_text_decoration(&mut self) -> DecorationType {
-        unsafe { MagickDrawGetTextDecoration(self.wand) }.into()
+        unsafe { MagickDrawGetTextDecoration(self.wand.as_ptr()) }.into()
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextdecoration>
@@ -1519,7 +1524,7 @@ impl DrawingWand {
     /// annotating with text.
     ///
     pub fn set_text_decoration(&mut self, decoration: DecorationType) -> &mut Self {
-        unsafe { MagickDrawSetTextDecoration(self.wand, decoration.into()) };
+        unsafe { MagickDrawSetTextDecoration(self.wand.as_ptr(), decoration.into()) };
         self
     }
 
@@ -1532,7 +1537,7 @@ impl DrawingWand {
     /// once it is no longer required.
     ///
     pub fn get_text_encoding(&self) -> MagickCString {
-        unsafe { MagickCString::new(MagickDrawGetTextEncoding(self.wand)) }
+        unsafe { MagickCString::new(MagickDrawGetTextEncoding(self.wand.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/drawing_wand.html#drawsettextencoding>
@@ -1551,7 +1556,7 @@ impl DrawingWand {
     ///
     pub fn set_text_encoding(&mut self, encoding: &str) -> &mut Self {
         let encoding = str_to_c_string(encoding);
-        unsafe { MagickDrawSetTextEncoding(self.wand, encoding.as_ptr()) };
+        unsafe { MagickDrawSetTextEncoding(self.wand.as_ptr(), encoding.as_ptr()) };
         self
     }
 
@@ -1563,7 +1568,7 @@ impl DrawingWand {
     ///
     pub fn get_text_under_color(&self) -> PixelWand {
         let mut under_color = PixelWand::new();
-        unsafe { MagickDrawGetTextUnderColor(self.wand, under_color.wand_mut()) };
+        unsafe { MagickDrawGetTextUnderColor(self.wand.as_ptr(), under_color.wand_mut()) };
         under_color
     }
 
@@ -1574,7 +1579,7 @@ impl DrawingWand {
     /// to place under text annotations.
     ///
     pub fn set_text_under_color(&mut self, under_wand: &PixelWand) -> &mut Self {
-        unsafe { MagickDrawSetTextUnderColor(self.wand, under_wand.wand()) };
+        unsafe { MagickDrawSetTextUnderColor(self.wand.as_ptr(), under_wand.wand()) };
         self
     }
 
@@ -1587,7 +1592,7 @@ impl DrawingWand {
     /// coordinate.
     ///
     pub fn translate(&mut self, x: c_double, y: c_double) -> &mut Self {
-        unsafe { MagickDrawTranslate(self.wand, x, y) };
+        unsafe { MagickDrawTranslate(self.wand.as_ptr(), x, y) };
         self
     }
 
@@ -1604,7 +1609,7 @@ impl DrawingWand {
     /// a viewer will render the vector data on.
     ///
     pub fn set_viewbox(&mut self, x1: c_ulong, y1: c_ulong, x2: c_ulong, y2: c_ulong) -> &mut Self {
-        unsafe { MagickDrawSetViewbox(self.wand, x1, y1, x2, y2) };
+        unsafe { MagickDrawSetViewbox(self.wand.as_ptr(), x1, y1, x2, y2) };
         self
     }
 }

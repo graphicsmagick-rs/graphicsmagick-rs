@@ -27,6 +27,10 @@ impl Exception {
     pub fn new(kind: ExceptionType, description: String) -> Self {
         Exception { kind, description }
     }
+
+    pub fn get_exception_type(&self) -> ExceptionType {
+        self.kind
+    }
 }
 
 /// Wrapper of [ExceptionType](http://www.graphicsmagick.org/api/types.html#exceptiontype).

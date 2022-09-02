@@ -10,6 +10,7 @@ use std::{
 };
 
 /// Wrapper of `graphicsmagick_sys::PixelWand`.
+#[derive(Debug)]
 #[repr(transparent)]
 pub struct PixelWand {
     wand: NonNull<graphicsmagick_sys::PixelWand>,

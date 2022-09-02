@@ -20,7 +20,6 @@ use std::{
     mem::MaybeUninit,
     os::raw::{c_double, c_float, c_long, c_uchar, c_uint, c_ulong, c_ushort, c_void},
     ptr::NonNull,
-    slice,
 };
 
 #[cfg(feature = "v1_3_26")]
@@ -99,14 +98,15 @@ impl MagickWand<'_> {
         let description_ptr =
             MagickGetException(self.wand.as_ptr(), &mut severity as *mut ExceptionType);
 
-        if description_ptr.is_null() {
-            return Exception::new(severity.into(), "Unknown exception".to_string()).into();
-        }
-        let description =
-            slice::from_raw_parts(description_ptr as *const u8, libc::strlen(description_ptr));
+        let description = if description_ptr.is_null() {
+            "Unknown exception".to_string()
+        } else {
+            let description =
+                String::from_utf8_lossy(CStr::from_ptr(description_ptr).to_bytes()).into_owned();
+            MagickRelinquishMemory(description_ptr as *mut c_void);
+            description
+        };
 
-        let description = String::from_utf8_lossy(description).into_owned();
-        MagickRelinquishMemory(description_ptr as *mut c_void);
         Exception::new(severity.into(), description).into()
     }
 

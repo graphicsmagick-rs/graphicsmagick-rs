@@ -597,6 +597,10 @@ pub enum ResourceType {
     /// Undefined value
     UndefinedResource = graphicsmagick_sys::ResourceType_UndefinedResource,
     /// Pixel cache total disk space (Gigabytes)
+    ///
+    /// Alias:
+    ///  - ResourceType_WidthResource
+    ///  - ResourceType_HeightResource
     DiskResource = graphicsmagick_sys::ResourceType_DiskResource,
     /// Pixel cache number of open files (Files)
     FileResource = graphicsmagick_sys::ResourceType_FileResource,
@@ -608,14 +612,6 @@ pub enum ResourceType {
     PixelsResource = graphicsmagick_sys::ResourceType_PixelsResource,
     /// Maximum number of worker threads
     ThreadsResource = graphicsmagick_sys::ResourceType_ThreadsResource,
-    /// Maximum pixel width of an image (Pixels)
-    #[cfg(feature = "v1_3_21")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_21")))]
-    WidthResource = graphicsmagick_sys::ResourceType_WidthResource,
-    /// Maximum pixel height of an image (Pixels)
-    #[cfg(feature = "v1_3_21")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_21")))]
-    HeightResource = graphicsmagick_sys::ResourceType_HeightResource,
 }
 
 /// MontageMode

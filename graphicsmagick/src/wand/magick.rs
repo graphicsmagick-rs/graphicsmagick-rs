@@ -9,7 +9,7 @@ use crate::{
         ImageType, InterlaceType, MetricType, MontageMode, NoiseType, PreviewType, Quantum,
         RenderingIntent, ResolutionType, ResourceType, VirtualPixelMethod,
     },
-    utils::{assert_initialized, str_to_c_string, CStrExt},
+    utils::{assert_initialized, str_to_c_string, CStrExt, MagickAutoRelinquish},
     wand::{DrawingWand, PixelWand},
     MagickBoxSlice, MagickCString,
 };
@@ -98,14 +98,11 @@ impl MagickWand<'_> {
         let description_ptr =
             MagickGetException(self.wand.as_ptr(), &mut severity as *mut ExceptionType);
 
-        let description = if description_ptr.is_null() {
-            "Unknown exception".to_string()
-        } else {
-            let description =
-                String::from_utf8_lossy(CStr::from_ptr(description_ptr).to_bytes()).into_owned();
-            MagickRelinquishMemory(description_ptr as *mut c_void);
-            description
-        };
+        let description = MagickAutoRelinquish::new(description_ptr as *mut c_void)
+            .map(|description_ptr| {
+                String::from_utf8_lossy(description_ptr.as_c_str().to_bytes()).into_owned()
+            })
+            .unwrap_or_else(|| "Unknown exception".to_string());
 
         Exception::new(severity.into(), description).into()
     }

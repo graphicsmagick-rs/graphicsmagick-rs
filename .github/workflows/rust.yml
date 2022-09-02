@@ -139,4 +139,4 @@ jobs:
         run: cargo test --verbose --features ${{ matrix.flag.feature }} -- --test-threads=1 --nocapture
 
       - name: Doc
-        run: cargo +nightly rustdoc --manifest-path graphicsmagick/Cargo.toml --all-features -- --cfg docsrs
+        run: cargo +nightly rustdoc --manifest-path graphicsmagick/Cargo.toml --features ${{ matrix.flag.feature }} -- --cfg docsrs

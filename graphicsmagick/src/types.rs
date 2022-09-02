@@ -597,10 +597,6 @@ pub enum ResourceType {
     /// Undefined value
     UndefinedResource = graphicsmagick_sys::ResourceType_UndefinedResource,
     /// Pixel cache total disk space (Gigabytes)
-    ///
-    /// On v_1_3_21, alias:
-    ///  - ResourceType_WidthResource
-    ///  - ResourceType_HeightResource
     DiskResource = graphicsmagick_sys::ResourceType_DiskResource,
     /// Pixel cache number of open files (Files)
     FileResource = graphicsmagick_sys::ResourceType_FileResource,

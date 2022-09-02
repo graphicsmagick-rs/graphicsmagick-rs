@@ -1135,7 +1135,9 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageColorspace() gets the image colorspace.
     ///
     pub fn get_image_colorspace(&mut self) -> ColorspaceType {
-        unsafe { MagickGetImageColorspace(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageColorspace(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecompose>
@@ -1145,7 +1147,9 @@ impl<'a> MagickWand<'a> {
     /// image.
     ///
     pub fn get_image_compose(&mut self) -> CompositeOperator {
-        unsafe { MagickGetImageCompose(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageCompose(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagecompression>
@@ -1153,7 +1157,9 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageCompression() gets the image compression.
     ///
     pub fn get_image_compression(&mut self) -> CompressionType {
-        unsafe { MagickGetImageCompression(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageCompression(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagedelay>
@@ -1193,7 +1199,9 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageDispose() gets the image disposal method.
     ///
     pub fn get_image_dispose(&mut self) -> DisposeType {
-        unsafe { MagickGetImageDispose(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageDispose(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagefilename>
@@ -1245,7 +1253,9 @@ impl<'a> MagickWand<'a> {
     #[cfg(feature = "v1_3_22")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_22")))]
     pub fn get_image_gravity(&mut self) -> GravityType {
-        unsafe { MagickGetImageGravity(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageGravity(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagegreenprimary>
@@ -1297,7 +1307,9 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageInterlaceScheme() gets the image interlace scheme.
     ///
     pub fn get_image_interlace_scheme(&mut self) -> InterlaceType {
-        unsafe { MagickGetImageInterlaceScheme(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageInterlaceScheme(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageiterations>
@@ -1347,7 +1359,9 @@ impl<'a> MagickWand<'a> {
     #[cfg(feature = "v1_3_26")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
     pub fn get_image_orientation(&mut self) -> OrientationType {
-        unsafe { MagickGetImageOrientation(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageOrientation(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepage>
@@ -1552,7 +1566,9 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageRenderingIntent() gets the image rendering intent.
     ///
     pub fn get_image_rendering_intent(&mut self) -> RenderingIntent {
-        unsafe { MagickGetImageRenderingIntent(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageRenderingIntent(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageresolution>
@@ -1602,7 +1618,9 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageType() gets the image type.
     ///
     pub fn get_image_type(&mut self) -> ImageType {
-        unsafe { MagickGetImageType(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageType(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagesavedtype>
@@ -1614,7 +1632,9 @@ impl<'a> MagickWand<'a> {
     /// by MagickGetImageType().
     ///
     pub fn get_image_saved_type(&mut self) -> ImageType {
-        unsafe { MagickGetImageSavedType(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageSavedType(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageunits>
@@ -1622,7 +1642,9 @@ impl<'a> MagickWand<'a> {
     /// MagickGetImageUnits() gets the image units of resolution.
     ///
     pub fn get_image_units(&mut self) -> ResolutionType {
-        unsafe { MagickGetImageUnits(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageUnits(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagevirtualpixelmethod>
@@ -1632,7 +1654,9 @@ impl<'a> MagickWand<'a> {
     /// sepcified image.
     ///
     pub fn get_image_virtual_pixel_method(&mut self) -> VirtualPixelMethod {
-        unsafe { MagickGetImageVirtualPixelMethod(self.wand.as_ptr()) }.into()
+        unsafe { MagickGetImageVirtualPixelMethod(self.wand.as_ptr()) }
+            .try_into()
+            .unwrap()
     }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagewhitepoint>

@@ -4,780 +4,841 @@
 
 pub use graphicsmagick_sys::{AffineMatrix, PixelPacket, PointInfo, Quantum};
 
-types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#channeltype>
-    ChannelType;
+use num_enum::{IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive};
 
+/// <http://www.graphicsmagick.org/api/types.html#channeltype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum ChannelType {
     /// Default
-    (graphicsmagick_sys::ChannelType_UndefinedChannel, UndefinedChannel);
+    UndefinedChannel = graphicsmagick_sys::ChannelType_UndefinedChannel,
     /// RGB Red channel
-    (graphicsmagick_sys::ChannelType_RedChannel, RedChannel);
+    RedChannel = graphicsmagick_sys::ChannelType_RedChannel,
     /// CMYK Cyan channel
-    (graphicsmagick_sys::ChannelType_CyanChannel, CyanChannel);
+    CyanChannel = graphicsmagick_sys::ChannelType_CyanChannel,
     /// RGB Green channel
-    (graphicsmagick_sys::ChannelType_GreenChannel, GreenChannel);
+    GreenChannel = graphicsmagick_sys::ChannelType_GreenChannel,
     /// CMYK Magenta channel
-    (graphicsmagick_sys::ChannelType_MagentaChannel, MagentaChannel);
+    MagentaChannel = graphicsmagick_sys::ChannelType_MagentaChannel,
     /// RGB Blue channel
-    (graphicsmagick_sys::ChannelType_BlueChannel, BlueChannel);
+    BlueChannel = graphicsmagick_sys::ChannelType_BlueChannel,
     /// CMYK Yellow channel
-    (graphicsmagick_sys::ChannelType_YellowChannel, YellowChannel);
+    YellowChannel = graphicsmagick_sys::ChannelType_YellowChannel,
     /// Opacity channel
-    (graphicsmagick_sys::ChannelType_OpacityChannel, OpacityChannel);
+    OpacityChannel = graphicsmagick_sys::ChannelType_OpacityChannel,
     /// CMYK Black (K) channel
-    (graphicsmagick_sys::ChannelType_BlackChannel, BlackChannel);
+    BlackChannel = graphicsmagick_sys::ChannelType_BlackChannel,
     /// Same as Opacity channel (deprecated)
-    (graphicsmagick_sys::ChannelType_MatteChannel, MatteChannel);
+    MatteChannel = graphicsmagick_sys::ChannelType_MatteChannel,
     /// Color channels
-    (graphicsmagick_sys::ChannelType_AllChannels, AllChannels);
+    AllChannels = graphicsmagick_sys::ChannelType_AllChannels,
     /// Color channels represent an intensity
-    (graphicsmagick_sys::ChannelType_GrayChannel, GrayChannel);
+    GrayChannel = graphicsmagick_sys::ChannelType_GrayChannel,
 }
 
-types_enum_block! {
-    /// FilterTypes is used to adjust the filter algorithm used when resizing images.
-    /// Different filters experience varying degrees of success with various images and can
-    /// take significantly different amounts of processing time. GraphicsMagick uses the
-    /// LanczosFilter by default since this filter has been shown to provide the best results for
-    /// most images in a reasonable amount of time. Other filter types (e.g. TriangleFilter) may
-    /// execute much faster but may show artifacts when the image is re-sized or around diagonal
-    /// lines. The only way to be sure is to test the filter with sample images.
-    ///
-    /// <http://www.graphicsmagick.org/api/types.html#filtertypes>
-    FilterTypes;
-
+/// FilterTypes is used to adjust the filter algorithm used when resizing images.
+/// Different filters experience varying degrees of success with various images and can
+/// take significantly different amounts of processing time. GraphicsMagick uses the
+/// LanczosFilter by default since this filter has been shown to provide the best results for
+/// most images in a reasonable amount of time. Other filter types (e.g. TriangleFilter) may
+/// execute much faster but may show artifacts when the image is re-sized or around diagonal
+/// lines. The only way to be sure is to test the filter with sample images.
+///
+/// <http://www.graphicsmagick.org/api/types.html#filtertypes>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum FilterTypes {
     /// Unset value.
-    (graphicsmagick_sys::FilterTypes_UndefinedFilter, UndefinedFilter);
+    UndefinedFilter = graphicsmagick_sys::FilterTypes_UndefinedFilter,
     /// Point Filter
-    (graphicsmagick_sys::FilterTypes_PointFilter, PointFilter);
+    PointFilter = graphicsmagick_sys::FilterTypes_PointFilter,
     /// Box Filter
-    (graphicsmagick_sys::FilterTypes_BoxFilter, BoxFilter);
+    BoxFilter = graphicsmagick_sys::FilterTypes_BoxFilter,
     /// Triangle Filter
-    (graphicsmagick_sys::FilterTypes_TriangleFilter, TriangleFilter);
+    TriangleFilter = graphicsmagick_sys::FilterTypes_TriangleFilter,
     /// Hermite Filter
-    (graphicsmagick_sys::FilterTypes_HermiteFilter, HermiteFilter);
+    HermiteFilter = graphicsmagick_sys::FilterTypes_HermiteFilter,
     /// Hanning Filter
-    (graphicsmagick_sys::FilterTypes_HanningFilter, HanningFilter);
+    HanningFilter = graphicsmagick_sys::FilterTypes_HanningFilter,
     /// Hamming Filter
-    (graphicsmagick_sys::FilterTypes_HammingFilter, HammingFilter);
+    HammingFilter = graphicsmagick_sys::FilterTypes_HammingFilter,
     /// Blackman Filter
-    (graphicsmagick_sys::FilterTypes_BlackmanFilter, BlackmanFilter);
+    BlackmanFilter = graphicsmagick_sys::FilterTypes_BlackmanFilter,
     /// Gaussian Filter
-    (graphicsmagick_sys::FilterTypes_GaussianFilter, GaussianFilter);
+    GaussianFilter = graphicsmagick_sys::FilterTypes_GaussianFilter,
     /// Quadratic Filter
-    (graphicsmagick_sys::FilterTypes_QuadraticFilter, QuadraticFilter);
+    QuadraticFilter = graphicsmagick_sys::FilterTypes_QuadraticFilter,
     /// Cubic Filter
-    (graphicsmagick_sys::FilterTypes_CubicFilter, CubicFilter);
+    CubicFilter = graphicsmagick_sys::FilterTypes_CubicFilter,
     /// Catrom Filter
-    (graphicsmagick_sys::FilterTypes_CatromFilter, CatromFilter);
+    CatromFilter = graphicsmagick_sys::FilterTypes_CatromFilter,
     /// Mitchell Filter
-    (graphicsmagick_sys::FilterTypes_MitchellFilter, MitchellFilter);
+    MitchellFilter = graphicsmagick_sys::FilterTypes_MitchellFilter,
     /// Lanczos Filter
-    (graphicsmagick_sys::FilterTypes_LanczosFilter, LanczosFilter);
+    LanczosFilter = graphicsmagick_sys::FilterTypes_LanczosFilter,
     /// Bessel Filter
-    (graphicsmagick_sys::FilterTypes_BesselFilter, BesselFilter);
+    BesselFilter = graphicsmagick_sys::FilterTypes_BesselFilter,
     /// Sinc Filter
-    (graphicsmagick_sys::FilterTypes_SincFilter, SincFilter);
+    SincFilter = graphicsmagick_sys::FilterTypes_SincFilter,
 }
 
-types_enum_block! {
-    /// CompositeOperator is used to select the image composition algorithm used to compose
-    /// a composite image with an image. By default, each of the composite image pixels are
-    /// replaced by the corresponding image tile pixel. Specify CompositeOperator to select
-    /// a different algorithm.
-    ///
-    /// The image compositor requires a matte, or alpha channel in the image for some operations.
-    /// This extra channel usually defines a mask which represents a sort of a cookie-cutter for
-    /// the image. This is the case when matte is 255 (full coverage) for pixels inside the shape,
-    /// zero outside, and between zero and 255 on the boundary. For certain operations, if image
-    /// does not have a matte channel, it is initialized with 0 for any pixel matching in color
-    /// to pixel location (0,0), otherwise 255 (to work properly borderWidth must be 0).
-    ///
-    /// <http://www.graphicsmagick.org/api/types.html#compositeoperator>
-    CompositeOperator;
-
+/// CompositeOperator is used to select the image composition algorithm used to compose
+/// a composite image with an image. By default, each of the composite image pixels are
+/// replaced by the corresponding image tile pixel. Specify CompositeOperator to select
+/// a different algorithm.
+///
+/// The image compositor requires a matte, or alpha channel in the image for some operations.
+/// This extra channel usually defines a mask which represents a sort of a cookie-cutter for
+/// the image. This is the case when matte is 255 (full coverage) for pixels inside the shape,
+/// zero outside, and between zero and 255 on the boundary. For certain operations, if image
+/// does not have a matte channel, it is initialized with 0 for any pixel matching in color
+/// to pixel location (0,0), otherwise 255 (to work properly borderWidth must be 0).
+///
+/// <http://www.graphicsmagick.org/api/types.html#compositeoperator>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum CompositeOperator {
     /// Unset value.
-    (graphicsmagick_sys::CompositeOperator_UndefinedCompositeOp, UndefinedCompositeOp);
+    UndefinedCompositeOp = graphicsmagick_sys::CompositeOperator_UndefinedCompositeOp,
     /// The result is the union of the the two image shapes with the composite image obscuring
     /// image in the region of overlap.
-    (graphicsmagick_sys::CompositeOperator_OverCompositeOp, OverCompositeOp);
+    OverCompositeOp = graphicsmagick_sys::CompositeOperator_OverCompositeOp,
     /// The result is a simply composite image cut by the shape of image. None of the image
     /// data of image is included in the result.
-    (graphicsmagick_sys::CompositeOperator_InCompositeOp, InCompositeOp);
+    InCompositeOp = graphicsmagick_sys::CompositeOperator_InCompositeOp,
     /// The resulting image is composite image with the shape of image cut out.
-    (graphicsmagick_sys::CompositeOperator_OutCompositeOp, OutCompositeOp);
+    OutCompositeOp = graphicsmagick_sys::CompositeOperator_OutCompositeOp,
     /// The result is the same shape as image image, with composite image obscuring image
     /// there the image shapes overlap. Note that this differs from OverCompositeOp because
     /// the portion of composite image outside of image's shape does not appear in the result.
-    (graphicsmagick_sys::CompositeOperator_AtopCompositeOp, AtopCompositeOp);
+    AtopCompositeOp = graphicsmagick_sys::CompositeOperator_AtopCompositeOp,
     /// The result is the image data from both composite image and image that is outside
     /// the overlap region. The overlap region will be blank.
-    (graphicsmagick_sys::CompositeOperator_XorCompositeOp, XorCompositeOp);
+    XorCompositeOp = graphicsmagick_sys::CompositeOperator_XorCompositeOp,
     /// The result is just the sum of the image data. Output values are cropped to
-    /// 255 (no overflow). This operation is independent of the matte channels.
-    (graphicsmagick_sys::CompositeOperator_PlusCompositeOp, PlusCompositeOp);
+    /// 255 (no over=low). This operation is independent of the matte channels.
+    PlusCompositeOp = graphicsmagick_sys::CompositeOperator_PlusCompositeOp,
     /// The result of composite image - image, with overflow cropped to zero.
     /// The matte chanel is ignored (set to 255, full coverage).
-    (graphicsmagick_sys::CompositeOperator_MinusCompositeOp, MinusCompositeOp);
+    MinusCompositeOp = graphicsmagick_sys::CompositeOperator_MinusCompositeOp,
     /// The result of composite image + image, with overflow wrapping around (mod 256).
-    (graphicsmagick_sys::CompositeOperator_AddCompositeOp, AddCompositeOp);
+    AddCompositeOp = graphicsmagick_sys::CompositeOperator_AddCompositeOp,
     /// The result of composite image - image, with underflow wrapping around (mod 256).
     /// The add and subtract operators can be used to perform reversible transformations.
-    (graphicsmagick_sys::CompositeOperator_SubtractCompositeOp, SubtractCompositeOp);
+    SubtractCompositeOp = graphicsmagick_sys::CompositeOperator_SubtractCompositeOp,
     /// The result of abs(composite image - image). This is useful for comparing two very
     /// similar images.
-    (graphicsmagick_sys::CompositeOperator_DifferenceCompositeOp, DifferenceCompositeOp);
+    DifferenceCompositeOp = graphicsmagick_sys::CompositeOperator_DifferenceCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_MultiplyCompositeOp, MultiplyCompositeOp);
+    MultiplyCompositeOp = graphicsmagick_sys::CompositeOperator_MultiplyCompositeOp,
     /// The result image shaded by composite image.
-    (graphicsmagick_sys::CompositeOperator_BumpmapCompositeOp, BumpmapCompositeOp);
+    BumpmapCompositeOp = graphicsmagick_sys::CompositeOperator_BumpmapCompositeOp,
     /// The resulting image is image replaced with composite image. Here the matte
     /// information is ignored.
-    (graphicsmagick_sys::CompositeOperator_CopyCompositeOp, CopyCompositeOp);
+    CopyCompositeOp = graphicsmagick_sys::CompositeOperator_CopyCompositeOp,
     /// The resulting image is the red layer in image replaced with the red layer in
     /// composite image. The other layers are copied untouched.
-    (graphicsmagick_sys::CompositeOperator_CopyRedCompositeOp, CopyRedCompositeOp);
+    CopyRedCompositeOp = graphicsmagick_sys::CompositeOperator_CopyRedCompositeOp,
     /// The resulting image is the green layer in image replaced with the green layer
     /// in composite image. The other layers are copied untouched.
-    (graphicsmagick_sys::CompositeOperator_CopyGreenCompositeOp, CopyGreenCompositeOp);
+    CopyGreenCompositeOp = graphicsmagick_sys::CompositeOperator_CopyGreenCompositeOp,
     /// The resulting image is the blue layer in image replaced with the blue layer in
     /// composite image. The other layers are copied untouched.
-    (graphicsmagick_sys::CompositeOperator_CopyBlueCompositeOp, CopyBlueCompositeOp);
+    CopyBlueCompositeOp = graphicsmagick_sys::CompositeOperator_CopyBlueCompositeOp,
     /// The resulting image is the matte layer in image replaced with the matte layer
     /// in composite image. The other layers are copied untouched.
-    (graphicsmagick_sys::CompositeOperator_CopyOpacityCompositeOp, CopyOpacityCompositeOp);
+    CopyOpacityCompositeOp = graphicsmagick_sys::CompositeOperator_CopyOpacityCompositeOp,
     /// Pixels in the region are set to Transparent.
-    (graphicsmagick_sys::CompositeOperator_ClearCompositeOp, ClearCompositeOp);
+    ClearCompositeOp = graphicsmagick_sys::CompositeOperator_ClearCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_DissolveCompositeOp, DissolveCompositeOp);
+    DissolveCompositeOp = graphicsmagick_sys::CompositeOperator_DissolveCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_DisplaceCompositeOp, DisplaceCompositeOp);
+    DisplaceCompositeOp = graphicsmagick_sys::CompositeOperator_DisplaceCompositeOp,
     /// Modulate brightness in HSL space.
-    (graphicsmagick_sys::CompositeOperator_ModulateCompositeOp, ModulateCompositeOp);
-    (graphicsmagick_sys::CompositeOperator_ThresholdCompositeOp, ThresholdCompositeOp);
+    ModulateCompositeOp = graphicsmagick_sys::CompositeOperator_ModulateCompositeOp,
+    ///
+    ThresholdCompositeOp = graphicsmagick_sys::CompositeOperator_ThresholdCompositeOp,
     /// Do nothing at all.
-    (graphicsmagick_sys::CompositeOperator_NoCompositeOp, NoCompositeOp);
+    NoCompositeOp = graphicsmagick_sys::CompositeOperator_NoCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_DarkenCompositeOp, DarkenCompositeOp);
+    DarkenCompositeOp = graphicsmagick_sys::CompositeOperator_DarkenCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_LightenCompositeOp, LightenCompositeOp);
+    LightenCompositeOp = graphicsmagick_sys::CompositeOperator_LightenCompositeOp,
     /// Copy Hue channel (from HSL colorspace).
-    (graphicsmagick_sys::CompositeOperator_HueCompositeOp, HueCompositeOp);
+    HueCompositeOp = graphicsmagick_sys::CompositeOperator_HueCompositeOp,
     /// Copy Saturation channel (from HSL colorspace).
-    (graphicsmagick_sys::CompositeOperator_SaturateCompositeOp, SaturateCompositeOp);
+    SaturateCompositeOp = graphicsmagick_sys::CompositeOperator_SaturateCompositeOp,
     /// Copy Hue and Saturation channels (from HSL colorspace).
-    (graphicsmagick_sys::CompositeOperator_ColorizeCompositeOp, ColorizeCompositeOp);
+    ColorizeCompositeOp = graphicsmagick_sys::CompositeOperator_ColorizeCompositeOp,
     /// Copy Brightness channel (from HSL colorspace).
-    (graphicsmagick_sys::CompositeOperator_LuminizeCompositeOp, LuminizeCompositeOp);
+    LuminizeCompositeOp = graphicsmagick_sys::CompositeOperator_LuminizeCompositeOp,
     /// [Not yet implemented]
-    (graphicsmagick_sys::CompositeOperator_ScreenCompositeOp, ScreenCompositeOp);
+    ScreenCompositeOp = graphicsmagick_sys::CompositeOperator_ScreenCompositeOp,
     /// [Not yet implemented]
-    (graphicsmagick_sys::CompositeOperator_OverlayCompositeOp, OverlayCompositeOp);
+    OverlayCompositeOp = graphicsmagick_sys::CompositeOperator_OverlayCompositeOp,
     /// Copy the Cyan channel.
-    (graphicsmagick_sys::CompositeOperator_CopyCyanCompositeOp, CopyCyanCompositeOp);
+    CopyCyanCompositeOp = graphicsmagick_sys::CompositeOperator_CopyCyanCompositeOp,
     /// Copy the Magenta channel.
-    (graphicsmagick_sys::CompositeOperator_CopyMagentaCompositeOp, CopyMagentaCompositeOp);
+    CopyMagentaCompositeOp = graphicsmagick_sys::CompositeOperator_CopyMagentaCompositeOp,
     /// Copy the Yellow channel.
-    (graphicsmagick_sys::CompositeOperator_CopyYellowCompositeOp, CopyYellowCompositeOp);
+    CopyYellowCompositeOp = graphicsmagick_sys::CompositeOperator_CopyYellowCompositeOp,
     /// Copy the Black channel.
-    (graphicsmagick_sys::CompositeOperator_CopyBlackCompositeOp, CopyBlackCompositeOp);
+    CopyBlackCompositeOp = graphicsmagick_sys::CompositeOperator_CopyBlackCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_DivideCompositeOp, DivideCompositeOp);
+    DivideCompositeOp = graphicsmagick_sys::CompositeOperator_DivideCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_HardLightCompositeOp, HardLightCompositeOp);
+    HardLightCompositeOp = graphicsmagick_sys::CompositeOperator_HardLightCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_ExclusionCompositeOp, ExclusionCompositeOp);
+    ExclusionCompositeOp = graphicsmagick_sys::CompositeOperator_ExclusionCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_ColorDodgeCompositeOp, ColorDodgeCompositeOp);
+    ColorDodgeCompositeOp = graphicsmagick_sys::CompositeOperator_ColorDodgeCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_ColorBurnCompositeOp, ColorBurnCompositeOp);
+    ColorBurnCompositeOp = graphicsmagick_sys::CompositeOperator_ColorBurnCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_SoftLightCompositeOp, SoftLightCompositeOp);
+    SoftLightCompositeOp = graphicsmagick_sys::CompositeOperator_SoftLightCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_LinearBurnCompositeOp, LinearBurnCompositeOp);
+    LinearBurnCompositeOp = graphicsmagick_sys::CompositeOperator_LinearBurnCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_LinearDodgeCompositeOp, LinearDodgeCompositeOp);
+    LinearDodgeCompositeOp = graphicsmagick_sys::CompositeOperator_LinearDodgeCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_LinearLightCompositeOp, LinearLightCompositeOp);
+    LinearLightCompositeOp = graphicsmagick_sys::CompositeOperator_LinearLightCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_VividLightCompositeOp, VividLightCompositeOp);
+    VividLightCompositeOp = graphicsmagick_sys::CompositeOperator_VividLightCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_PinLightCompositeOp, PinLightCompositeOp);
+    PinLightCompositeOp = graphicsmagick_sys::CompositeOperator_PinLightCompositeOp,
     ///
-    (graphicsmagick_sys::CompositeOperator_HardMixCompositeOp, HardMixCompositeOp);
+    HardMixCompositeOp = graphicsmagick_sys::CompositeOperator_HardMixCompositeOp,
 }
 
-types_enum_block! {
-    /// NoiseType is used as an argument to select the type of noise to be added to the image.
-    ///
-    /// <http://www.graphicsmagick.org/api/types.html#noisetype>
-    NoiseType;
-
+/// NoiseType is used as an argument to select the type of noise to be added to the image.
+///
+/// <http://www.graphicsmagick.org/api/types.html#noisetype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum NoiseType {
     /// Uniform noise
-    (graphicsmagick_sys::NoiseType_UniformNoise, UniformNoise);
+    UniformNoise = graphicsmagick_sys::NoiseType_UniformNoise,
     /// Gaussian noise
-    (graphicsmagick_sys::NoiseType_GaussianNoise, GaussianNoise);
+    GaussianNoise = graphicsmagick_sys::NoiseType_GaussianNoise,
     /// Multiplicative Gaussian noise
-    (graphicsmagick_sys::NoiseType_MultiplicativeGaussianNoise, MultiplicativeGaussianNoise);
+    MultiplicativeGaussianNoise = graphicsmagick_sys::NoiseType_MultiplicativeGaussianNoise,
     /// Impulse noise
-    (graphicsmagick_sys::NoiseType_ImpulseNoise, ImpulseNoise);
+    ImpulseNoise = graphicsmagick_sys::NoiseType_ImpulseNoise,
     /// Laplacian noise
-    (graphicsmagick_sys::NoiseType_LaplacianNoise, LaplacianNoise);
+    LaplacianNoise = graphicsmagick_sys::NoiseType_LaplacianNoise,
     /// Poisson noise
-    (graphicsmagick_sys::NoiseType_PoissonNoise, PoissonNoise);
+    PoissonNoise = graphicsmagick_sys::NoiseType_PoissonNoise,
     /// Random noise
-    (graphicsmagick_sys::NoiseType_RandomNoise, RandomNoise);
+    RandomNoise = graphicsmagick_sys::NoiseType_RandomNoise,
     /// Undefined noise
-    (graphicsmagick_sys::NoiseType_UndefinedNoise, UndefinedNoise);
+    UndefinedNoise = graphicsmagick_sys::NoiseType_UndefinedNoise,
 }
 
-types_enum_block! {
-    /// OrientationType specifies the orientation of the image. Useful for when the image is produced via a different ordinate system, the camera was turned on its side, or the page was scanned sideways.
+/// OrientationType specifies the orientation of the image. Useful for when the image is produced via a different ordinate system, the camera was turned on its side, or the page was scanned sideways.
+///
+/// <http://www.graphicsmagick.org/api/types.html#orientationtype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum OrientationType {
     ///
-    /// <http://www.graphicsmagick.org/api/types.html#orientationtype>
-    OrientationType;
-
+    UndefinedOrientation = graphicsmagick_sys::OrientationType_UndefinedOrientation,
     ///
-    (graphicsmagick_sys::OrientationType_UndefinedOrientation, UndefinedOrientation);
+    TopLeftOrientation = graphicsmagick_sys::OrientationType_TopLeftOrientation,
     ///
-    (graphicsmagick_sys::OrientationType_TopLeftOrientation, TopLeftOrientation);
+    TopRightOrientation = graphicsmagick_sys::OrientationType_TopRightOrientation,
     ///
-    (graphicsmagick_sys::OrientationType_TopRightOrientation, TopRightOrientation);
+    BottomRightOrientation = graphicsmagick_sys::OrientationType_BottomRightOrientation,
     ///
-    (graphicsmagick_sys::OrientationType_BottomRightOrientation, BottomRightOrientation);
+    BottomLeftOrientation = graphicsmagick_sys::OrientationType_BottomLeftOrientation,
     ///
-    (graphicsmagick_sys::OrientationType_BottomLeftOrientation, BottomLeftOrientation);
+    LeftTopOrientation = graphicsmagick_sys::OrientationType_LeftTopOrientation,
     ///
-    (graphicsmagick_sys::OrientationType_LeftTopOrientation, LeftTopOrientation);
+    RightTopOrientation = graphicsmagick_sys::OrientationType_RightTopOrientation,
     ///
-    (graphicsmagick_sys::OrientationType_RightTopOrientation, RightTopOrientation);
+    RightBottomOrientation = graphicsmagick_sys::OrientationType_RightBottomOrientation,
     ///
-    (graphicsmagick_sys::OrientationType_RightBottomOrientation, RightBottomOrientation);
-    ///
-    (graphicsmagick_sys::OrientationType_LeftBottomOrientation, LeftBottomOrientation);
+    LeftBottomOrientation = graphicsmagick_sys::OrientationType_LeftBottomOrientation,
 }
 
-types_enum_block! {
-    /// Pixel error metrics
-    MetricType;
-
+/// Pixel error metrics
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum MetricType {
     ///
-    (graphicsmagick_sys::MetricType_MeanAbsoluteErrorMetric, MeanAbsoluteErrorMetric);
+    MeanAbsoluteErrorMetric = graphicsmagick_sys::MetricType_MeanAbsoluteErrorMetric,
     ///
-    (graphicsmagick_sys::MetricType_MeanSquaredErrorMetric, MeanSquaredErrorMetric);
+    MeanSquaredErrorMetric = graphicsmagick_sys::MetricType_MeanSquaredErrorMetric,
     ///
-    (graphicsmagick_sys::MetricType_PeakAbsoluteErrorMetric, PeakAbsoluteErrorMetric);
+    PeakAbsoluteErrorMetric = graphicsmagick_sys::MetricType_PeakAbsoluteErrorMetric,
     ///
-    (graphicsmagick_sys::MetricType_PeakSignalToNoiseRatioMetric, PeakSignalToNoiseRatioMetric);
+    PeakSignalToNoiseRatioMetric = graphicsmagick_sys::MetricType_PeakSignalToNoiseRatioMetric,
     ///
-    (graphicsmagick_sys::MetricType_RootMeanSquaredErrorMetric, RootMeanSquaredErrorMetric);
+    RootMeanSquaredErrorMetric = graphicsmagick_sys::MetricType_RootMeanSquaredErrorMetric,
 }
 
-types_enum_block! {
-    /// The ColorspaceType enumeration is used to specify the colorspace that quantization
-    /// (color reduction and mapping) is done under or to specify the colorspace when encoding
-    /// an output image. Colorspaces are ways of describing colors to fit the requirements of a
-    /// particular application (e.g. Television, offset printing, color monitors). Color reduction,
-    /// by default, takes place in the RGBColorspace. Empirical evidence suggests that distances
-    /// in color spaces such as YUVColorspace or YIQColorspace correspond to perceptual color
-    /// differences more closely han do distances in RGB space. These color spaces may give better
-    /// results when color reducing an image. Refer to quantize for more details.
-    //When encoding an output image, the colorspaces RGBColorspace, CMYKColorspace, and GRAYColorspace may be specified. The CMYKColorspace option is only applicable when writing TIFF, JPEG, and Adobe Photoshop bitmap (PSD) files.
-    ///
-    /// <http://www.graphicsmagick.org/api/types.html#colorspacetype>
-    ColorspaceType;
-
+/// The ColorspaceType enumeration is used to specify the colorspace that quantization
+/// (color reduction and mapping) is done under or to specify the colorspace when encoding
+/// an output image. Colorspaces are ways of describing colors to fit the requirements of a
+/// particular application (e.g. Television, offset printing, color monitors). Color reduction,
+/// by default, takes place in the RGBColorspace. Empirical evidence suggests that distances
+/// in color spaces such as YUVColorspace or YIQColorspace correspond to perceptual color
+/// differences more closely han do distances in RGB space. These color spaces may give better
+/// results when color reducing an image. Refer to quantize for more details.
+/// When encoding an output image, the colorspaces RGBColorspace, CMYKColorspace, and GRAYColorspace may be specified. The CMYKColorspace option is only applicable when writing TIFF, JPEG, and Adobe Photoshop bitmap (PSD) files.
+///
+/// <http://www.graphicsmagick.org/api/types.html#colorspacetype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum ColorspaceType {
     /// Unset value.
-    (graphicsmagick_sys::ColorspaceType_UndefinedColorspace, UndefinedColorspace);
+    UndefinedColorspace = graphicsmagick_sys::ColorspaceType_UndefinedColorspace,
     /// Red, Green, Blue colorspace.
-    (graphicsmagick_sys::ColorspaceType_RGBColorspace, RGBColorspace);
+    RGBColorspace = graphicsmagick_sys::ColorspaceType_RGBColorspace,
     /// Similar to Luma (Y) according to ITU-R 601
-    (graphicsmagick_sys::ColorspaceType_GRAYColorspace, GRAYColorspace);
+    GRAYColorspace = graphicsmagick_sys::ColorspaceType_GRAYColorspace,
     /// Similar to Luma (Y) according to ITU-R 601
-    (graphicsmagick_sys::ColorspaceType_TransparentColorspace, TransparentColorspace);
+    TransparentColorspace = graphicsmagick_sys::ColorspaceType_TransparentColorspace,
     ///
-    (graphicsmagick_sys::ColorspaceType_OHTAColorspace, OHTAColorspace);
+    OHTAColorspace = graphicsmagick_sys::ColorspaceType_OHTAColorspace,
     /// CIE XYZ
-    (graphicsmagick_sys::ColorspaceType_XYZColorspace, XYZColorspace);
+    XYZColorspace = graphicsmagick_sys::ColorspaceType_XYZColorspace,
     /// Kodak PhotoCD PhotoYCC
-    (graphicsmagick_sys::ColorspaceType_YCCColorspace, YCCColorspace);
+    YCCColorspace = graphicsmagick_sys::ColorspaceType_YCCColorspace,
     ///
-    (graphicsmagick_sys::ColorspaceType_YIQColorspace, YIQColorspace);
+    YIQColorspace = graphicsmagick_sys::ColorspaceType_YIQColorspace,
     ///
-    (graphicsmagick_sys::ColorspaceType_YPbPrColorspace, YPbPrColorspace);
+    YPbPrColorspace = graphicsmagick_sys::ColorspaceType_YPbPrColorspace,
     /// YUV colorspace as used for computer video.
-    (graphicsmagick_sys::ColorspaceType_YUVColorspace, YUVColorspace);
+    YUVColorspace = graphicsmagick_sys::ColorspaceType_YUVColorspace,
     /// Cyan, Magenta, Yellow, Black colorspace.
-    (graphicsmagick_sys::ColorspaceType_CMYKColorspace, CMYKColorspace);
+    CMYKColorspace = graphicsmagick_sys::ColorspaceType_CMYKColorspace,
     /// Kodak PhotoCD sRGB
-    (graphicsmagick_sys::ColorspaceType_sRGBColorspace, SRGBColorspace);
+    SRGBColorspace = graphicsmagick_sys::ColorspaceType_sRGBColorspace,
     /// Hue, saturation, luminosity
-    (graphicsmagick_sys::ColorspaceType_HSLColorspace, HSLColorspace);
+    HSLColorspace = graphicsmagick_sys::ColorspaceType_HSLColorspace,
     /// Hue, whiteness, blackness
-    (graphicsmagick_sys::ColorspaceType_HWBColorspace, HWBColorspace);
+    HWBColorspace = graphicsmagick_sys::ColorspaceType_HWBColorspace,
     /// ITU LAB
-    (graphicsmagick_sys::ColorspaceType_LABColorspace, LABColorspace);
+    LABColorspace = graphicsmagick_sys::ColorspaceType_LABColorspace,
     /// RGB data with Cineon Log scaling, 2.048 density range
-    (graphicsmagick_sys::ColorspaceType_CineonLogRGBColorspace, CineonLogRGBColorspace);
+    CineonLogRGBColorspace = graphicsmagick_sys::ColorspaceType_CineonLogRGBColorspace,
     /// Luma (Y) according to ITU-R 601
-    (graphicsmagick_sys::ColorspaceType_Rec601LumaColorspace, Rec601LumaColorspace);
+    Rec601LumaColorspace = graphicsmagick_sys::ColorspaceType_Rec601LumaColorspace,
     /// YCbCr according to ITU-R 601
-    (graphicsmagick_sys::ColorspaceType_Rec601YCbCrColorspace, Rec601YCbCrColorspace);
+    Rec601YCbCrColorspace = graphicsmagick_sys::ColorspaceType_Rec601YCbCrColorspace,
     /// Luma (Y) according to ITU-R 709
-    (graphicsmagick_sys::ColorspaceType_Rec709LumaColorspace, Rec709LumaColorspace);
+    Rec709LumaColorspace = graphicsmagick_sys::ColorspaceType_Rec709LumaColorspace,
     /// YCbCr according to ITU-R 709
-    (graphicsmagick_sys::ColorspaceType_Rec709YCbCrColorspace, Rec709YCbCrColorspace);
+    Rec709YCbCrColorspace = graphicsmagick_sys::ColorspaceType_Rec709YCbCrColorspace,
 }
 
-types_enum_block! {
-    /// CompressionType is used to express the desired compression type when encoding an image.
-    /// Be aware that most image types only support a sub-set of the available compression types.
-    /// If the compression type specified is incompatable with the image, GraphicsMagick selects
-    /// a compression type compatable with the image type, which might be no compression at all.
-    ///
-    /// <http://www.graphicsmagick.org/api/types.html#compressiontype>
-    CompressionType;
-
+/// CompressionType is used to express the desired compression type when encoding an image.
+/// Be aware that most image types only support a sub-set of the available compression types.
+/// If the compression type specified is incompatable with the image, GraphicsMagick selects
+/// a compression type compatable with the image type, which might be no compression at all.
+///
+/// <http://www.graphicsmagick.org/api/types.html#compressiontype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum CompressionType {
     /// Unset value.
-    (graphicsmagick_sys::CompressionType_UndefinedCompression, UndefinedCompression);
+    UndefinedCompression = graphicsmagick_sys::CompressionType_UndefinedCompression,
     /// No compression
-    (graphicsmagick_sys::CompressionType_NoCompression, NoCompression);
+    NoCompression = graphicsmagick_sys::CompressionType_NoCompression,
     /// BZip (Burrows-Wheeler block-sorting text compression algorithm and Huffman coding)
     /// as used by bzip2 utilities
-    (graphicsmagick_sys::CompressionType_BZipCompression, BZipCompression);
-    /// CCITT Group 3 FAX compression
-    (graphicsmagick_sys::CompressionType_FaxCompression, FaxCompression);
-    (graphicsmagick_sys::CompressionType_Group3Compression, Group3Compression);
+    BZipCompression = graphicsmagick_sys::CompressionType_BZipCompression,
+    /// CCITT Group 3 FAX compression.
+    ///
+    /// Alias: Group3Compression
+    FaxCompression = graphicsmagick_sys::CompressionType_FaxCompression,
     /// CCITT Group 4 FAX compression (used only for TIFF)
-    (graphicsmagick_sys::CompressionType_Group4Compression, Group4Compression);
+    Group4Compression = graphicsmagick_sys::CompressionType_Group4Compression,
     /// JPEG compression
-    (graphicsmagick_sys::CompressionType_JPEGCompression, JPEGCompression);
+    JPEGCompression = graphicsmagick_sys::CompressionType_JPEGCompression,
     /// Lossless JPEG compression
-    (graphicsmagick_sys::CompressionType_LosslessJPEGCompression, LosslessJPEGCompression);
+    LosslessJPEGCompression = graphicsmagick_sys::CompressionType_LosslessJPEGCompression,
     /// Lempel-Ziv-Welch (LZW) compression (caution, patented by Unisys)
-    (graphicsmagick_sys::CompressionType_LZWCompression, LZWCompression);
+    LZWCompression = graphicsmagick_sys::CompressionType_LZWCompression,
     /// Run-Length encoded (RLE) compression
-    (graphicsmagick_sys::CompressionType_RLECompression, RLECompression);
+    RLECompression = graphicsmagick_sys::CompressionType_RLECompression,
     /// Lempel-Ziv compression (LZ77) as used in PKZIP and GNU gzip.
-    (graphicsmagick_sys::CompressionType_ZipCompression, ZipCompression);
+    ZipCompression = graphicsmagick_sys::CompressionType_ZipCompression,
     /// LZMA - Lempel-Ziv-Markov chain algorithm
-    (graphicsmagick_sys::CompressionType_LZMACompression, LZMACompression);
+    LZMACompression = graphicsmagick_sys::CompressionType_LZMACompression,
     /// JPEG 2000 - ISO/IEC std 15444-1
-    (graphicsmagick_sys::CompressionType_JPEG2000Compression, JPEG2000Compression);
+    JPEG2000Compression = graphicsmagick_sys::CompressionType_JPEG2000Compression,
     /// JBIG v1 - ISO/IEC std 11544 / ITU-T rec T.82
-    (graphicsmagick_sys::CompressionType_JBIG1Compression, JBIG1Compression);
+    JBIG1Compression = graphicsmagick_sys::CompressionType_JBIG1Compression,
 }
 
-types_enum_block! {
-    /// DisposeType
-    DisposeType;
-
+/// DisposeType
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum DisposeType {
     ///
-    (graphicsmagick_sys::DisposeType_UndefinedDispose, UndefinedDispose);
+    UndefinedDispose = graphicsmagick_sys::DisposeType_UndefinedDispose,
     ///
-    (graphicsmagick_sys::DisposeType_NoneDispose, NoneDispose);
+    NoneDispose = graphicsmagick_sys::DisposeType_NoneDispose,
     ///
-    (graphicsmagick_sys::DisposeType_BackgroundDispose, BackgroundDispose);
+    BackgroundDispose = graphicsmagick_sys::DisposeType_BackgroundDispose,
     ///
-    (graphicsmagick_sys::DisposeType_PreviousDispose, PreviousDispose);
+    PreviousDispose = graphicsmagick_sys::DisposeType_PreviousDispose,
 }
 
-types_enum_block! {
-    /// GravityType specifies positioning of an object (e.g. text, image) within a bounding
-    /// region (e.g. an image). Gravity provides a convenient way to locate objects irrespective
-    /// of the size of the bounding region, in other words, you don't need to provide absolute
-    /// coordinates in order to position an object. A common default for gravity is
-    /// NorthWestGravity.
-    ///
-    /// <http://www.graphicsmagick.org/api/types.html#gravitytype>
-    GravityType;
-
+/// GravityType specifies positioning of an object (e.g. text, image) within a bounding
+/// region (e.g. an image). Gravity provides a convenient way to locate objects irrespective
+/// of the size of the bounding region, in other words, you don't need to provide absolute
+/// coordinates in order to position an object. A common default for gravity is
+/// NorthWestGravity.
+///
+/// <http://www.graphicsmagick.org/api/types.html#gravitytype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum GravityType {
     /// Don't use gravity.
-    (graphicsmagick_sys::GravityType_ForgetGravity, ForgetGravity);
+    ForgetGravity = graphicsmagick_sys::GravityType_ForgetGravity,
     /// Position object at top-left of region.
-    (graphicsmagick_sys::GravityType_NorthWestGravity, NorthWestGravity);
+    NorthWestGravity = graphicsmagick_sys::GravityType_NorthWestGravity,
     /// Postiion object at top-center of region
-    (graphicsmagick_sys::GravityType_NorthGravity, NorthGravity);
+    NorthGravity = graphicsmagick_sys::GravityType_NorthGravity,
     /// Position object at top-right of region
-    (graphicsmagick_sys::GravityType_NorthEastGravity, NorthEastGravity);
+    NorthEastGravity = graphicsmagick_sys::GravityType_NorthEastGravity,
     /// Position object at left-center of region
-    (graphicsmagick_sys::GravityType_WestGravity, WestGravity);
+    WestGravity = graphicsmagick_sys::GravityType_WestGravity,
     /// Position object at center of region
-    (graphicsmagick_sys::GravityType_CenterGravity, CenterGravity);
+    CenterGravity = graphicsmagick_sys::GravityType_CenterGravity,
     /// Position object at right-center of region
-    (graphicsmagick_sys::GravityType_EastGravity, EastGravity);
+    EastGravity = graphicsmagick_sys::GravityType_EastGravity,
     /// Position object at left-bottom of region
-    (graphicsmagick_sys::GravityType_SouthWestGravity, SouthWestGravity);
+    SouthWestGravity = graphicsmagick_sys::GravityType_SouthWestGravity,
     /// Position object at bottom-center of region
-    (graphicsmagick_sys::GravityType_SouthGravity, SouthGravity);
+    SouthGravity = graphicsmagick_sys::GravityType_SouthGravity,
     /// Position object at bottom-right of region
-    (graphicsmagick_sys::GravityType_SouthEastGravity, SouthEastGravity);
-    (graphicsmagick_sys::GravityType_StaticGravity, StaticGravity);
+    SouthEastGravity = graphicsmagick_sys::GravityType_SouthEastGravity,
+    ///
+    StaticGravity = graphicsmagick_sys::GravityType_StaticGravity,
 }
 
-types_enum_block! {
-    /// InterlaceType specifies the ordering of the red, green, and blue pixel information in
-    /// the image. Interlacing is usually used to make image information available to the user
-    /// faster by taking advantage of the space vs time tradeoff. For example, interlacing allows
-    /// images on the Web to be recognizable sooner and satellite images to accumulate/render with
-    /// image resolution increasing over time.
-    ///
-    /// Use LineInterlace or PlaneInterlace to create an interlaced GIF or progressive JPEG image.
-    ///
-    /// <http://www.graphicsmagick.org/api/types.html#interlacetype>
-    InterlaceType;
-
+/// InterlaceType specifies the ordering of the red, green, and blue pixel information in
+/// the image. Interlacing is usually used to make image information available to the user
+/// faster by taking advantage of the space vs time tradeoff. For example, interlacing allows
+/// images on the Web to be recognizable sooner and satellite images to accumulate/render with
+/// image resolution increasing over time.
+///
+/// Use LineInterlace or PlaneInterlace to create an interlaced GIF or progressive JPEG image.
+///
+/// <http://www.graphicsmagick.org/api/types.html#interlacetype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum InterlaceType {
     /// Unset value.
-    (graphicsmagick_sys::InterlaceType_UndefinedInterlace, UndefinedInterlace);
+    UndefinedInterlace = graphicsmagick_sys::InterlaceType_UndefinedInterlace,
     /// Don't interlace image (RGBRGBRGBRGBRGBRGB...)
-    (graphicsmagick_sys::InterlaceType_NoInterlace, NoInterlace);
+    NoInterlace = graphicsmagick_sys::InterlaceType_NoInterlace,
     /// Use scanline interlacing (RRR...GGG...BBB...RRR...GGG...BBB...)
-    (graphicsmagick_sys::InterlaceType_LineInterlace, LineInterlace);
+    LineInterlace = graphicsmagick_sys::InterlaceType_LineInterlace,
     /// Use plane interlacing (RRRRRR...GGGGGG...BBBBBB...)
-    (graphicsmagick_sys::InterlaceType_PlaneInterlace, PlaneInterlace);
+    PlaneInterlace = graphicsmagick_sys::InterlaceType_PlaneInterlace,
     /// Similar to plane interlaing except that the different planes are saved to
     /// individual files (e.g. image.R, image.G, and image.B)
-    (graphicsmagick_sys::InterlaceType_PartitionInterlace, PartitionInterlace);
+    PartitionInterlace = graphicsmagick_sys::InterlaceType_PartitionInterlace,
 }
 
-types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#storagetype>
-    StorageType;
-
+/// <http://www.graphicsmagick.org/api/types.html#storagetype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum StorageType {
     ///
-    (graphicsmagick_sys::StorageType_CharPixel, CharPixel);
+    CharPixel = graphicsmagick_sys::StorageType_CharPixel,
     ///
-    (graphicsmagick_sys::StorageType_ShortPixel, ShortPixel);
+    ShortPixel = graphicsmagick_sys::StorageType_ShortPixel,
     ///
-    (graphicsmagick_sys::StorageType_IntegerPixel, IntegerPixel);
+    IntegerPixel = graphicsmagick_sys::StorageType_IntegerPixel,
     ///
-    (graphicsmagick_sys::StorageType_LongPixel, LongPixel);
+    LongPixel = graphicsmagick_sys::StorageType_LongPixel,
     ///
-    (graphicsmagick_sys::StorageType_FloatPixel, FloatPixel);
+    FloatPixel = graphicsmagick_sys::StorageType_FloatPixel,
     ///
-    (graphicsmagick_sys::StorageType_DoublePixel, DoublePixel);
+    DoublePixel = graphicsmagick_sys::StorageType_DoublePixel,
 }
 
-types_enum_block! {
-    /// Rendering intent is a concept defined by ICC Spec ICC.1:1998-09, "File Format for Color
-    /// Profiles". GraphicsMagick uses RenderingIntent in order to support ICC Color Profiles.
-    ///
-    /// From the specification: "Rendering intent specifies the style of reproduction to be used
-    /// during the evaluation of this profile in a sequence of profiles. It applies specifically
-    /// to that profile in the sequence and not to the entire sequence. Typically, the user or
-    /// application will set the rendering intent dynamically at runtime or embedding time."
-    ///
-    /// <http://www.graphicsmagick.org/api/types.html#renderingintent>
-    RenderingIntent;
-
+/// Rendering intent is a concept defined by ICC Spec ICC.1:1998-09, "File Format for Color
+/// Profiles". GraphicsMagick uses RenderingIntent in order to support ICC Color Profiles.
+///
+/// From the specification: "Rendering intent specifies the style of reproduction to be used
+/// during the evaluation of this profile in a sequence of profiles. It applies specifically
+/// to that profile in the sequence and not to the entire sequence. Typically, the user or
+/// application will set the rendering intent dynamically at runtime or embedding time."
+///
+/// <http://www.graphicsmagick.org/api/types.html#renderingintent>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum RenderingIntent {
     /// Unset value.
-    (graphicsmagick_sys::RenderingIntent_UndefinedIntent, UndefinedIntent);
+    UndefinedIntent = graphicsmagick_sys::RenderingIntent_UndefinedIntent,
     /// A rendering intent that specifies the saturation of the pixels in the image is preserved
     /// perhaps at the expense of accuracy in hue and lightness.
-    (graphicsmagick_sys::RenderingIntent_SaturationIntent, SaturationIntent);
+    SaturationIntent = graphicsmagick_sys::RenderingIntent_SaturationIntent,
     /// A rendering intent that specifies the full gamut of the image is compressed or expanded
     /// to fill the gamut of the destination device. Gray balance is preserved but colorimetric
     /// accuracy might not be preserved.
-    (graphicsmagick_sys::RenderingIntent_PerceptualIntent, PerceptualIntent);
+    PerceptualIntent = graphicsmagick_sys::RenderingIntent_PerceptualIntent,
     /// Absolute colorimetric
-    (graphicsmagick_sys::RenderingIntent_AbsoluteIntent, AbsoluteIntent);
+    AbsoluteIntent = graphicsmagick_sys::RenderingIntent_AbsoluteIntent,
     /// Relative colorimetric
-    (graphicsmagick_sys::RenderingIntent_RelativeIntent, RelativeIntent);
+    RelativeIntent = graphicsmagick_sys::RenderingIntent_RelativeIntent,
 }
 
-types_enum_block! {
-    /// ImageType indicates the type classification of the image.
-    ///
-    /// <http://www.graphicsmagick.org/api/types.html#imagetype>
-    ImageType;
-
+/// ImageType indicates the type classification of the image.
+///
+/// <http://www.graphicsmagick.org/api/types.html#imagetype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum ImageType {
     /// Unset value.
-    (graphicsmagick_sys::ImageType_UndefinedType, UndefinedType);
+    UndefinedType = graphicsmagick_sys::ImageType_UndefinedType,
     /// Monochrome image
-    (graphicsmagick_sys::ImageType_BilevelType, BilevelType);
+    BilevelType = graphicsmagick_sys::ImageType_BilevelType,
     /// Grayscale image
-    (graphicsmagick_sys::ImageType_GrayscaleType, GrayscaleType);
+    GrayscaleType = graphicsmagick_sys::ImageType_GrayscaleType,
     /// Grayscale image with opacity
-    (graphicsmagick_sys::ImageType_GrayscaleMatteType, GrayscaleMatteType);
+    GrayscaleMatteType = graphicsmagick_sys::ImageType_GrayscaleMatteType,
     /// Indexed color (palette) image
-    (graphicsmagick_sys::ImageType_PaletteType, PaletteType);
+    PaletteType = graphicsmagick_sys::ImageType_PaletteType,
     /// Indexed color (palette) image with opacity
-    (graphicsmagick_sys::ImageType_PaletteMatteType, PaletteMatteType);
+    PaletteMatteType = graphicsmagick_sys::ImageType_PaletteMatteType,
     /// Truecolor image
-    (graphicsmagick_sys::ImageType_TrueColorType, TrueColorType);
+    TrueColorType = graphicsmagick_sys::ImageType_TrueColorType,
     /// Truecolor image with opacity
-    (graphicsmagick_sys::ImageType_TrueColorMatteType, TrueColorMatteType);
+    TrueColorMatteType = graphicsmagick_sys::ImageType_TrueColorMatteType,
     /// Cyan/Yellow/Magenta/Black (CYMK) image
-    (graphicsmagick_sys::ImageType_ColorSeparationType, ColorSeparationType);
+    ColorSeparationType = graphicsmagick_sys::ImageType_ColorSeparationType,
     ///
-    (graphicsmagick_sys::ImageType_ColorSeparationMatteType, ColorSeparationMatteType);
+    ColorSeparationMatteType = graphicsmagick_sys::ImageType_ColorSeparationMatteType,
     ///
-    (graphicsmagick_sys::ImageType_OptimizeType, OptimizeType);
+    OptimizeType = graphicsmagick_sys::ImageType_OptimizeType,
 }
 
-types_enum_block! {
-    /// By default, GraphicsMagick defines resolutions in pixels per inch. ResolutionType provides a means to adjust this.
-    /// <http://www.graphicsmagick.org/api/types.html#resolutiontype>
-    ///
-    ResolutionType;
-
+/// By default, GraphicsMagick defines resolutions in pixels per inch. ResolutionType provides a means to adjust this.
+/// <http://www.graphicsmagick.org/api/types.html#resolutiontype>
+///
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum ResolutionType {
     /// Unset value.
-    (graphicsmagick_sys::ResolutionType_UndefinedResolution, UndefinedResolution);
+    UndefinedResolution = graphicsmagick_sys::ResolutionType_UndefinedResolution,
     /// Density specifications are specified in units of pixels per inch (english units).
-    (graphicsmagick_sys::ResolutionType_PixelsPerInchResolution, PixelsPerInchResolution);
+    PixelsPerInchResolution = graphicsmagick_sys::ResolutionType_PixelsPerInchResolution,
     /// Density specifications are specified in units of pixels per centimeter (metric units).
-    (graphicsmagick_sys::ResolutionType_PixelsPerCentimeterResolution, PixelsPerCentimeterResolution);
+    PixelsPerCentimeterResolution =
+        graphicsmagick_sys::ResolutionType_PixelsPerCentimeterResolution,
 }
 
-types_enum_block! {
-    /// Enum declaractions.
+/// Enum declaractions.
+///
+/// <http://www.graphicsmagick.org/api/types.html#virtualpixelmethod>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum VirtualPixelMethod {
     ///
-    /// <http://www.graphicsmagick.org/api/types.html#virtualpixelmethod>
-    VirtualPixelMethod;
-
+    UndefinedVirtualPixelMethod =
+        graphicsmagick_sys::VirtualPixelMethod_UndefinedVirtualPixelMethod,
     ///
-    (graphicsmagick_sys::VirtualPixelMethod_UndefinedVirtualPixelMethod, UndefinedVirtualPixelMethod);
+    ConstantVirtualPixelMethod = graphicsmagick_sys::VirtualPixelMethod_ConstantVirtualPixelMethod,
     ///
-    (graphicsmagick_sys::VirtualPixelMethod_ConstantVirtualPixelMethod, ConstantVirtualPixelMethod);
+    EdgeVirtualPixelMethod = graphicsmagick_sys::VirtualPixelMethod_EdgeVirtualPixelMethod,
     ///
-    (graphicsmagick_sys::VirtualPixelMethod_EdgeVirtualPixelMethod, EdgeVirtualPixelMethod);
+    MirrorVirtualPixelMethod = graphicsmagick_sys::VirtualPixelMethod_MirrorVirtualPixelMethod,
     ///
-    (graphicsmagick_sys::VirtualPixelMethod_MirrorVirtualPixelMethod, MirrorVirtualPixelMethod);
-    ///
-    (graphicsmagick_sys::VirtualPixelMethod_TileVirtualPixelMethod, TileVirtualPixelMethod);
+    TileVirtualPixelMethod = graphicsmagick_sys::VirtualPixelMethod_TileVirtualPixelMethod,
 }
 
-types_enum_block! {
-    /// Typedef declarations.
-    ///
-    /// <http://www.graphicsmagick.org/api/types.html#resourcetype>
-    ResourceType;
-
+/// Typedef declarations.
+///
+/// <http://www.graphicsmagick.org/api/types.html#resourcetype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum ResourceType {
     /// Undefined value
-    (graphicsmagick_sys::ResourceType_UndefinedResource, UndefinedResource);
+    UndefinedResource = graphicsmagick_sys::ResourceType_UndefinedResource,
     /// Pixel cache total disk space (Gigabytes)
-    (graphicsmagick_sys::ResourceType_DiskResource, DiskResource);
+    DiskResource = graphicsmagick_sys::ResourceType_DiskResource,
     /// Pixel cache number of open files (Files)
-    (graphicsmagick_sys::ResourceType_FileResource, FileResource);
+    FileResource = graphicsmagick_sys::ResourceType_FileResource,
     /// Pixel cache total file memory-mapping (Megabytes)
-    (graphicsmagick_sys::ResourceType_MapResource, MapResource);
+    MapResource = graphicsmagick_sys::ResourceType_MapResource,
     /// Maximum pixel cache heap memory allocations (Megabytes)
-    (graphicsmagick_sys::ResourceType_MemoryResource, MemoryResource);
+    MemoryResource = graphicsmagick_sys::ResourceType_MemoryResource,
     /// Maximum number of pixels in single image (Pixels)
-    (graphicsmagick_sys::ResourceType_PixelsResource, PixelsResource);
+    PixelsResource = graphicsmagick_sys::ResourceType_PixelsResource,
     /// Maximum number of worker threads
-    (graphicsmagick_sys::ResourceType_ThreadsResource, ThreadsResource);
+    ThreadsResource = graphicsmagick_sys::ResourceType_ThreadsResource,
     /// Maximum pixel width of an image (Pixels)
     #[cfg(feature = "v1_3_21")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_21")))]
-    (graphicsmagick_sys::ResourceType_WidthResource, WidthResource);
+    WidthResource = graphicsmagick_sys::ResourceType_WidthResource,
     /// Maximum pixel height of an image (Pixels)
     #[cfg(feature = "v1_3_21")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_21")))]
-    (graphicsmagick_sys::ResourceType_HeightResource, HeightResource);
+    HeightResource = graphicsmagick_sys::ResourceType_HeightResource,
 }
 
-types_enum_block! {
-    /// MontageMode
-    MontageMode;
-
+/// MontageMode
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum MontageMode {
     ///
-    (graphicsmagick_sys::MontageMode_UndefinedMode, UndefinedMode);
+    UndefinedMode = graphicsmagick_sys::MontageMode_UndefinedMode,
     ///
-    (graphicsmagick_sys::MontageMode_FrameMode, FrameMode);
+    FrameMode = graphicsmagick_sys::MontageMode_FrameMode,
     ///
-    (graphicsmagick_sys::MontageMode_UnframeMode, UnframeMode);
+    UnframeMode = graphicsmagick_sys::MontageMode_UnframeMode,
     ///
-    (graphicsmagick_sys::MontageMode_ConcatenateMode, ConcatenateMode);
+    ConcatenateMode = graphicsmagick_sys::MontageMode_ConcatenateMode,
 }
 
-types_enum_block! {
-    /// PreviewType
-    PreviewType;
-
+/// PreviewType
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum PreviewType {
     ///
-    (graphicsmagick_sys::PreviewType_UndefinedPreview, UndefinedPreview);
+    UndefinedPreview = graphicsmagick_sys::PreviewType_UndefinedPreview,
     ///
-    (graphicsmagick_sys::PreviewType_RotatePreview, RotatePreview);
+    RotatePreview = graphicsmagick_sys::PreviewType_RotatePreview,
     ///
-    (graphicsmagick_sys::PreviewType_ShearPreview, ShearPreview);
+    ShearPreview = graphicsmagick_sys::PreviewType_ShearPreview,
     ///
-    (graphicsmagick_sys::PreviewType_RollPreview, RollPreview);
+    RollPreview = graphicsmagick_sys::PreviewType_RollPreview,
     ///
-    (graphicsmagick_sys::PreviewType_HuePreview, HuePreview);
+    HuePreview = graphicsmagick_sys::PreviewType_HuePreview,
     ///
-    (graphicsmagick_sys::PreviewType_SaturationPreview, SaturationPreview);
+    SaturationPreview = graphicsmagick_sys::PreviewType_SaturationPreview,
     ///
-    (graphicsmagick_sys::PreviewType_BrightnessPreview, BrightnessPreview);
+    BrightnessPreview = graphicsmagick_sys::PreviewType_BrightnessPreview,
     ///
-    (graphicsmagick_sys::PreviewType_GammaPreview, GammaPreview);
+    GammaPreview = graphicsmagick_sys::PreviewType_GammaPreview,
     ///
-    (graphicsmagick_sys::PreviewType_SpiffPreview, SpiffPreview);
+    SpiffPreview = graphicsmagick_sys::PreviewType_SpiffPreview,
     ///
-    (graphicsmagick_sys::PreviewType_DullPreview, DullPreview);
+    DullPreview = graphicsmagick_sys::PreviewType_DullPreview,
     ///
-    (graphicsmagick_sys::PreviewType_GrayscalePreview, GrayscalePreview);
+    GrayscalePreview = graphicsmagick_sys::PreviewType_GrayscalePreview,
     ///
-    (graphicsmagick_sys::PreviewType_QuantizePreview, QuantizePreview);
+    QuantizePreview = graphicsmagick_sys::PreviewType_QuantizePreview,
     ///
-    (graphicsmagick_sys::PreviewType_DespecklePreview, DespecklePreview);
+    DespecklePreview = graphicsmagick_sys::PreviewType_DespecklePreview,
     ///
-    (graphicsmagick_sys::PreviewType_ReduceNoisePreview, ReduceNoisePreview);
+    ReduceNoisePreview = graphicsmagick_sys::PreviewType_ReduceNoisePreview,
     ///
-    (graphicsmagick_sys::PreviewType_AddNoisePreview, AddNoisePreview);
+    AddNoisePreview = graphicsmagick_sys::PreviewType_AddNoisePreview,
     ///
-    (graphicsmagick_sys::PreviewType_SharpenPreview, SharpenPreview);
+    SharpenPreview = graphicsmagick_sys::PreviewType_SharpenPreview,
     ///
-    (graphicsmagick_sys::PreviewType_BlurPreview, BlurPreview);
+    BlurPreview = graphicsmagick_sys::PreviewType_BlurPreview,
     ///
-    (graphicsmagick_sys::PreviewType_ThresholdPreview, ThresholdPreview);
+    ThresholdPreview = graphicsmagick_sys::PreviewType_ThresholdPreview,
     ///
-    (graphicsmagick_sys::PreviewType_EdgeDetectPreview, EdgeDetectPreview);
+    EdgeDetectPreview = graphicsmagick_sys::PreviewType_EdgeDetectPreview,
     ///
-    (graphicsmagick_sys::PreviewType_SpreadPreview, SpreadPreview);
+    SpreadPreview = graphicsmagick_sys::PreviewType_SpreadPreview,
     ///
-    (graphicsmagick_sys::PreviewType_SolarizePreview, SolarizePreview);
+    SolarizePreview = graphicsmagick_sys::PreviewType_SolarizePreview,
     ///
-    (graphicsmagick_sys::PreviewType_ShadePreview, ShadePreview);
+    ShadePreview = graphicsmagick_sys::PreviewType_ShadePreview,
     ///
-    (graphicsmagick_sys::PreviewType_RaisePreview, RaisePreview);
+    RaisePreview = graphicsmagick_sys::PreviewType_RaisePreview,
     ///
-    (graphicsmagick_sys::PreviewType_SegmentPreview, SegmentPreview);
+    SegmentPreview = graphicsmagick_sys::PreviewType_SegmentPreview,
     ///
-    (graphicsmagick_sys::PreviewType_SwirlPreview, SwirlPreview);
+    SwirlPreview = graphicsmagick_sys::PreviewType_SwirlPreview,
     ///
-    (graphicsmagick_sys::PreviewType_ImplodePreview, ImplodePreview);
+    ImplodePreview = graphicsmagick_sys::PreviewType_ImplodePreview,
     ///
-    (graphicsmagick_sys::PreviewType_WavePreview, WavePreview);
+    WavePreview = graphicsmagick_sys::PreviewType_WavePreview,
     ///
-    (graphicsmagick_sys::PreviewType_OilPaintPreview, OilPaintPreview);
+    OilPaintPreview = graphicsmagick_sys::PreviewType_OilPaintPreview,
     ///
-    (graphicsmagick_sys::PreviewType_CharcoalDrawingPreview, CharcoalDrawingPreview);
+    CharcoalDrawingPreview = graphicsmagick_sys::PreviewType_CharcoalDrawingPreview,
     ///
-    (graphicsmagick_sys::PreviewType_JPEGPreview, JPEGPreview);
+    JPEGPreview = graphicsmagick_sys::PreviewType_JPEGPreview,
 }
 
-types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#fillrule>
-    FillRule;
-
+/// <http://www.graphicsmagick.org/api/types.html#fillrule>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum FillRule {
     ///
-    (graphicsmagick_sys::FillRule_UndefinedRule, UndefinedRule);
+    UndefinedRule = graphicsmagick_sys::FillRule_UndefinedRule,
     ///
-    (graphicsmagick_sys::FillRule_EvenOddRule, EvenOddRule);
+    EvenOddRule = graphicsmagick_sys::FillRule_EvenOddRule,
     ///
-    (graphicsmagick_sys::FillRule_NonZeroRule, NonZeroRule);
+    NonZeroRule = graphicsmagick_sys::FillRule_NonZeroRule,
 }
 
-types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#clippathunits>
-    ClipPathUnits;
-
+/// <http://www.graphicsmagick.org/api/types.html#clippathunits>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum ClipPathUnits {
     ///
-    (graphicsmagick_sys::ClipPathUnits_UserSpace, UserSpace);
+    UserSpace = graphicsmagick_sys::ClipPathUnits_UserSpace,
     ///
-    (graphicsmagick_sys::ClipPathUnits_UserSpaceOnUse, UserSpaceOnUse);
+    UserSpaceOnUse = graphicsmagick_sys::ClipPathUnits_UserSpaceOnUse,
     ///
-    (graphicsmagick_sys::ClipPathUnits_ObjectBoundingBox, ObjectBoundingBox);
+    ObjectBoundingBox = graphicsmagick_sys::ClipPathUnits_ObjectBoundingBox,
 }
 
-types_enum_block! {
-    /// PaintMethod specifies how pixel colors are to be replaced in the image. It is used to select
-    /// the pixel-filling algorithm employed.
-    ///
-    /// <http://www.graphicsmagick.org/api/types.html#paintmethod>
-    PaintMethod;
-
+/// PaintMethod specifies how pixel colors are to be replaced in the image. It is used to select
+/// the pixel-filling algorithm employed.
+///
+/// <http://www.graphicsmagick.org/api/types.html#paintmethod>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum PaintMethod {
     /// Replace pixel color at point.
-    (graphicsmagick_sys::PaintMethod_PointMethod, PointMethod);
+    PointMethod = graphicsmagick_sys::PaintMethod_PointMethod,
     /// Replace color for all image pixels matching color at point.
-    (graphicsmagick_sys::PaintMethod_ReplaceMethod, ReplaceMethod);
+    ReplaceMethod = graphicsmagick_sys::PaintMethod_ReplaceMethod,
     /// Replace color for pixels surrounding point until encountering pixel that fails to match color at point.
-    (graphicsmagick_sys::PaintMethod_FloodfillMethod, FloodfillMethod);
+    FloodfillMethod = graphicsmagick_sys::PaintMethod_FloodfillMethod,
     /// Replace color for pixels surrounding point until encountering pixels matching border color.
-    (graphicsmagick_sys::PaintMethod_FillToBorderMethod, FillToBorderMethod);
+    FillToBorderMethod = graphicsmagick_sys::PaintMethod_FillToBorderMethod,
     /// Replace colors for all pixels in image with pen color.
-    (graphicsmagick_sys::PaintMethod_ResetMethod, ResetMethod);
+    ResetMethod = graphicsmagick_sys::PaintMethod_ResetMethod,
 }
 
-types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#stretchtype>
-    StretchType;
-
+/// <http://www.graphicsmagick.org/api/types.html#stretchtype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum StretchType {
     ///
-    (graphicsmagick_sys::StretchType_NormalStretch, NormalStretch);
+    NormalStretch = graphicsmagick_sys::StretchType_NormalStretch,
     ///
-    (graphicsmagick_sys::StretchType_UltraCondensedStretch, UltraCondensedStretch);
+    UltraCondensedStretch = graphicsmagick_sys::StretchType_UltraCondensedStretch,
     ///
-    (graphicsmagick_sys::StretchType_ExtraCondensedStretch, ExtraCondensedStretch);
+    ExtraCondensedStretch = graphicsmagick_sys::StretchType_ExtraCondensedStretch,
     ///
-    (graphicsmagick_sys::StretchType_CondensedStretch, CondensedStretch);
+    CondensedStretch = graphicsmagick_sys::StretchType_CondensedStretch,
     ///
-    (graphicsmagick_sys::StretchType_SemiCondensedStretch, SemiCondensedStretch);
+    SemiCondensedStretch = graphicsmagick_sys::StretchType_SemiCondensedStretch,
     ///
-    (graphicsmagick_sys::StretchType_SemiExpandedStretch, SemiExpandedStretch);
+    SemiExpandedStretch = graphicsmagick_sys::StretchType_SemiExpandedStretch,
     ///
-    (graphicsmagick_sys::StretchType_ExpandedStretch, ExpandedStretch);
+    ExpandedStretch = graphicsmagick_sys::StretchType_ExpandedStretch,
     ///
-    (graphicsmagick_sys::StretchType_ExtraExpandedStretch, ExtraExpandedStretch);
+    ExtraExpandedStretch = graphicsmagick_sys::StretchType_ExtraExpandedStretch,
     ///
-    (graphicsmagick_sys::StretchType_UltraExpandedStretch, UltraExpandedStretch);
+    UltraExpandedStretch = graphicsmagick_sys::StretchType_UltraExpandedStretch,
     ///
-    (graphicsmagick_sys::StretchType_AnyStretch, AnyStretch);
+    AnyStretch = graphicsmagick_sys::StretchType_AnyStretch,
 }
 
-types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#styletype>
-    StyleType;
-
+/// <http://www.graphicsmagick.org/api/types.html#styletype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum StyleType {
     ///
-    (graphicsmagick_sys::StyleType_NormalStyle, NormalStyle);
+    NormalStyle = graphicsmagick_sys::StyleType_NormalStyle,
     ///
-    (graphicsmagick_sys::StyleType_ItalicStyle, ItalicStyle);
+    ItalicStyle = graphicsmagick_sys::StyleType_ItalicStyle,
     ///
-    (graphicsmagick_sys::StyleType_ObliqueStyle, ObliqueStyle);
+    ObliqueStyle = graphicsmagick_sys::StyleType_ObliqueStyle,
     ///
-    (graphicsmagick_sys::StyleType_AnyStyle, AnyStyle);
+    AnyStyle = graphicsmagick_sys::StyleType_AnyStyle,
 }
 
-types_enum_block! {
-    /// LineCap
-    LineCap;
-
+/// LineCap
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum LineCap {
     ///
-    (graphicsmagick_sys::LineCap_UndefinedCap, UndefinedCap);
+    UndefinedCap = graphicsmagick_sys::LineCap_UndefinedCap,
     ///
-    (graphicsmagick_sys::LineCap_ButtCap, ButtCap);
+    ButtCap = graphicsmagick_sys::LineCap_ButtCap,
     ///
-    (graphicsmagick_sys::LineCap_RoundCap, RoundCap);
+    RoundCap = graphicsmagick_sys::LineCap_RoundCap,
     ///
-    (graphicsmagick_sys::LineCap_SquareCap, SquareCap);
+    SquareCap = graphicsmagick_sys::LineCap_SquareCap,
 }
 
-types_enum_block! {
-    /// LineJoin
-    LineJoin;
-
+/// LineJoin
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum LineJoin {
     ///
-    (graphicsmagick_sys::LineJoin_UndefinedJoin, UndefinedJoin);
+    UndefinedJoin = graphicsmagick_sys::LineJoin_UndefinedJoin,
     ///
-    (graphicsmagick_sys::LineJoin_MiterJoin, MiterJoin);
+    MiterJoin = graphicsmagick_sys::LineJoin_MiterJoin,
     ///
-    (graphicsmagick_sys::LineJoin_RoundJoin, RoundJoin);
+    RoundJoin = graphicsmagick_sys::LineJoin_RoundJoin,
     ///
-    (graphicsmagick_sys::LineJoin_BevelJoin, BevelJoin);
+    BevelJoin = graphicsmagick_sys::LineJoin_BevelJoin,
 }
 
-types_enum_block! {
-    /// <http://www.graphicsmagick.org/api/types.html#decorationtype>
-    DecorationType;
-
+/// <http://www.graphicsmagick.org/api/types.html#decorationtype>
+#[derive(
+    Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, TryFromPrimitive, UnsafeFromPrimitive,
+)]
+#[repr(u32)]
+pub enum DecorationType {
     ///
-    (graphicsmagick_sys::DecorationType_NoDecoration, NoDecoration);
+    NoDecoration = graphicsmagick_sys::DecorationType_NoDecoration,
     ///
-    (graphicsmagick_sys::DecorationType_UnderlineDecoration, UnderlineDecoration);
+    UnderlineDecoration = graphicsmagick_sys::DecorationType_UnderlineDecoration,
     ///
-    (graphicsmagick_sys::DecorationType_OverlineDecoration, OverlineDecoration);
+    OverlineDecoration = graphicsmagick_sys::DecorationType_OverlineDecoration,
     ///
-    (graphicsmagick_sys::DecorationType_LineThroughDecoration, LineThroughDecoration);
+    LineThroughDecoration = graphicsmagick_sys::DecorationType_LineThroughDecoration,
 }

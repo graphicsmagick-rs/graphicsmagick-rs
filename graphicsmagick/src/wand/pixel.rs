@@ -2,7 +2,10 @@
 //!
 //! <http://www.graphicsmagick.org/wand/pixel_wand.html>
 
-use crate::utils::{assert_initialized, str_to_c_string, MagickCString};
+use crate::{
+    types::*,
+    utils::{assert_initialized, str_to_c_string, MagickCString},
+};
 use graphicsmagick_sys::*;
 use std::{
     os::raw::{c_double, c_ulong},

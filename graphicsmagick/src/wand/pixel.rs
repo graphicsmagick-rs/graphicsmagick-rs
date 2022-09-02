@@ -421,7 +421,7 @@ impl PixelWand {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::initialize;
+    use crate::{initialize, wand::PixelWand};
 
     fn new_pixel_wand() -> PixelWand {
         initialize();

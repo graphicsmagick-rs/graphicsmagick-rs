@@ -4,8 +4,8 @@
 
 use crate::{
     types::{
-        ClipPathUnits, DecorationType, FillRule, GravityType, LineCap, LineJoin, PaintMethod,
-        StretchType, StyleType,
+        AffineMatrix, ClipPathUnits, DecorationType, FillRule, GravityType, LineCap, LineJoin,
+        PaintMethod, StretchType, StyleType,
     },
     utils::{assert_initialized, str_to_c_string},
     wand::pixel::PixelWand,
@@ -1618,8 +1618,14 @@ impl DrawingWand {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::initialize;
+    use crate::{
+        initialize,
+        types::{
+            AffineMatrix, ClipPathUnits, DecorationType, FillRule, GravityType, LineCap, LineJoin,
+            PaintMethod, PointInfo, StretchType, StyleType,
+        },
+        wand::{DrawingWand, PixelWand},
+    };
 
     fn new_logo_drawing_wand() -> DrawingWand {
         initialize();

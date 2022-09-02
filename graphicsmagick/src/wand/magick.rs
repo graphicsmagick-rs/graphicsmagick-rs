@@ -16,8 +16,8 @@ use crate::{
 use graphicsmagick_sys::*;
 use std::{
     ffi::CStr,
-    fmt,
     marker::PhantomData,
+    mem::MaybeUninit,
     os::raw::{c_double, c_float, c_long, c_uchar, c_uint, c_ulong, c_ushort, c_void},
     ptr::null_mut,
     slice,
@@ -29,43 +29,34 @@ use crate::types::OrientationType;
 #[cfg(feature = "v1_3_22")]
 use crate::types::GravityType;
 
-/// # Safety
-///
-/// `STORAGE_TYPE` must match `TARGET`.
-pub unsafe trait MagickWandExportTypeSealed {
-    const STORAGE_TYPE: StorageType;
+mod sealed {
+    use super::StorageType;
 
-    /// Make using it in generic code easier.
-    type Target: fmt::Debug + fmt::Display + Copy + Clone;
+    /// # Safety
+    ///
+    /// `STORAGE_TYPE` must match the type being implemented.
+    pub unsafe trait MagickWandExportTypeSealed {
+        const STORAGE_TYPE: StorageType;
+    }
 }
 
-pub trait MagickWandExportType: MagickWandExportTypeSealed {}
+pub trait MagickWandExportType: sealed::MagickWandExportTypeSealed {}
 
 macro_rules! def_magickwand_export_type {
-    ($name:ident, $STORAGE_TYPE:expr, $Target:ty) => {
-        pub struct $name;
-        unsafe impl MagickWandExportTypeSealed for $name {
+    ($STORAGE_TYPE:expr, $type:ty) => {
+        unsafe impl sealed::MagickWandExportTypeSealed for $type {
             const STORAGE_TYPE: StorageType = $STORAGE_TYPE;
-            type Target = $Target;
         }
-        impl MagickWandExportType for $name {}
+        impl MagickWandExportType for $type {}
     };
 }
 
-def_magickwand_export_type!(MagickWandExportCharPixel, StorageType_CharPixel, c_uchar);
-def_magickwand_export_type!(MagickWandExportShortPixel, StorageType_ShortPixel, c_ushort);
-def_magickwand_export_type!(
-    MagickWandExportIntegerPixel,
-    StorageType_IntegerPixel,
-    c_uint
-);
-def_magickwand_export_type!(MagickWandExportLongPixel, StorageType_LongPixel, c_ulong);
-def_magickwand_export_type!(MagickWandExportFloatPixel, StorageType_FloatPixel, c_float);
-def_magickwand_export_type!(
-    MagickWandExportDoublePixel,
-    StorageType_DoublePixel,
-    c_double
-);
+def_magickwand_export_type!(StorageType_CharPixel, c_uchar);
+def_magickwand_export_type!(StorageType_ShortPixel, c_ushort);
+def_magickwand_export_type!(StorageType_IntegerPixel, c_uint);
+def_magickwand_export_type!(StorageType_LongPixel, c_ulong);
+def_magickwand_export_type!(StorageType_FloatPixel, c_float);
+def_magickwand_export_type!(StorageType_DoublePixel, c_double);
 
 /// Wrapper of `graphicsmagick_sys::MagickWand`.
 pub struct MagickWand<'a> {
@@ -1331,6 +1322,90 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)?;
         Ok((width, height, x, y))
     }
+}
+
+#[derive(Debug)]
+pub struct MagickWandExportSlice<'a, T> {
+    columns: c_ulong,
+    rows: c_ulong,
+    map: &'a str,
+    slice: &'a mut [MaybeUninit<T>],
+
+    /// The number of `T` that will be written to `slice`.
+    len: usize,
+}
+
+#[allow(clippy::len_without_is_empty)]
+impl<'a, T> MagickWandExportSlice<'a, T>
+where
+    T: MagickWandExportType,
+{
+    /// Return `Some` if the `slice` is large enough.
+    /// Otherwise return `None`.
+    pub fn new(
+        columns: c_ulong,
+        rows: c_ulong,
+        map: &'a str,
+        slice: &'a mut [MaybeUninit<T>],
+    ) -> Option<Self> {
+        let size: usize = (columns * rows).try_into().unwrap();
+        let len = size * map.len();
+
+        if slice.len() >= len {
+            Some(Self {
+                columns,
+                rows,
+                map,
+                slice,
+                len,
+            })
+        } else {
+            None
+        }
+    }
+
+    /// The number of `T` that will be written to `slice`.
+    pub const fn len(&self) -> usize {
+        self.len
+    }
+}
+
+impl MagickWand<'_> {
+    /// Check the doc and implementation of [`MagickWand::get_image_pixels`].
+    pub fn write_image_pixels_to<'a, T: MagickWandExportType>(
+        &mut self,
+        x_offset: c_long,
+        y_offset: c_long,
+        input: MagickWandExportSlice<'a, T>,
+    ) -> crate::Result<&mut [T]> {
+        let len = input.len();
+        let map = str_to_c_string(input.map);
+        let storage = T::STORAGE_TYPE;
+        let columns = input.columns;
+        let rows = input.rows;
+
+        let slice = input.slice;
+
+        let status = unsafe {
+            MagickGetImagePixels(
+                self.wand,
+                x_offset,
+                y_offset,
+                columns,
+                rows,
+                map.as_ptr(),
+                storage,
+                slice.as_mut_ptr() as *mut c_uchar,
+            )
+        };
+        self.check_status(status)?;
+
+        // Safety:
+        //
+        // MagickGetImagePixels succeeds, so it should have written
+        // `len` bytes into the slice.
+        Ok(unsafe { &mut *((&mut slice[..len]) as *mut [_] as *mut [T]) })
+    }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimagepixels>
     ///
@@ -1348,14 +1423,14 @@ impl<'a> MagickWand<'a> {
     ///
     /// ```
     /// use graphicsmagick::{
-    ///     wand::{MagickWand, MagickWandExportCharPixel},
+    ///     wand::{MagickWand},
     ///     initialize,
     /// };
     ///
     /// initialize();
     ///
     /// MagickWand::new()
-    ///     .get_image_pixels::<MagickWandExportCharPixel>(0, 0, 640, 1, "RGB");
+    ///     .get_image_pixels::<u8>(0, 0, 640, 1, "RGB");
     /// ```
     ///
     pub fn get_image_pixels<ExportType: MagickWandExportType>(
@@ -1365,27 +1440,20 @@ impl<'a> MagickWand<'a> {
         columns: c_ulong,
         rows: c_ulong,
         map: &str,
-    ) -> crate::Result<Vec<ExportType::Target>> {
+    ) -> crate::Result<Vec<ExportType>> {
         let size: usize = (columns * rows).try_into().unwrap();
         let len = size * map.len();
-
         let mut pixels = Vec::with_capacity(len);
-        let map = str_to_c_string(map);
-        let storage = ExportType::STORAGE_TYPE;
 
-        let status = unsafe {
-            MagickGetImagePixels(
-                self.wand,
-                x_offset,
-                y_offset,
-                columns,
-                rows,
-                map.as_ptr(),
-                storage,
-                pixels.spare_capacity_mut().as_mut_ptr() as *mut c_uchar,
-            )
+        let input = MagickWandExportSlice {
+            columns,
+            rows,
+            map,
+            slice: pixels.spare_capacity_mut(),
+            len,
         };
-        self.check_status(status)?;
+
+        self.write_image_pixels_to(x_offset, y_offset, input)?;
 
         // Safety:
         //
@@ -1397,7 +1465,9 @@ impl<'a> MagickWand<'a> {
 
         Ok(pixels)
     }
+}
 
+impl<'a> MagickWand<'a> {
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickgetimageprofile>
     ///
     /// MagickGetImageProfile() returns the named image profile.
@@ -4320,30 +4390,29 @@ mod tests {
         mw.get_image_page().unwrap();
     }
 
-    fn test_magick_wand_get_image_pixels_inner<ExportType: MagickWandExportType>() {
+    fn test_magick_wand_get_image_pixels_inner<T>()
+    where
+        T: MagickWandExportType + std::fmt::Debug,
+    {
         let mut mw = new_logo_magick_wand();
 
-        let pixels = mw
-            .get_image_pixels::<ExportType>(0, 0, 0, 0, "RGBA")
-            .unwrap();
+        let pixels = mw.get_image_pixels::<T>(0, 0, 0, 0, "RGBA").unwrap();
 
         assert!(pixels.is_empty());
 
-        let pixels = mw
-            .get_image_pixels::<ExportType>(0, 0, 10, 10, "RGBA")
-            .unwrap();
+        let pixels = mw.get_image_pixels::<T>(0, 0, 10, 10, "RGBA").unwrap();
 
         assert!(!pixels.is_empty());
     }
 
     #[test]
     fn test_magick_wand_get_image_pixels() {
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportCharPixel>();
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportShortPixel>();
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportIntegerPixel>();
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportLongPixel>();
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportFloatPixel>();
-        test_magick_wand_get_image_pixels_inner::<MagickWandExportDoublePixel>();
+        test_magick_wand_get_image_pixels_inner::<c_uchar>();
+        test_magick_wand_get_image_pixels_inner::<c_ushort>();
+        test_magick_wand_get_image_pixels_inner::<c_uint>();
+        test_magick_wand_get_image_pixels_inner::<c_ulong>();
+        test_magick_wand_get_image_pixels_inner::<c_float>();
+        test_magick_wand_get_image_pixels_inner::<c_double>();
     }
 
     #[test]

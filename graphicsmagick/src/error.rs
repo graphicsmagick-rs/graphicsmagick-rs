@@ -31,6 +31,10 @@ impl Exception {
     pub fn get_exception_type(&self) -> ExceptionType {
         self.kind
     }
+
+    pub fn get_description(&self) -> &str {
+        &self.description
+    }
 }
 
 /// Wrapper of [ExceptionType](http://www.graphicsmagick.org/api/types.html#exceptiontype).

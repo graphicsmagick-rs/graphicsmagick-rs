@@ -2,53 +2,55 @@
 //!
 //! <http://www.graphicsmagick.org/wand/pixel_wand.html>
 
-use crate::utils::{assert_initialized, str_to_c_string, MagickCString};
+use crate::{
+    types::*,
+    utils::{assert_initialized, str_to_c_string, MagickCString},
+};
 use graphicsmagick_sys::*;
 use std::{
     os::raw::{c_double, c_ulong},
-    ptr::null_mut,
+    ptr::NonNull,
 };
 
 /// Wrapper of `graphicsmagick_sys::PixelWand`.
+#[derive(Debug)]
 #[repr(transparent)]
 pub struct PixelWand {
-    wand: *mut graphicsmagick_sys::PixelWand,
+    wand: NonNull<graphicsmagick_sys::PixelWand>,
 }
 
 impl PixelWand {
     pub fn new() -> Self {
         assert_initialized();
 
-        let wand = unsafe { NewPixelWand() };
-        assert_ne!(wand, null_mut(), "NewPixelWand return NULL");
+        let wand = NonNull::new(unsafe { NewPixelWand() }).expect("NewPixelWand return NULL");
 
         PixelWand { wand }
     }
 
+    /// # Safety
+    ///
+    ///  * `wand` - must points to either NULL, or a valid allocation.
     #[inline]
-    pub fn from_wand(wand: *mut graphicsmagick_sys::PixelWand) -> Option<PixelWand> {
-        if wand.is_null() {
-            None
-        } else {
-            Some(PixelWand { wand })
-        }
+    pub unsafe fn from_wand(wand: *mut graphicsmagick_sys::PixelWand) -> Option<PixelWand> {
+        NonNull::new(wand).map(|wand| PixelWand { wand })
     }
 
     #[inline]
     pub fn wand(&self) -> *const graphicsmagick_sys::PixelWand {
-        self.wand
+        self.wand.as_ptr() as *const _
     }
 
     #[inline]
     pub fn wand_mut(&mut self) -> *mut graphicsmagick_sys::PixelWand {
-        self.wand
+        self.wand.as_ptr()
     }
 }
 
 impl Drop for PixelWand {
     fn drop(&mut self) {
         unsafe {
-            DestroyPixelWand(self.wand);
+            DestroyPixelWand(self.wand.as_ptr());
         }
     }
 }
@@ -56,7 +58,8 @@ impl Drop for PixelWand {
 impl Clone for PixelWand {
     fn clone(&self) -> Self {
         PixelWand {
-            wand: unsafe { ClonePixelWand(self.wand) },
+            wand: NonNull::new(unsafe { ClonePixelWand(self.wand.as_ptr()) })
+                .expect("ClonePixelWand returns NULL"),
         }
     }
 }
@@ -73,7 +76,7 @@ impl PixelWand {
     /// PixelGetBlack() returns the normalized black color of the pixel wand.
     ///
     pub fn get_black(&self) -> c_double {
-        unsafe { PixelGetBlack(self.wand) }
+        unsafe { PixelGetBlack(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetblackquantum>
@@ -83,7 +86,7 @@ impl PixelWand {
     /// color is in the range of [0..MaxRGB]
     ///
     pub fn get_black_quantum(&self) -> Quantum {
-        unsafe { PixelGetBlackQuantum(self.wand) }
+        unsafe { PixelGetBlackQuantum(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetblue>
@@ -91,7 +94,7 @@ impl PixelWand {
     /// PixelGetBlue(const) returns the normalized blue color of the pixel wand.
     ///
     pub fn get_blue(&self) -> c_double {
-        unsafe { PixelGetBlue(self.wand) }
+        unsafe { PixelGetBlue(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetbluequantum>
@@ -101,7 +104,7 @@ impl PixelWand {
     /// color is in the range of [0..MaxRGB]
     ///
     pub fn get_blue_quantum(&self) -> Quantum {
-        unsafe { PixelGetBlueQuantum(self.wand) }
+        unsafe { PixelGetBlueQuantum(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcolorasstring>
@@ -109,7 +112,7 @@ impl PixelWand {
     /// PixelGetColorAsString() gets the color of the pixel wand.
     ///
     pub fn get_color_as_string(&mut self) -> MagickCString {
-        unsafe { MagickCString::new(PixelGetColorAsString(self.wand)) }
+        unsafe { MagickCString::new(PixelGetColorAsString(self.wand.as_ptr())) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcolorcount>
@@ -117,7 +120,7 @@ impl PixelWand {
     /// PixelGetColorCount() returns the color count associated with this color.
     ///
     pub fn get_color_count(&self) -> c_ulong {
-        unsafe { PixelGetColorCount(self.wand) }
+        unsafe { PixelGetColorCount(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcyan>
@@ -125,7 +128,7 @@ impl PixelWand {
     /// PixelGetCyan() returns the normalized cyan color of the pixel wand.
     ///
     pub fn get_cyan(&self) -> c_double {
-        unsafe { PixelGetCyan(self.wand) }
+        unsafe { PixelGetCyan(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetcyanquantum>
@@ -135,7 +138,7 @@ impl PixelWand {
     /// is in the range of [0..MaxRGB]
     ///
     pub fn get_cyan_quantum(&self) -> Quantum {
-        unsafe { PixelGetCyanQuantum(self.wand) }
+        unsafe { PixelGetCyanQuantum(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetgreen>
@@ -143,7 +146,7 @@ impl PixelWand {
     /// PixelGetGreen(const ) returns the normalized green color of the pixel wand.
     ///
     pub fn get_green(&self) -> c_double {
-        unsafe { PixelGetGreen(self.wand) }
+        unsafe { PixelGetGreen(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetgreenquantum>
@@ -153,7 +156,7 @@ impl PixelWand {
     /// color is in the range of [0..MaxRGB]
     ///
     pub fn get_green_quantum(&self) -> Quantum {
-        unsafe { PixelGetGreenQuantum(self.wand) }
+        unsafe { PixelGetGreenQuantum(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetmagenta>
@@ -161,7 +164,7 @@ impl PixelWand {
     /// PixelGetMagenta() returns the normalized magenta color of the pixel wand.
     ///
     pub fn get_magenta(&self) -> c_double {
-        unsafe { PixelGetMagenta(self.wand) }
+        unsafe { PixelGetMagenta(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetmagentaquantum>
@@ -171,7 +174,7 @@ impl PixelWand {
     /// color is in the range of [0..MaxRGB]
     ///
     pub fn get_magenta_quantum(&self) -> Quantum {
-        unsafe { PixelGetMagentaQuantum(self.wand) }
+        unsafe { PixelGetMagentaQuantum(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetopacity>
@@ -181,7 +184,7 @@ impl PixelWand {
     /// wand.
     ///
     pub fn get_opacity(&self) -> c_double {
-        unsafe { PixelGetOpacity(self.wand) }
+        unsafe { PixelGetOpacity(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetopacityquantum>
@@ -191,7 +194,7 @@ impl PixelWand {
     /// The color is in the range of [0..MaxRGB]
     ///
     pub fn get_opacity_quantum(&self) -> Quantum {
-        unsafe { PixelGetOpacityQuantum(self.wand) }
+        unsafe { PixelGetOpacityQuantum(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetred>
@@ -199,7 +202,7 @@ impl PixelWand {
     /// PixelGetRed(const ) returns the normalized red color of the pixel wand.
     ///
     pub fn get_red(&self) -> c_double {
-        unsafe { PixelGetRed(self.wand) }
+        unsafe { PixelGetRed(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetredquantum>
@@ -209,7 +212,7 @@ impl PixelWand {
     /// color is in the range of [0..MaxRGB]
     ///
     pub fn get_red_quantum(&self) -> Quantum {
-        unsafe { PixelGetRedQuantum(self.wand) }
+        unsafe { PixelGetRedQuantum(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetyellow>
@@ -217,7 +220,7 @@ impl PixelWand {
     /// PixelGetYellow() returns the normalized yellow color of the pixel wand.
     ///
     pub fn get_yellow(&self) -> c_double {
-        unsafe { PixelGetYellow(self.wand) }
+        unsafe { PixelGetYellow(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelgetyellowquantum>
@@ -227,7 +230,7 @@ impl PixelWand {
     /// color is in the range of [0..MaxRGB]
     ///
     pub fn get_yellow_quantum(&self) -> Quantum {
-        unsafe { PixelGetYellowQuantum(self.wand) }
+        unsafe { PixelGetYellowQuantum(self.wand.as_ptr()) }
     }
 
     /// <http://www.graphicsmagick.org/wand/pixel_wand.html#pixelsetblack>
@@ -235,7 +238,7 @@ impl PixelWand {
     /// PixelSetBlack() sets the normalized black color of the pixel wand.
     ///
     pub fn set_black(&mut self, black: c_double) -> &mut Self {
-        unsafe { PixelSetBlack(self.wand, black) };
+        unsafe { PixelSetBlack(self.wand.as_ptr(), black) };
         self
     }
 
@@ -246,7 +249,7 @@ impl PixelWand {
     /// must be in the range of [0..MaxRGB]
     ///
     pub fn set_black_quantum(&mut self, black: Quantum) -> &mut Self {
-        unsafe { PixelSetBlackQuantum(self.wand, black) };
+        unsafe { PixelSetBlackQuantum(self.wand.as_ptr(), black) };
         self
     }
 
@@ -255,7 +258,7 @@ impl PixelWand {
     /// PixelSetBlue() sets the normalized blue color of the pixel wand.
     ///
     pub fn set_blue(&mut self, blue: c_double) -> &mut Self {
-        unsafe { PixelSetBlue(self.wand, blue) };
+        unsafe { PixelSetBlue(self.wand.as_ptr(), blue) };
         self
     }
 
@@ -266,7 +269,7 @@ impl PixelWand {
     /// be in the range of [0..MaxRGB]
     ///
     pub fn set_blue_quantum(&mut self, blue: Quantum) -> &mut Self {
-        unsafe { PixelSetBlueQuantum(self.wand, blue) };
+        unsafe { PixelSetBlueQuantum(self.wand.as_ptr(), blue) };
         self
     }
 
@@ -278,7 +281,7 @@ impl PixelWand {
     ///
     pub fn set_color(&mut self, color: &str) -> &mut Self {
         let color = str_to_c_string(color);
-        unsafe { PixelSetColor(self.wand, color.as_ptr()) };
+        unsafe { PixelSetColor(self.wand.as_ptr(), color.as_ptr()) };
         self
     }
 
@@ -287,7 +290,7 @@ impl PixelWand {
     /// PixelSetColorCount() sets the color count of the pixel wand.
     ///
     pub fn set_color_count(&mut self, count: c_ulong) -> &mut Self {
-        unsafe { PixelSetColorCount(self.wand, count) };
+        unsafe { PixelSetColorCount(self.wand.as_ptr(), count) };
         self
     }
 
@@ -296,7 +299,7 @@ impl PixelWand {
     /// PixelSetCyan() sets the normalized cyan color of the pixel wand.
     ///
     pub fn set_cyan(&mut self, cyan: c_double) -> &mut Self {
-        unsafe { PixelSetCyan(self.wand, cyan) };
+        unsafe { PixelSetCyan(self.wand.as_ptr(), cyan) };
         self
     }
 
@@ -307,7 +310,7 @@ impl PixelWand {
     /// be in the range of [0..MaxRGB]
     ///
     pub fn set_cyan_quantum(&mut self, cyan: Quantum) -> &mut Self {
-        unsafe { PixelSetCyanQuantum(self.wand, cyan) };
+        unsafe { PixelSetCyanQuantum(self.wand.as_ptr(), cyan) };
         self
     }
 
@@ -316,7 +319,7 @@ impl PixelWand {
     /// PixelSetGreen() sets the normalized green color of the pixel wand.
     ///
     pub fn set_green(&mut self, green: c_double) -> &mut Self {
-        unsafe { PixelSetGreen(self.wand, green) };
+        unsafe { PixelSetGreen(self.wand.as_ptr(), green) };
         self
     }
 
@@ -327,7 +330,7 @@ impl PixelWand {
     /// be in the range of [0..MaxRGB]
     ///
     pub fn set_green_quantum(&mut self, green: Quantum) -> &mut Self {
-        unsafe { PixelSetGreenQuantum(self.wand, green) };
+        unsafe { PixelSetGreenQuantum(self.wand.as_ptr(), green) };
         self
     }
 
@@ -336,7 +339,7 @@ impl PixelWand {
     /// PixelSetMagenta() sets the normalized magenta color of the pixel wand.
     ///
     pub fn set_magenta(&mut self, magenta: c_double) -> &mut Self {
-        unsafe { PixelSetMagenta(self.wand, magenta) };
+        unsafe { PixelSetMagenta(self.wand.as_ptr(), magenta) };
         self
     }
 
@@ -347,7 +350,7 @@ impl PixelWand {
     /// color must be in the range of [0..MaxRGB]
     ///
     pub fn set_magenta_quantum(&mut self, magenta: Quantum) -> &mut Self {
-        unsafe { PixelSetMagentaQuantum(self.wand, magenta) };
+        unsafe { PixelSetMagentaQuantum(self.wand.as_ptr(), magenta) };
         self
     }
 
@@ -356,7 +359,7 @@ impl PixelWand {
     /// PixelSetOpacity() sets the normalized opacity color of the pixel wand.
     ///
     pub fn set_opacity(&mut self, opacity: c_double) -> &mut Self {
-        unsafe { PixelSetOpacity(self.wand, opacity) };
+        unsafe { PixelSetOpacity(self.wand.as_ptr(), opacity) };
         self
     }
 
@@ -367,7 +370,7 @@ impl PixelWand {
     /// color must be in the range of [0..MaxRGB]
     ///
     pub fn set_opacity_quantum(&mut self, opacity: Quantum) -> &mut Self {
-        unsafe { PixelSetOpacityQuantum(self.wand, opacity) };
+        unsafe { PixelSetOpacityQuantum(self.wand.as_ptr(), opacity) };
         self
     }
 
@@ -376,7 +379,7 @@ impl PixelWand {
     /// PixelSetQuantumColor() sets the color of the pixel wand.
     ///
     pub fn set_quantum_color(&mut self, color: &mut PixelPacket) -> &mut Self {
-        unsafe { PixelSetQuantumColor(self.wand, color as *mut PixelPacket) };
+        unsafe { PixelSetQuantumColor(self.wand.as_ptr(), color as *mut PixelPacket) };
         self
     }
 
@@ -385,7 +388,7 @@ impl PixelWand {
     /// PixelSetRed() sets the normalized red color of the pixel wand.
     ///
     pub fn set_red(&mut self, red: c_double) -> &mut Self {
-        unsafe { PixelSetRed(self.wand, red) };
+        unsafe { PixelSetRed(self.wand.as_ptr(), red) };
         self
     }
 
@@ -396,7 +399,7 @@ impl PixelWand {
     /// be in the range of [0..MaxRGB]
     ///
     pub fn set_red_quantum(&mut self, red: Quantum) -> &mut Self {
-        unsafe { PixelSetRedQuantum(self.wand, red) };
+        unsafe { PixelSetRedQuantum(self.wand.as_ptr(), red) };
         self
     }
 
@@ -405,7 +408,7 @@ impl PixelWand {
     /// PixelSetYellow() sets the normalized yellow color of the pixel wand.
     ///
     pub fn set_yellow(&mut self, yellow: c_double) -> &mut Self {
-        unsafe { PixelSetYellow(self.wand, yellow) };
+        unsafe { PixelSetYellow(self.wand.as_ptr(), yellow) };
         self
     }
 
@@ -416,15 +419,14 @@ impl PixelWand {
     /// must be in the range of [0..MaxRGB]
     ///
     pub fn set_yellow_quantum(&mut self, yellow: Quantum) -> &mut Self {
-        unsafe { PixelSetYellowQuantum(self.wand, yellow) };
+        unsafe { PixelSetYellowQuantum(self.wand.as_ptr(), yellow) };
         self
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::initialize;
+    use crate::{initialize, types::PixelPacket, wand::PixelWand};
 
     fn new_pixel_wand() -> PixelWand {
         initialize();

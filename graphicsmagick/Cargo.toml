@@ -38,7 +38,6 @@ v1_3_38 = ["v1_3_37"]
 
 [dependencies]
 graphicsmagick-sys = { version = "0.1.2", path = "../graphicsmagick-sys" }
-libc = "0.2.117"
 thiserror = "1.0.30"
 
 [dev-dependencies]

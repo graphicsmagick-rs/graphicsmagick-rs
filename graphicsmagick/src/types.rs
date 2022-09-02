@@ -2,6 +2,8 @@
 //!
 //! <http://www.graphicsmagick.org/api/types.html>
 
+pub use graphicsmagick_sys::{AffineMatrix, PixelPacket, PointInfo, Quantum};
+
 types_enum_block! {
     /// <http://www.graphicsmagick.org/api/types.html#channeltype>
     ChannelType;

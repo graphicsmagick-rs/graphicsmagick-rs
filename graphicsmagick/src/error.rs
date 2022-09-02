@@ -1,6 +1,5 @@
 //! Crate level errors.
 
-use std::str::Utf8Error;
 use thiserror::Error as ThisError;
 
 /// Crate result.
@@ -9,10 +8,6 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// Crate error.
 #[derive(ThisError, Debug)]
 pub enum Error {
-    /// Utf8 Error.
-    #[error(transparent)]
-    Utf8(#[from] Utf8Error),
-
     /// GraphicsMagick Exception.
     #[error(transparent)]
     Exception(#[from] Exception),

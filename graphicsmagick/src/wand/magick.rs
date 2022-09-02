@@ -104,10 +104,8 @@ impl MagickWand<'_> {
         }
         let description =
             slice::from_raw_parts(description_ptr as *const u8, libc::strlen(description_ptr));
-        let description = match std::str::from_utf8(description) {
-            Ok(description) => description.to_string(),
-            Err(e) => return e.into(),
-        };
+
+        let description = String::from_utf8_lossy(description).into_owned();
         MagickRelinquishMemory(description_ptr as *mut c_void);
         Exception::new(severity.into(), description).into()
     }

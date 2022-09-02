@@ -3902,21 +3902,26 @@ impl<'a> MagickWand<'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::{
         initialize,
         tests::{logo_path, logo_unicode_path},
+        types::*,
+        wand::{magick::MagickWandExportType, DrawingWand, MagickWand, PixelWand},
     };
-    use std::{fs::File, io::Read};
+    use std::{
+        fs::File,
+        io::Read,
+        os::raw::{c_double, c_float, c_uchar, c_uint, c_ulong, c_ushort},
+    };
 
-    fn new_magick_wand<'a>() -> MagickWand<'a> {
+    fn new_magick_wand() -> MagickWand<'static> {
         initialize();
         MagickWand::new()
     }
 
-    fn new_logo_magick_wand<'a>() -> MagickWand<'a> {
+    fn new_logo_magick_wand() -> MagickWand<'static> {
         let mut mw = new_magick_wand();
-        mw.read_image(&logo_unicode_path()).unwrap();
+        mw.read_image(logo_unicode_path().leak()).unwrap();
         mw
     }
 

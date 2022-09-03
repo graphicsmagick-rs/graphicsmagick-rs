@@ -1,5 +1,6 @@
 //! Crate level errors.
 
+use num_enum::{FromPrimitive, IntoPrimitive};
 use thiserror::Error as ThisError;
 
 /// Crate result.
@@ -26,131 +27,142 @@ impl Exception {
     pub fn new(kind: ExceptionType, description: String) -> Self {
         Exception { kind, description }
     }
+
+    pub fn get_exception_type(&self) -> ExceptionType {
+        self.kind
+    }
+
+    pub fn get_description(&self) -> &str {
+        &self.description
+    }
 }
 
-types_enum_block! {
-    /// Wrapper of [ExceptionType](http://www.graphicsmagick.org/api/types.html#exceptiontype).
-    ExceptionType;
+/// Wrapper of [ExceptionType](http://www.graphicsmagick.org/api/types.html#exceptiontype).
+#[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
+#[repr(u32)]
+pub enum ExceptionType {
+    UndefinedException = graphicsmagick_sys::ExceptionType_UndefinedException,
+    EventException = graphicsmagick_sys::ExceptionType_EventException,
+    ExceptionEvent = graphicsmagick_sys::ExceptionType_ExceptionEvent,
+    /// Alias: ResourceLimitEvent
+    ResourceEvent = graphicsmagick_sys::ExceptionType_ResourceEvent,
+    /// Alias: AnnotateEvent
+    TypeEvent = graphicsmagick_sys::ExceptionType_TypeEvent,
+    OptionEvent = graphicsmagick_sys::ExceptionType_OptionEvent,
+    DelegateEvent = graphicsmagick_sys::ExceptionType_DelegateEvent,
+    MissingDelegateEvent = graphicsmagick_sys::ExceptionType_MissingDelegateEvent,
+    CorruptImageEvent = graphicsmagick_sys::ExceptionType_CorruptImageEvent,
+    FileOpenEvent = graphicsmagick_sys::ExceptionType_FileOpenEvent,
+    BlobEvent = graphicsmagick_sys::ExceptionType_BlobEvent,
+    StreamEvent = graphicsmagick_sys::ExceptionType_StreamEvent,
+    CacheEvent = graphicsmagick_sys::ExceptionType_CacheEvent,
+    CoderEvent = graphicsmagick_sys::ExceptionType_CoderEvent,
+    ModuleEvent = graphicsmagick_sys::ExceptionType_ModuleEvent,
+    /// Alias: RenderEvent
+    DrawEvent = graphicsmagick_sys::ExceptionType_DrawEvent,
+    ImageEvent = graphicsmagick_sys::ExceptionType_ImageEvent,
+    WandEvent = graphicsmagick_sys::ExceptionType_WandEvent,
+    TemporaryFileEvent = graphicsmagick_sys::ExceptionType_TemporaryFileEvent,
+    TransformEvent = graphicsmagick_sys::ExceptionType_TransformEvent,
+    XServerEvent = graphicsmagick_sys::ExceptionType_XServerEvent,
+    X11Event = graphicsmagick_sys::ExceptionType_X11Event,
+    UserEvent = graphicsmagick_sys::ExceptionType_UserEvent,
+    MonitorEvent = graphicsmagick_sys::ExceptionType_MonitorEvent,
+    LocaleEvent = graphicsmagick_sys::ExceptionType_LocaleEvent,
+    DeprecateEvent = graphicsmagick_sys::ExceptionType_DeprecateEvent,
+    RegistryEvent = graphicsmagick_sys::ExceptionType_RegistryEvent,
+    ConfigureEvent = graphicsmagick_sys::ExceptionType_ConfigureEvent,
+    WarningException = graphicsmagick_sys::ExceptionType_WarningException,
+    ExceptionWarning = graphicsmagick_sys::ExceptionType_ExceptionWarning,
+    /// Alias: ResourceLimitWarning
+    ResourceWarning = graphicsmagick_sys::ExceptionType_ResourceWarning,
+    /// Alias: AnnotateWarning
+    TypeWarning = graphicsmagick_sys::ExceptionType_TypeWarning,
+    OptionWarning = graphicsmagick_sys::ExceptionType_OptionWarning,
+    DelegateWarning = graphicsmagick_sys::ExceptionType_DelegateWarning,
+    MissingDelegateWarning = graphicsmagick_sys::ExceptionType_MissingDelegateWarning,
+    CorruptImageWarning = graphicsmagick_sys::ExceptionType_CorruptImageWarning,
+    FileOpenWarning = graphicsmagick_sys::ExceptionType_FileOpenWarning,
+    BlobWarning = graphicsmagick_sys::ExceptionType_BlobWarning,
+    StreamWarning = graphicsmagick_sys::ExceptionType_StreamWarning,
+    CacheWarning = graphicsmagick_sys::ExceptionType_CacheWarning,
+    CoderWarning = graphicsmagick_sys::ExceptionType_CoderWarning,
+    ModuleWarning = graphicsmagick_sys::ExceptionType_ModuleWarning,
+    /// Alias: RenderWarning
+    DrawWarning = graphicsmagick_sys::ExceptionType_DrawWarning,
+    ImageWarning = graphicsmagick_sys::ExceptionType_ImageWarning,
+    WandWarning = graphicsmagick_sys::ExceptionType_WandWarning,
+    TemporaryFileWarning = graphicsmagick_sys::ExceptionType_TemporaryFileWarning,
+    TransformWarning = graphicsmagick_sys::ExceptionType_TransformWarning,
+    XServerWarning = graphicsmagick_sys::ExceptionType_XServerWarning,
+    X11Warning = graphicsmagick_sys::ExceptionType_X11Warning,
+    UserWarning = graphicsmagick_sys::ExceptionType_UserWarning,
+    MonitorWarning = graphicsmagick_sys::ExceptionType_MonitorWarning,
+    LocaleWarning = graphicsmagick_sys::ExceptionType_LocaleWarning,
+    DeprecateWarning = graphicsmagick_sys::ExceptionType_DeprecateWarning,
+    RegistryWarning = graphicsmagick_sys::ExceptionType_RegistryWarning,
+    ConfigureWarning = graphicsmagick_sys::ExceptionType_ConfigureWarning,
+    ErrorException = graphicsmagick_sys::ExceptionType_ErrorException,
+    ExceptionError = graphicsmagick_sys::ExceptionType_ExceptionError,
+    /// Alias: ResourceLimitError
+    ResourceError = graphicsmagick_sys::ExceptionType_ResourceError,
+    /// Alias: AnnotateError
+    TypeError = graphicsmagick_sys::ExceptionType_TypeError,
+    OptionError = graphicsmagick_sys::ExceptionType_OptionError,
+    DelegateError = graphicsmagick_sys::ExceptionType_DelegateError,
+    MissingDelegateError = graphicsmagick_sys::ExceptionType_MissingDelegateError,
+    CorruptImageError = graphicsmagick_sys::ExceptionType_CorruptImageError,
+    FileOpenError = graphicsmagick_sys::ExceptionType_FileOpenError,
+    BlobError = graphicsmagick_sys::ExceptionType_BlobError,
+    StreamError = graphicsmagick_sys::ExceptionType_StreamError,
+    CacheError = graphicsmagick_sys::ExceptionType_CacheError,
+    CoderError = graphicsmagick_sys::ExceptionType_CoderError,
+    ModuleError = graphicsmagick_sys::ExceptionType_ModuleError,
+    /// Alias: RenderError
+    DrawError = graphicsmagick_sys::ExceptionType_DrawError,
+    ImageError = graphicsmagick_sys::ExceptionType_ImageError,
+    WandError = graphicsmagick_sys::ExceptionType_WandError,
+    TemporaryFileError = graphicsmagick_sys::ExceptionType_TemporaryFileError,
+    TransformError = graphicsmagick_sys::ExceptionType_TransformError,
+    XServerError = graphicsmagick_sys::ExceptionType_XServerError,
+    X11Error = graphicsmagick_sys::ExceptionType_X11Error,
+    UserError = graphicsmagick_sys::ExceptionType_UserError,
+    MonitorError = graphicsmagick_sys::ExceptionType_MonitorError,
+    LocaleError = graphicsmagick_sys::ExceptionType_LocaleError,
+    DeprecateError = graphicsmagick_sys::ExceptionType_DeprecateError,
+    RegistryError = graphicsmagick_sys::ExceptionType_RegistryError,
+    ConfigureError = graphicsmagick_sys::ExceptionType_ConfigureError,
+    FatalErrorException = graphicsmagick_sys::ExceptionType_FatalErrorException,
+    ExceptionFatalError = graphicsmagick_sys::ExceptionType_ExceptionFatalError,
+    /// Alias: ResourceLimitFatalError
+    ResourceFatalError = graphicsmagick_sys::ExceptionType_ResourceFatalError,
+    /// Alias: AnnotateFatalError
+    TypeFatalError = graphicsmagick_sys::ExceptionType_TypeFatalError,
+    OptionFatalError = graphicsmagick_sys::ExceptionType_OptionFatalError,
+    DelegateFatalError = graphicsmagick_sys::ExceptionType_DelegateFatalError,
+    MissingDelegateFatalError = graphicsmagick_sys::ExceptionType_MissingDelegateFatalError,
+    CorruptImageFatalError = graphicsmagick_sys::ExceptionType_CorruptImageFatalError,
+    FileOpenFatalError = graphicsmagick_sys::ExceptionType_FileOpenFatalError,
+    BlobFatalError = graphicsmagick_sys::ExceptionType_BlobFatalError,
+    StreamFatalError = graphicsmagick_sys::ExceptionType_StreamFatalError,
+    CacheFatalError = graphicsmagick_sys::ExceptionType_CacheFatalError,
+    CoderFatalError = graphicsmagick_sys::ExceptionType_CoderFatalError,
+    ModuleFatalError = graphicsmagick_sys::ExceptionType_ModuleFatalError,
+    /// Alias: RenderFatalError
+    DrawFatalError = graphicsmagick_sys::ExceptionType_DrawFatalError,
+    ImageFatalError = graphicsmagick_sys::ExceptionType_ImageFatalError,
+    WandFatalError = graphicsmagick_sys::ExceptionType_WandFatalError,
+    TemporaryFileFatalError = graphicsmagick_sys::ExceptionType_TemporaryFileFatalError,
+    TransformFatalError = graphicsmagick_sys::ExceptionType_TransformFatalError,
+    XServerFatalError = graphicsmagick_sys::ExceptionType_XServerFatalError,
+    X11FatalError = graphicsmagick_sys::ExceptionType_X11FatalError,
+    UserFatalError = graphicsmagick_sys::ExceptionType_UserFatalError,
+    MonitorFatalError = graphicsmagick_sys::ExceptionType_MonitorFatalError,
+    LocaleFatalError = graphicsmagick_sys::ExceptionType_LocaleFatalError,
+    DeprecateFatalError = graphicsmagick_sys::ExceptionType_DeprecateFatalError,
+    RegistryFatalError = graphicsmagick_sys::ExceptionType_RegistryFatalError,
+    ConfigureFatalError = graphicsmagick_sys::ExceptionType_ConfigureFatalError,
 
-    (graphicsmagick_sys::ExceptionType_UndefinedException, UndefinedException);
-    (graphicsmagick_sys::ExceptionType_EventException, EventException);
-    (graphicsmagick_sys::ExceptionType_ExceptionEvent, ExceptionEvent);
-    (graphicsmagick_sys::ExceptionType_ResourceEvent, ResourceEvent);
-    (graphicsmagick_sys::ExceptionType_ResourceLimitEvent, ResourceLimitEvent);
-    (graphicsmagick_sys::ExceptionType_TypeEvent, TypeEvent);
-    (graphicsmagick_sys::ExceptionType_AnnotateEvent, AnnotateEvent);
-    (graphicsmagick_sys::ExceptionType_OptionEvent, OptionEvent);
-    (graphicsmagick_sys::ExceptionType_DelegateEvent, DelegateEvent);
-    (graphicsmagick_sys::ExceptionType_MissingDelegateEvent, MissingDelegateEvent);
-    (graphicsmagick_sys::ExceptionType_CorruptImageEvent, CorruptImageEvent);
-    (graphicsmagick_sys::ExceptionType_FileOpenEvent, FileOpenEvent);
-    (graphicsmagick_sys::ExceptionType_BlobEvent, BlobEvent);
-    (graphicsmagick_sys::ExceptionType_StreamEvent, StreamEvent);
-    (graphicsmagick_sys::ExceptionType_CacheEvent, CacheEvent);
-    (graphicsmagick_sys::ExceptionType_CoderEvent, CoderEvent);
-    (graphicsmagick_sys::ExceptionType_ModuleEvent, ModuleEvent);
-    (graphicsmagick_sys::ExceptionType_DrawEvent, DrawEvent);
-    (graphicsmagick_sys::ExceptionType_RenderEvent, RenderEvent);
-    (graphicsmagick_sys::ExceptionType_ImageEvent, ImageEvent);
-    (graphicsmagick_sys::ExceptionType_WandEvent, WandEvent);
-    (graphicsmagick_sys::ExceptionType_TemporaryFileEvent, TemporaryFileEvent);
-    (graphicsmagick_sys::ExceptionType_TransformEvent, TransformEvent);
-    (graphicsmagick_sys::ExceptionType_XServerEvent, XServerEvent);
-    (graphicsmagick_sys::ExceptionType_X11Event, X11Event);
-    (graphicsmagick_sys::ExceptionType_UserEvent, UserEvent);
-    (graphicsmagick_sys::ExceptionType_MonitorEvent, MonitorEvent);
-    (graphicsmagick_sys::ExceptionType_LocaleEvent, LocaleEvent);
-    (graphicsmagick_sys::ExceptionType_DeprecateEvent, DeprecateEvent);
-    (graphicsmagick_sys::ExceptionType_RegistryEvent, RegistryEvent);
-    (graphicsmagick_sys::ExceptionType_ConfigureEvent, ConfigureEvent);
-    (graphicsmagick_sys::ExceptionType_WarningException, WarningException);
-    (graphicsmagick_sys::ExceptionType_ExceptionWarning, ExceptionWarning);
-    (graphicsmagick_sys::ExceptionType_ResourceWarning, ResourceWarning);
-    (graphicsmagick_sys::ExceptionType_ResourceLimitWarning, ResourceLimitWarning);
-    (graphicsmagick_sys::ExceptionType_TypeWarning, TypeWarning);
-    (graphicsmagick_sys::ExceptionType_AnnotateWarning, AnnotateWarning);
-    (graphicsmagick_sys::ExceptionType_OptionWarning, OptionWarning);
-    (graphicsmagick_sys::ExceptionType_DelegateWarning, DelegateWarning);
-    (graphicsmagick_sys::ExceptionType_MissingDelegateWarning, MissingDelegateWarning);
-    (graphicsmagick_sys::ExceptionType_CorruptImageWarning, CorruptImageWarning);
-    (graphicsmagick_sys::ExceptionType_FileOpenWarning, FileOpenWarning);
-    (graphicsmagick_sys::ExceptionType_BlobWarning, BlobWarning);
-    (graphicsmagick_sys::ExceptionType_StreamWarning, StreamWarning);
-    (graphicsmagick_sys::ExceptionType_CacheWarning, CacheWarning);
-    (graphicsmagick_sys::ExceptionType_CoderWarning, CoderWarning);
-    (graphicsmagick_sys::ExceptionType_ModuleWarning, ModuleWarning);
-    (graphicsmagick_sys::ExceptionType_DrawWarning, DrawWarning);
-    (graphicsmagick_sys::ExceptionType_RenderWarning, RenderWarning);
-    (graphicsmagick_sys::ExceptionType_ImageWarning, ImageWarning);
-    (graphicsmagick_sys::ExceptionType_WandWarning, WandWarning);
-    (graphicsmagick_sys::ExceptionType_TemporaryFileWarning, TemporaryFileWarning);
-    (graphicsmagick_sys::ExceptionType_TransformWarning, TransformWarning);
-    (graphicsmagick_sys::ExceptionType_XServerWarning, XServerWarning);
-    (graphicsmagick_sys::ExceptionType_X11Warning, X11Warning);
-    (graphicsmagick_sys::ExceptionType_UserWarning, UserWarning);
-    (graphicsmagick_sys::ExceptionType_MonitorWarning, MonitorWarning);
-    (graphicsmagick_sys::ExceptionType_LocaleWarning, LocaleWarning);
-    (graphicsmagick_sys::ExceptionType_DeprecateWarning, DeprecateWarning);
-    (graphicsmagick_sys::ExceptionType_RegistryWarning, RegistryWarning);
-    (graphicsmagick_sys::ExceptionType_ConfigureWarning, ConfigureWarning);
-    (graphicsmagick_sys::ExceptionType_ErrorException, ErrorException);
-    (graphicsmagick_sys::ExceptionType_ExceptionError, ExceptionError);
-    (graphicsmagick_sys::ExceptionType_ResourceError, ResourceError);
-    (graphicsmagick_sys::ExceptionType_ResourceLimitError, ResourceLimitError);
-    (graphicsmagick_sys::ExceptionType_TypeError, TypeError);
-    (graphicsmagick_sys::ExceptionType_AnnotateError, AnnotateError);
-    (graphicsmagick_sys::ExceptionType_OptionError, OptionError);
-    (graphicsmagick_sys::ExceptionType_DelegateError, DelegateError);
-    (graphicsmagick_sys::ExceptionType_MissingDelegateError, MissingDelegateError);
-    (graphicsmagick_sys::ExceptionType_CorruptImageError, CorruptImageError);
-    (graphicsmagick_sys::ExceptionType_FileOpenError, FileOpenError);
-    (graphicsmagick_sys::ExceptionType_BlobError, BlobError);
-    (graphicsmagick_sys::ExceptionType_StreamError, StreamError);
-    (graphicsmagick_sys::ExceptionType_CacheError, CacheError);
-    (graphicsmagick_sys::ExceptionType_CoderError, CoderError);
-    (graphicsmagick_sys::ExceptionType_ModuleError, ModuleError);
-    (graphicsmagick_sys::ExceptionType_DrawError, DrawError);
-    (graphicsmagick_sys::ExceptionType_RenderError, RenderError);
-    (graphicsmagick_sys::ExceptionType_ImageError, ImageError);
-    (graphicsmagick_sys::ExceptionType_WandError, WandError);
-    (graphicsmagick_sys::ExceptionType_TemporaryFileError, TemporaryFileError);
-    (graphicsmagick_sys::ExceptionType_TransformError, TransformError);
-    (graphicsmagick_sys::ExceptionType_XServerError, XServerError);
-    (graphicsmagick_sys::ExceptionType_X11Error, X11Error);
-    (graphicsmagick_sys::ExceptionType_UserError, UserError);
-    (graphicsmagick_sys::ExceptionType_MonitorError, MonitorError);
-    (graphicsmagick_sys::ExceptionType_LocaleError, LocaleError);
-    (graphicsmagick_sys::ExceptionType_DeprecateError, DeprecateError);
-    (graphicsmagick_sys::ExceptionType_RegistryError, RegistryError);
-    (graphicsmagick_sys::ExceptionType_ConfigureError, ConfigureError);
-    (graphicsmagick_sys::ExceptionType_FatalErrorException, FatalErrorException);
-    (graphicsmagick_sys::ExceptionType_ExceptionFatalError, ExceptionFatalError);
-    (graphicsmagick_sys::ExceptionType_ResourceFatalError, ResourceFatalError);
-    (graphicsmagick_sys::ExceptionType_ResourceLimitFatalError, ResourceLimitFatalError);
-    (graphicsmagick_sys::ExceptionType_TypeFatalError, TypeFatalError);
-    (graphicsmagick_sys::ExceptionType_AnnotateFatalError, AnnotateFatalError);
-    (graphicsmagick_sys::ExceptionType_OptionFatalError, OptionFatalError);
-    (graphicsmagick_sys::ExceptionType_DelegateFatalError, DelegateFatalError);
-    (graphicsmagick_sys::ExceptionType_MissingDelegateFatalError, MissingDelegateFatalError);
-    (graphicsmagick_sys::ExceptionType_CorruptImageFatalError, CorruptImageFatalError);
-    (graphicsmagick_sys::ExceptionType_FileOpenFatalError, FileOpenFatalError);
-    (graphicsmagick_sys::ExceptionType_BlobFatalError, BlobFatalError);
-    (graphicsmagick_sys::ExceptionType_StreamFatalError, StreamFatalError);
-    (graphicsmagick_sys::ExceptionType_CacheFatalError, CacheFatalError);
-    (graphicsmagick_sys::ExceptionType_CoderFatalError, CoderFatalError);
-    (graphicsmagick_sys::ExceptionType_ModuleFatalError, ModuleFatalError);
-    (graphicsmagick_sys::ExceptionType_DrawFatalError, DrawFatalError);
-    (graphicsmagick_sys::ExceptionType_RenderFatalError, RenderFatalError);
-    (graphicsmagick_sys::ExceptionType_ImageFatalError, ImageFatalError);
-    (graphicsmagick_sys::ExceptionType_WandFatalError, WandFatalError);
-    (graphicsmagick_sys::ExceptionType_TemporaryFileFatalError, TemporaryFileFatalError);
-    (graphicsmagick_sys::ExceptionType_TransformFatalError, TransformFatalError);
-    (graphicsmagick_sys::ExceptionType_XServerFatalError, XServerFatalError);
-    (graphicsmagick_sys::ExceptionType_X11FatalError, X11FatalError);
-    (graphicsmagick_sys::ExceptionType_UserFatalError, UserFatalError);
-    (graphicsmagick_sys::ExceptionType_MonitorFatalError, MonitorFatalError);
-    (graphicsmagick_sys::ExceptionType_LocaleFatalError, LocaleFatalError);
-    (graphicsmagick_sys::ExceptionType_DeprecateFatalError, DeprecateFatalError);
-    (graphicsmagick_sys::ExceptionType_RegistryFatalError, RegistryFatalError);
-    (graphicsmagick_sys::ExceptionType_ConfigureFatalError, ConfigureFatalError);
+    #[num_enum(default)]
+    Unknown = u32::MAX,
 }

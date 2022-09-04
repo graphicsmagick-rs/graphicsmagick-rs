@@ -19,11 +19,15 @@ jobs:
       fail-fast: false
 
       matrix:
+        os:
+          - ubuntu-20.04
+
         flag:
           - gm-version: GraphicsMagick-1_3_20
             feature: v1_3_20
 
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
+
     steps:
       - name: System info
         run: cat /etc/apt/sources.list

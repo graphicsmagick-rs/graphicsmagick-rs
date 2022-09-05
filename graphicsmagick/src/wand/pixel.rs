@@ -4,9 +4,10 @@
 
 use crate::{
     types::*,
-    utils::{assert_initialized, str_to_c_string, MagickCString},
+    utils::{assert_initialized, MagickCString},
 };
 use graphicsmagick_sys::*;
+use null_terminated_str::IntoNullTerminatedString;
 use std::{
     os::raw::{c_double, c_ulong},
     ptr::NonNull,
@@ -279,8 +280,8 @@ impl PixelWand {
     ///
     /// &quot;blue&quot;, &quot;#0000ff&quot;, &quot;rgb(0,0,255)&quot;, etc.).
     ///
-    pub fn set_color(&mut self, color: &str) -> &mut Self {
-        let color = str_to_c_string(color);
+    pub fn set_color<'a>(&mut self, color: impl IntoNullTerminatedString<'a>) -> &mut Self {
+        let color = color.into_null_terminated_string();
         unsafe { PixelSetColor(self.wand.as_ptr(), color.as_ptr()) };
         self
     }

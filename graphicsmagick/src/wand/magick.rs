@@ -4692,7 +4692,7 @@ mod tests {
 
             let import = MagickWandImportSlice::new(columns, rows, map, &pixels).unwrap();
 
-            let mut wand = MagickWand::new();
+            let mut wand = new_logo_magick_wand();
             wand.set_image_pixels(0, 0, import).unwrap();
 
             let reexported_pixels = wand

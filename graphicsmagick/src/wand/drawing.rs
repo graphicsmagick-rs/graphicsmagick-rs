@@ -7,11 +7,12 @@ use crate::{
         AffineMatrix, ClipPathUnits, DecorationType, FillRule, GravityType, LineCap, LineJoin,
         PaintMethod, StretchType, StyleType,
     },
-    utils::{assert_initialized, str_to_c_string},
+    utils::assert_initialized,
     wand::pixel::PixelWand,
     MagickBoxSlice, MagickCString,
 };
 use graphicsmagick_sys::*;
+use null_terminated_str::IntoNullTerminatedString;
 use std::{
     os::raw::{c_double, c_uint, c_ulong},
     ptr::NonNull,
@@ -73,8 +74,13 @@ impl DrawingWand {
     ///
     /// DrawAnnotation() draws text on the image.
     ///
-    pub fn annotation(&mut self, x: c_double, y: c_double, text: &str) -> &mut Self {
-        let text = str_to_c_string(text);
+    pub fn annotation<'a>(
+        &mut self,
+        x: c_double,
+        y: c_double,
+        text: impl IntoNullTerminatedString<'a>,
+    ) -> &mut Self {
+        let text = text.into_null_terminated_string();
         unsafe { MagickDrawAnnotation(self.wand.as_ptr(), x, y, text.as_ptr().cast()) };
         self
     }
@@ -167,8 +173,8 @@ impl DrawingWand {
     ///
     /// remains in effect.
     ///
-    pub fn set_clip_path(&mut self, clip_path: &str) -> &mut Self {
-        let clip_path = str_to_c_string(clip_path);
+    pub fn set_clip_path<'a>(&mut self, clip_path: impl IntoNullTerminatedString<'a>) -> &mut Self {
+        let clip_path = clip_path.into_null_terminated_string();
         unsafe { MagickDrawSetClipPath(self.wand.as_ptr(), clip_path.as_ptr()) };
         self
     }
@@ -236,8 +242,8 @@ impl DrawingWand {
     ///
     /// DrawComment() adds a comment to a vector output stream.
     ///
-    pub fn comment(&mut self, comment: &str) -> &mut Self {
-        let comment = str_to_c_string(comment);
+    pub fn comment<'a>(&mut self, comment: impl IntoNullTerminatedString<'a>) -> &mut Self {
+        let comment = comment.into_null_terminated_string();
         unsafe { MagickDrawComment(self.wand.as_ptr(), comment.as_ptr()) };
         self
     }
@@ -288,8 +294,11 @@ impl DrawingWand {
     ///
     /// DrawPushPattern/DrawPopPattern.
     ///
-    pub fn set_fill_pattern_url(&mut self, fill_url: &str) -> &mut Self {
-        let fill_url = str_to_c_string(fill_url);
+    pub fn set_fill_pattern_url<'a>(
+        &mut self,
+        fill_url: impl IntoNullTerminatedString<'a>,
+    ) -> &mut Self {
+        let fill_url = fill_url.into_null_terminated_string();
         unsafe { MagickDrawSetFillPatternURL(self.wand.as_ptr(), fill_url.as_ptr()) };
         self
     }
@@ -350,8 +359,8 @@ impl DrawingWand {
     ///
     /// text.
     ///
-    pub fn set_font(&mut self, font_name: &str) -> &mut Self {
-        let font_name = str_to_c_string(font_name);
+    pub fn set_font<'a>(&mut self, font_name: impl IntoNullTerminatedString<'a>) -> &mut Self {
+        let font_name = font_name.into_null_terminated_string();
         unsafe { MagickDrawSetFont(self.wand.as_ptr(), font_name.as_ptr()) };
         self
     }
@@ -370,8 +379,11 @@ impl DrawingWand {
     ///
     /// DrawSetFontFamily() sets the font family to use when annotating with text.
     ///
-    pub fn set_font_family(&mut self, font_family: &str) -> &mut Self {
-        let font_family = str_to_c_string(font_family);
+    pub fn set_font_family<'a>(
+        &mut self,
+        font_family: impl IntoNullTerminatedString<'a>,
+    ) -> &mut Self {
+        let font_family = font_family.into_null_terminated_string();
         unsafe { MagickDrawSetFontFamily(self.wand.as_ptr(), font_family.as_ptr()) };
         self
     }
@@ -1083,8 +1095,11 @@ impl DrawingWand {
     ///
     /// command.
     ///
-    pub fn push_clip_path(&mut self, clip_path_id: &str) -> &mut Self {
-        let clip_path_id = str_to_c_string(clip_path_id);
+    pub fn push_clip_path<'a>(
+        &mut self,
+        clip_path_id: impl IntoNullTerminatedString<'a>,
+    ) -> &mut Self {
+        let clip_path_id = clip_path_id.into_null_terminated_string();
         unsafe { MagickDrawPushClipPath(self.wand.as_ptr(), clip_path_id.as_ptr()) };
         self
     }
@@ -1133,15 +1148,15 @@ impl DrawingWand {
     ///
     /// Named patterns may be used as stroke or brush definitions.
     ///
-    pub fn push_pattern(
+    pub fn push_pattern<'a>(
         &mut self,
-        pattern_id: &str,
+        pattern_id: impl IntoNullTerminatedString<'a>,
         x: c_double,
         y: c_double,
         width: c_double,
         height: c_double,
     ) -> &mut Self {
-        let pattern_id = str_to_c_string(pattern_id);
+        let pattern_id = pattern_id.into_null_terminated_string();
         unsafe {
             MagickDrawPushPattern(self.wand.as_ptr(), pattern_id.as_ptr(), x, y, width, height)
         };
@@ -1270,8 +1285,11 @@ impl DrawingWand {
     ///
     /// DrawSetStrokePatternURL() sets the pattern used for stroking object outlines.
     ///
-    pub fn set_stroke_pattern_url(&mut self, stroke_url: &str) -> &mut Self {
-        let stroke_url = str_to_c_string(stroke_url);
+    pub fn set_stroke_pattern_url<'a>(
+        &mut self,
+        stroke_url: impl IntoNullTerminatedString<'a>,
+    ) -> &mut Self {
+        let stroke_url = stroke_url.into_null_terminated_string();
         unsafe { MagickDrawSetStrokePatternURL(self.wand.as_ptr(), stroke_url.as_ptr()) };
         self
     }
@@ -1556,8 +1574,11 @@ impl DrawingWand {
     ///
     /// designed to support Unicode.
     ///
-    pub fn set_text_encoding(&mut self, encoding: &str) -> &mut Self {
-        let encoding = str_to_c_string(encoding);
+    pub fn set_text_encoding<'a>(
+        &mut self,
+        encoding: impl IntoNullTerminatedString<'a>,
+    ) -> &mut Self {
+        let encoding = encoding.into_null_terminated_string();
         unsafe { MagickDrawSetTextEncoding(self.wand.as_ptr(), encoding.as_ptr()) };
         self
     }

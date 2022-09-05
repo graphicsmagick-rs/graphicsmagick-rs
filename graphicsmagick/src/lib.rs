@@ -15,3 +15,5 @@ pub use crate::{
     error::{Error, Result},
     utils::{has_initialized, initialize, max_rgb, MagickBoxSlice, MagickCString, MaxRGB},
 };
+
+pub use null_terminated_str;

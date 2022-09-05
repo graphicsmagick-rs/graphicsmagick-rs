@@ -4069,7 +4069,10 @@ mod tests {
         initialize,
         tests::{logo_path, logo_unicode_path},
         types::*,
-        wand::{magick::MagickWandExportType, DrawingWand, MagickWand, PixelWand},
+        wand::{
+            magick::{MagickWandExportType, MagickWandImportSlice},
+            DrawingWand, MagickWand, PixelWand,
+        },
     };
     use std::{
         fs::File,
@@ -4667,29 +4670,47 @@ mod tests {
         mw.get_image_page().unwrap();
     }
 
-    fn test_magick_wand_get_image_pixels_inner<T>()
+    fn test_magick_wand_get_set_image_pixels_inner<T>()
     where
-        T: MagickWandExportType + std::fmt::Debug,
+        T: MagickWandExportType + std::fmt::Debug + std::cmp::PartialEq,
     {
         let mut mw = new_logo_magick_wand();
 
-        let pixels = mw.get_image_pixels::<T>(0, 0, 0, 0, "RGBA").unwrap();
+        let columns = mw.get_image_width();
+        let rows = mw.get_image_height();
 
+        // Some basic tests tests
+        let pixels = mw.get_image_pixels::<T>(0, 0, 0, 0, "RGBA").unwrap();
         assert!(pixels.is_empty());
 
         let pixels = mw.get_image_pixels::<T>(0, 0, 10, 10, "RGBA").unwrap();
-
         assert!(!pixels.is_empty());
+
+        // Round trip tests
+        for map in ["RGB", "RGBA"] {
+            let pixels = mw.get_image_pixels::<T>(0, 0, columns, rows, map).unwrap();
+
+            let import = MagickWandImportSlice::new(columns, rows, map, &pixels).unwrap();
+
+            let mut wand = MagickWand::new();
+            wand.set_image_pixels(0, 0, import).unwrap();
+
+            let reexported_pixels = wand
+                .get_image_pixels::<T>(0, 0, columns, rows, map)
+                .unwrap();
+
+            assert_eq!(pixels, reexported_pixels);
+        }
     }
 
     #[test]
-    fn test_magick_wand_get_image_pixels() {
-        test_magick_wand_get_image_pixels_inner::<c_uchar>();
-        test_magick_wand_get_image_pixels_inner::<c_ushort>();
-        test_magick_wand_get_image_pixels_inner::<c_uint>();
-        test_magick_wand_get_image_pixels_inner::<c_ulong>();
-        test_magick_wand_get_image_pixels_inner::<c_float>();
-        test_magick_wand_get_image_pixels_inner::<c_double>();
+    fn test_magick_wand_get_set_image_pixels() {
+        test_magick_wand_get_set_image_pixels_inner::<c_uchar>();
+        test_magick_wand_get_set_image_pixels_inner::<c_ushort>();
+        test_magick_wand_get_set_image_pixels_inner::<c_uint>();
+        test_magick_wand_get_set_image_pixels_inner::<c_ulong>();
+        test_magick_wand_get_set_image_pixels_inner::<c_float>();
+        test_magick_wand_get_set_image_pixels_inner::<c_double>();
     }
 
     #[test]

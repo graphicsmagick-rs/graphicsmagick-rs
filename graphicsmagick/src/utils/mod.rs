@@ -4,7 +4,7 @@ use std::{
     marker::PhantomData,
     mem,
     ops::{Deref, DerefMut},
-    os::raw::{c_char, c_double, c_uint, c_void},
+    os::raw::{c_char, c_void},
     ptr::NonNull,
     slice::{from_raw_parts, from_raw_parts_mut},
     str::Utf8Error,
@@ -14,27 +14,8 @@ mod init;
 pub(crate) use init::assert_initialized;
 pub use init::{has_initialized, initialize};
 
-/// For [`max_rgb`] to return max RGB value.
-pub trait MaxRGB {
-    fn max_rgb() -> Self;
-}
-
-impl MaxRGB for c_uint {
-    fn max_rgb() -> Self {
-        graphicsmagick_sys::MaxRGB
-    }
-}
-
-impl MaxRGB for c_double {
-    fn max_rgb() -> Self {
-        graphicsmagick_sys::MaxRGBDouble
-    }
-}
-
-/// Wrapper of `graphicsmagick_sys::MaxRGB` and `graphicsmagick_sys::MaxRGBDouble`.
-pub fn max_rgb<T: MaxRGB>() -> T {
-    <T>::max_rgb()
-}
+mod rgb;
+pub use rgb::{max_rgb, MaxRGB};
 
 pub(crate) fn str_to_c_string(s: &str) -> CString {
     let buf = s.bytes().collect::<Vec<_>>();

@@ -3405,7 +3405,7 @@ impl MagickWand<'_> {
     ///
     /// ```
     /// use graphicsmagick::{
-    ///     wand::{MagickWand, MagickWandImportSlice},
+    ///     wand::{MagickWand, magick::MagickWandImportSlice},
     ///     initialize,
     /// };
     ///
@@ -3421,7 +3421,7 @@ impl MagickWand<'_> {
     /// ).unwrap();
     ///
     /// MagickWand::new()
-    ///     .set_image_pixels(0, 0, input);
+    ///     .set_image_pixels(0, 0, import);
     /// ```
     pub fn set_image_pixels<T: MagickWandExportType>(
         &mut self,

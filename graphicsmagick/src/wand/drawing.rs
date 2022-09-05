@@ -1641,6 +1641,7 @@ impl DrawingWand {
 mod tests {
     use crate::{
         initialize,
+        null_terminated_str::const_null_terminated_str,
         types::{
             AffineMatrix, ClipPathUnits, DecorationType, FillRule, GravityType, LineCap, LineJoin,
             PaintMethod, PointInfo, StretchType, StyleType,
@@ -1655,8 +1656,8 @@ mod tests {
 
     #[test]
     fn test_drawing_wand_annotation() {
-        let mut dw = new_logo_drawing_wand();
-        dw.annotation(0., 0., "");
+        new_logo_drawing_wand().annotation(0., 0., "");
+        new_logo_drawing_wand().annotation(0., 0., const_null_terminated_str!(""));
     }
 
     #[test]

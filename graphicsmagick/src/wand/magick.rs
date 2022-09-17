@@ -2870,19 +2870,18 @@ impl<'a> MagickWand<'a> {
         self.check_status(status)
     }
 
-    // TODO Detect version to implement.
-    //     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetdepth>
-    //     ///
-    //     /// MagickSetDepth() sets the sample depth to be used when reading from a
-    //     ///
-    //     /// raw image or a format which requires that the depth be specified in
-    //     ///
-    //     /// advance by the user.
-    //     ///
-    //     pub fn set_depth(&mut self,  depth: size_t) -> crate::Result<&mut Self> {
-    //         let status = unsafe { MagickSetDepth(self.wand.as_ptr(),  depth) };
-    //         self.check_status(status)
-    //     }
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetdepth>
+    ///
+    /// MagickSetDepth() sets the sample depth to be used when reading from a
+    ///
+    /// raw image or a format which requires that the depth be specified in
+    ///
+    /// advance by the user.
+    ///
+    pub fn set_depth(&mut self, depth: size_t) -> crate::Result<&mut Self> {
+        let status = unsafe { MagickSetDepth(self.wand.as_ptr(), depth) };
+        self.check_status(status)
+    }
 
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetfilename>
     ///

@@ -40,6 +40,7 @@ v1_3_38 = ["v1_3_37"]
 graphicsmagick-sys = { version = "0.4.0", path = "../graphicsmagick-sys" }
 thiserror = "1.0.30"
 num_enum = "0.5.7"
+null-terminated-str = "0.1.2"
 
 [dev-dependencies]
 anyhow = "1.0.53"

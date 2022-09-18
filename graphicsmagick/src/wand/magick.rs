@@ -9,12 +9,14 @@ use crate::{
         ImageType, InterlaceType, MetricType, MontageMode, NoiseType, PreviewType, Quantum,
         RenderingIntent, ResolutionType, ResourceType, VirtualPixelMethod,
     },
-    utils::{assert_initialized, str_to_c_string, CStrExt, MagickAutoRelinquish},
+    utils::{assert_initialized, CStrExt, MagickAutoRelinquish},
     wand::{DrawingWand, PixelWand},
     MagickBoxSlice, MagickCString,
 };
 use graphicsmagick_sys::*;
+use null_terminated_str::{IntoNullTerminatedString, NullTerminatedStr};
 use std::{
+    borrow::Cow,
     ffi::CStr,
     marker::PhantomData,
     mem::MaybeUninit,
@@ -217,15 +219,15 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickAnnotateImage() annotates an image with text.
     ///
-    pub fn annotate_image(
+    pub fn annotate_image<'s>(
         &mut self,
         drawing_wand: &DrawingWand,
         x: c_double,
         y: c_double,
         angle: c_double,
-        text: &str,
+        text: impl IntoNullTerminatedString<'s>,
     ) -> crate::Result<&mut Self> {
-        let text = str_to_c_string(text);
+        let text = text.into_null_terminated_string();
         let status = unsafe {
             MagickAnnotateImage(
                 self.wand.as_ptr(),
@@ -243,8 +245,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickAnimateImages() animates an image or image sequence.
     ///
-    pub fn animate_images(&mut self, server_name: &str) -> crate::Result<&mut Self> {
-        let server_name = str_to_c_string(server_name);
+    pub fn animate_images<'s>(
+        &mut self,
+        server_name: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let server_name = server_name.into_null_terminated_string();
         let status = unsafe { MagickAnimateImages(self.wand.as_ptr(), server_name.as_ptr()) };
         self.check_status(status)
     }
@@ -357,8 +362,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// See <http://en.wikipedia.org/wiki/ASC_CDL> for more information.
     ///
-    pub fn cdl_image(&mut self, cdl: &str) -> crate::Result<&mut Self> {
-        let cdl = str_to_c_string(cdl);
+    pub fn cdl_image<'s>(
+        &mut self,
+        cdl: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let cdl = cdl.into_null_terminated_string();
         let status = unsafe { MagickCdlImage(self.wand.as_ptr(), cdl.as_ptr()) };
         self.check_status(status)
     }
@@ -423,8 +431,12 @@ impl<'a> MagickWand<'a> {
     ///
     /// path.
     ///
-    pub fn clip_path_image(&mut self, path_name: &str, inside: bool) -> crate::Result<&mut Self> {
-        let path_name = str_to_c_string(path_name);
+    pub fn clip_path_image<'s>(
+        &mut self,
+        path_name: impl IntoNullTerminatedString<'s>,
+        inside: bool,
+    ) -> crate::Result<&mut Self> {
+        let path_name = path_name.into_null_terminated_string();
         let status = unsafe {
             MagickClipPathImage(self.wand.as_ptr(), path_name.as_ptr(), inside as c_uint)
         };
@@ -499,8 +511,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickCommentImage() adds a comment to your image.
     ///
-    pub fn comment_image(&mut self, comment: &str) -> crate::Result<&mut Self> {
-        let comment = str_to_c_string(comment);
+    pub fn comment_image<'s>(
+        &mut self,
+        comment: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let comment = comment.into_null_terminated_string();
         let status = unsafe { MagickCommentImage(self.wand.as_ptr(), comment.as_ptr()) };
         self.check_status(status)
     }
@@ -672,8 +687,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickDisplayImage() displays an image.
     ///
-    pub fn display_image(&mut self, server_name: &str) -> crate::Result<&mut Self> {
-        let server_name = str_to_c_string(server_name);
+    pub fn display_image<'s>(
+        &mut self,
+        server_name: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let server_name = server_name.into_null_terminated_string();
         let status = unsafe { MagickDisplayImage(self.wand.as_ptr(), server_name.as_ptr()) };
         self.check_status(status)
     }
@@ -684,8 +702,11 @@ impl<'a> MagickWand<'a> {
     ///
     #[cfg(feature = "v1_3_29")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_29")))]
-    pub fn display_images(&mut self, server_name: &str) -> crate::Result<&mut Self> {
-        let server_name = str_to_c_string(server_name);
+    pub fn display_images<'s>(
+        &mut self,
+        server_name: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let server_name = server_name.into_null_terminated_string();
         let status = unsafe { MagickDisplayImages(self.wand.as_ptr(), server_name.as_ptr()) };
         self.check_status(status)
     }
@@ -840,8 +861,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickFxImage() evaluate expression for each pixel in the image.
     ///
-    pub fn fx_image(&mut self, expression: &str) -> Option<MagickWand<'_>> {
-        let expression = str_to_c_string(expression);
+    pub fn fx_image<'s>(
+        &mut self,
+        expression: impl IntoNullTerminatedString<'s>,
+    ) -> Option<MagickWand<'_>> {
+        let expression = expression.into_null_terminated_string();
         let wand = unsafe { MagickFxImage(self.wand.as_ptr(), expression.as_ptr()) };
         unsafe { Self::from_wand(wand) }
     }
@@ -852,12 +876,12 @@ impl<'a> MagickWand<'a> {
     ///
     /// channel.
     ///
-    pub fn fx_image_channel(
+    pub fn fx_image_channel<'s>(
         &mut self,
         channel: ChannelType,
-        expression: &str,
+        expression: impl IntoNullTerminatedString<'s>,
     ) -> Option<MagickWand<'_>> {
-        let expression = str_to_c_string(expression);
+        let expression = expression.into_null_terminated_string();
         let wand = unsafe {
             MagickFxImageChannel(self.wand.as_ptr(), channel.into(), expression.as_ptr())
         };
@@ -916,8 +940,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// NAME, VERSION, LIB_VERSION, COPYRIGHT, etc.
     ///
-    pub fn get_configure_info(&mut self, name: &str) -> MagickCString {
-        let name = str_to_c_string(name);
+    pub fn get_configure_info<'s>(
+        &mut self,
+        name: impl IntoNullTerminatedString<'s>,
+    ) -> MagickCString {
+        let name = name.into_null_terminated_string();
         unsafe { MagickCString::new(MagickGetConfigureInfo(self.wand.as_ptr(), name.as_ptr())) }
     }
 
@@ -958,8 +985,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageAttribute returns an image attribute as a string
     ///
-    pub fn get_image_attribute(&mut self, name: &str) -> MagickCString {
-        let name = str_to_c_string(name);
+    pub fn get_image_attribute<'s>(
+        &mut self,
+        name: impl IntoNullTerminatedString<'s>,
+    ) -> MagickCString {
+        let name = name.into_null_terminated_string();
         unsafe { MagickCString::new(MagickGetImageAttribute(self.wand.as_ptr(), name.as_ptr())) }
     }
 
@@ -1377,7 +1407,7 @@ impl<'a> MagickWand<'a> {
 pub struct MagickWandExportSlice<'a, T> {
     columns: c_ulong,
     rows: c_ulong,
-    map: &'a str,
+    map: Cow<'a, NullTerminatedStr>,
     slice: &'a mut [MaybeUninit<T>],
 
     /// The number of `T` that will be written to `slice`.
@@ -1394,10 +1424,11 @@ where
     pub fn new(
         columns: c_ulong,
         rows: c_ulong,
-        map: &'a str,
+        map: impl IntoNullTerminatedString<'a>,
         slice: &'a mut [MaybeUninit<T>],
     ) -> Option<Self> {
         let size: usize = (columns * rows).try_into().unwrap();
+        let map = map.into_null_terminated_string();
         let len = size * map.len();
 
         if slice.len() >= len {
@@ -1428,7 +1459,7 @@ impl MagickWand<'_> {
         input: MagickWandExportSlice<'a, T>,
     ) -> crate::Result<&mut [T]> {
         let len = input.len();
-        let map = str_to_c_string(input.map);
+        let map = input.map;
         let storage = T::STORAGE_TYPE;
         let columns = input.columns;
         let rows = input.rows;
@@ -1482,15 +1513,16 @@ impl MagickWand<'_> {
     ///     .get_image_pixels::<u8>(0, 0, 640, 1, "RGB");
     /// ```
     ///
-    pub fn get_image_pixels<ExportType: MagickWandExportType>(
+    pub fn get_image_pixels<'s, ExportType: MagickWandExportType>(
         &mut self,
         x_offset: c_long,
         y_offset: c_long,
         columns: c_ulong,
         rows: c_ulong,
-        map: &str,
+        map: impl IntoNullTerminatedString<'s>,
     ) -> crate::Result<Vec<ExportType>> {
         let size: usize = (columns * rows).try_into().unwrap();
+        let map = map.into_null_terminated_string();
         let len = size * map.len();
         let mut pixels = Vec::with_capacity(len);
 
@@ -1521,9 +1553,12 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickGetImageProfile() returns the named image profile.
     ///
-    pub fn get_image_profile(&mut self, name: &str) -> MagickCString {
+    pub fn get_image_profile<'s>(
+        &mut self,
+        name: impl IntoNullTerminatedString<'s>,
+    ) -> MagickCString {
         let mut length = 0;
-        let name = str_to_c_string(name);
+        let name = name.into_null_terminated_string();
         unsafe {
             MagickCString::new(
                 MagickGetImageProfile(self.wand.as_ptr(), name.as_ptr(), &mut length).cast(),
@@ -1925,8 +1960,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickLabelImage() adds a label to your image.
     ///
-    pub fn label_image(&mut self, label: &str) -> crate::Result<&mut Self> {
-        let label = str_to_c_string(label);
+    pub fn label_image<'s>(
+        &mut self,
+        label: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let label = label.into_null_terminated_string();
         let status = unsafe { MagickLabelImage(self.wand.as_ptr(), label.as_ptr()) };
         self.check_status(status)
     }
@@ -2096,17 +2134,17 @@ impl<'a> MagickWand<'a> {
     ///
     /// of the image optionally appearing just below the individual tile.
     ///
-    pub fn montage_image(
+    pub fn montage_image<'s>(
         &mut self,
         drawing_wand: &DrawingWand,
-        tile_geometry: &str,
-        thumbnail_geometry: &str,
+        tile_geometry: impl IntoNullTerminatedString<'s>,
+        thumbnail_geometry: impl IntoNullTerminatedString<'s>,
         mode: MontageMode,
-        frame: &str,
+        frame: impl IntoNullTerminatedString<'s>,
     ) -> Option<MagickWand<'_>> {
-        let tile_geometry = str_to_c_string(tile_geometry);
-        let thumbnail_geometry = str_to_c_string(thumbnail_geometry);
-        let frame = str_to_c_string(frame);
+        let tile_geometry = tile_geometry.into_null_terminated_string();
+        let thumbnail_geometry = thumbnail_geometry.into_null_terminated_string();
+        let frame = frame.into_null_terminated_string();
         let wand = unsafe {
             MagickMontageImage(
                 self.wand.as_ptr(),
@@ -2275,8 +2313,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// reading the entire image sequence into memory.
     ///
-    pub fn ping_image(&mut self, filename: &str) -> crate::Result<&mut Self> {
-        let filename = str_to_c_string(filename);
+    pub fn ping_image<'s>(
+        &mut self,
+        filename: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let filename = filename.into_null_terminated_string();
         let status = unsafe { MagickPingImage(self.wand.as_ptr(), filename.as_ptr()) };
         self.check_status(status)
     }
@@ -2317,14 +2358,14 @@ impl<'a> MagickWand<'a> {
     ///
     /// profiles from the image.
     ///
-    pub fn profile_image(
+    pub fn profile_image<'s>(
         &mut self,
-        name: &str,
-        profile: &str,
+        name: impl IntoNullTerminatedString<'s>,
+        profile: impl IntoNullTerminatedString<'s>,
         length: size_t,
     ) -> crate::Result<&mut Self> {
-        let name = str_to_c_string(name);
-        let profile = str_to_c_string(profile);
+        let name = name.into_null_terminated_string();
+        let profile = profile.into_null_terminated_string();
         let status = unsafe {
             MagickProfileImage(
                 self.wand.as_ptr(),
@@ -2436,12 +2477,12 @@ impl<'a> MagickWand<'a> {
     ///
     /// 6 maximum horizontal advance
     ///
-    pub fn query_font_metrics(
+    pub fn query_font_metrics<'s>(
         &mut self,
         drawing_wand: &DrawingWand,
-        text: &str,
+        text: impl IntoNullTerminatedString<'s>,
     ) -> crate::Result<[f64; 7]> {
-        let text = str_to_c_string(text);
+        let text = text.into_null_terminated_string();
         let ds = unsafe {
             MagickQueryFontMetrics(self.wand.as_ptr(), drawing_wand.wand(), text.as_ptr())
         };
@@ -2469,8 +2510,10 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickQueryFonts() returns any font that match the specified pattern.
     ///
-    pub fn query_fonts(pattern: &str) -> Option<MagickBoxSlice<MagickCString>> {
-        let pattern = str_to_c_string(pattern);
+    pub fn query_fonts<'s>(
+        pattern: impl IntoNullTerminatedString<'s>,
+    ) -> Option<MagickBoxSlice<MagickCString>> {
+        let pattern = pattern.into_null_terminated_string();
         let mut number_fonts = 0;
         let a = unsafe { MagickQueryFonts(pattern.as_ptr(), &mut number_fonts) };
         unsafe { MagickBoxSlice::new(a, number_fonts.try_into().unwrap()) }
@@ -2482,8 +2525,10 @@ impl<'a> MagickWand<'a> {
     ///
     /// pattern.
     ///
-    pub fn query_formats(pattern: &str) -> Option<MagickBoxSlice<MagickCString>> {
-        let pattern = str_to_c_string(pattern);
+    pub fn query_formats<'s>(
+        pattern: impl IntoNullTerminatedString<'s>,
+    ) -> Option<MagickBoxSlice<MagickCString>> {
+        let pattern = pattern.into_null_terminated_string();
         let mut number_formats = 0;
         let a = unsafe { MagickQueryFormats(pattern.as_ptr(), &mut number_formats) };
         unsafe { MagickBoxSlice::new(a, number_formats.try_into().unwrap()) }
@@ -2525,8 +2570,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickReadImage() reads an image or image sequence.
     ///
-    pub fn read_image(&mut self, filename: &str) -> crate::Result<&mut Self> {
-        let filename = str_to_c_string(filename);
+    pub fn read_image<'s>(
+        &mut self,
+        filename: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let filename = filename.into_null_terminated_string();
         let status = unsafe { MagickReadImage(self.wand.as_ptr(), filename.as_ptr()) };
         self.check_status(status)
     }
@@ -2585,9 +2633,13 @@ impl<'a> MagickWand<'a> {
     ///
     #[cfg(feature = "v1_3_26")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
-    pub fn remove_image_option(&mut self, format: &str, key: &str) -> crate::Result<&mut Self> {
-        let format = str_to_c_string(format);
-        let key = str_to_c_string(key);
+    pub fn remove_image_option<'s>(
+        &mut self,
+        format: impl IntoNullTerminatedString<'s>,
+        key: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let format = format.into_null_terminated_string();
+        let key = key.into_null_terminated_string();
         let status =
             unsafe { MagickRemoveImageOption(self.wand.as_ptr(), format.as_ptr(), key.as_ptr()) };
         self.check_status(status)
@@ -2597,8 +2649,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickRemoveImageProfile() removes the named image profile and returns it.
     ///
-    pub fn remove_image_profile(&mut self, name: &str) -> MagickCString {
-        let name = str_to_c_string(name);
+    pub fn remove_image_profile<'s>(
+        &mut self,
+        name: impl IntoNullTerminatedString<'s>,
+    ) -> MagickCString {
+        let name = name.into_null_terminated_string();
         let mut length = 0;
         unsafe {
             MagickCString::new(
@@ -2888,8 +2943,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickSetFilename() sets the filename before you read or write an image file.
     ///
-    pub fn set_filename(&mut self, filename: &str) -> crate::Result<&mut Self> {
-        let filename = str_to_c_string(filename);
+    pub fn set_filename<'s>(
+        &mut self,
+        filename: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let filename = filename.into_null_terminated_string();
         let status = unsafe { MagickSetFilename(self.wand.as_ptr(), filename.as_ptr()) };
         self.check_status(status)
     }
@@ -2908,8 +2966,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// to set the format to be used when a file or blob is to be written.
     ///
-    pub fn set_format(&mut self, format: &str) -> crate::Result<&mut Self> {
-        let format = str_to_c_string(format);
+    pub fn set_format<'s>(
+        &mut self,
+        format: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let format = format.into_null_terminated_string();
         let status = unsafe { MagickSetFormat(self.wand.as_ptr(), format.as_ptr()) };
         self.check_status(status)
     }
@@ -2931,9 +2992,13 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickSetImageAttribute sets an image attribute
     ///
-    pub fn set_image_attribute(&mut self, name: &str, value: &str) -> crate::Result<&mut Self> {
-        let name = str_to_c_string(name);
-        let value = str_to_c_string(value);
+    pub fn set_image_attribute<'s>(
+        &mut self,
+        name: impl IntoNullTerminatedString<'s>,
+        value: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let name = name.into_null_terminated_string();
+        let value = value.into_null_terminated_string();
         let status =
             unsafe { MagickSetImageAttribute(self.wand.as_ptr(), name.as_ptr(), value.as_ptr()) };
         self.check_status(status)
@@ -3076,8 +3141,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// sequence.
     ///
-    pub fn set_image_filename(&mut self, filename: &str) -> crate::Result<&mut Self> {
-        let filename = str_to_c_string(filename);
+    pub fn set_image_filename<'s>(
+        &mut self,
+        filename: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let filename = filename.into_null_terminated_string();
         let status = unsafe { MagickSetImageFilename(self.wand.as_ptr(), filename.as_ptr()) };
         self.check_status(status)
     }
@@ -3088,8 +3156,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// sequence.  The format is designated by a magick string (e.g. "GIF").
     ///
-    pub fn set_image_format(&mut self, format: &str) -> crate::Result<&mut Self> {
-        let format = str_to_c_string(format);
+    pub fn set_image_format<'s>(
+        &mut self,
+        format: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let format = format.into_null_terminated_string();
         let status = unsafe { MagickSetImageFormat(self.wand.as_ptr(), format.as_ptr()) };
         self.check_status(status)
     }
@@ -3214,15 +3285,15 @@ impl<'a> MagickWand<'a> {
     ///
     #[cfg(feature = "v1_3_26")]
     #[cfg_attr(docsrs, doc(cfg(feature = "v1_3_26")))]
-    pub fn set_image_option(
+    pub fn set_image_option<'s>(
         &mut self,
-        format: &str,
-        key: &str,
-        value: &str,
+        format: impl IntoNullTerminatedString<'s>,
+        key: impl IntoNullTerminatedString<'s>,
+        value: impl IntoNullTerminatedString<'s>,
     ) -> crate::Result<&mut Self> {
-        let format = str_to_c_string(format);
-        let key = str_to_c_string(key);
-        let value = str_to_c_string(value);
+        let format = format.into_null_terminated_string();
+        let key = key.into_null_terminated_string();
+        let value = value.into_null_terminated_string();
         let status = unsafe {
             MagickSetImageOption(
                 self.wand.as_ptr(),
@@ -3310,14 +3381,14 @@ impl<'a> MagickWand<'a> {
     ///
     /// CMS color profiles.
     ///
-    pub fn set_image_profile(
+    pub fn set_image_profile<'s>(
         &mut self,
-        name: &str,
-        profile: &str,
+        name: impl IntoNullTerminatedString<'s>,
+        profile: impl IntoNullTerminatedString<'s>,
         length: c_ulong,
     ) -> crate::Result<&mut Self> {
-        let name = str_to_c_string(name);
-        let profile = str_to_c_string(profile);
+        let name = name.into_null_terminated_string();
+        let profile = profile.into_null_terminated_string();
         let status = unsafe {
             MagickSetImageProfile(
                 self.wand.as_ptr(),
@@ -3522,8 +3593,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickSetPassphrase() sets the passphrase.
     ///
-    pub fn set_passphrase(&mut self, passphrase: &str) -> crate::Result<&mut Self> {
-        let passphrase = str_to_c_string(passphrase);
+    pub fn set_passphrase<'s>(
+        &mut self,
+        passphrase: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let passphrase = passphrase.into_null_terminated_string();
         let status = unsafe { MagickSetPassphrase(self.wand.as_ptr(), passphrase.as_ptr()) };
         self.check_status(status)
     }
@@ -3732,9 +3806,13 @@ impl<'a> MagickWand<'a> {
     ///
     /// original image handle is returned.
     ///
-    pub fn transform_image(&mut self, crop: &str, geometry: &str) -> Option<MagickWand<'_>> {
-        let crop = str_to_c_string(crop);
-        let geometry = str_to_c_string(geometry);
+    pub fn transform_image<'s>(
+        &mut self,
+        crop: impl IntoNullTerminatedString<'s>,
+        geometry: &str,
+    ) -> Option<MagickWand<'_>> {
+        let crop = crop.into_null_terminated_string();
+        let geometry = geometry.into_null_terminated_string();
         let wand =
             unsafe { MagickTransformImage(self.wand.as_ptr(), crop.as_ptr(), geometry.as_ptr()) };
         unsafe { MagickWand::from_wand(wand) }
@@ -3822,8 +3900,11 @@ impl<'a> MagickWand<'a> {
     ///
     /// MagickWriteImage() writes an image.
     ///
-    pub fn write_image(&mut self, filename: &str) -> crate::Result<&mut Self> {
-        let filename = str_to_c_string(filename);
+    pub fn write_image<'s>(
+        &mut self,
+        filename: impl IntoNullTerminatedString<'s>,
+    ) -> crate::Result<&mut Self> {
+        let filename = filename.into_null_terminated_string();
         let status = unsafe { MagickWriteImage(self.wand.as_ptr(), filename.as_ptr()) };
         self.check_status(status)
     }
@@ -3888,8 +3969,12 @@ impl<'a> MagickWand<'a> {
     ///
     /// frame in the sequence.
     ///
-    pub fn write_images(&mut self, filename: &str, adjoin: c_uint) -> crate::Result<&mut Self> {
-        let filename = str_to_c_string(filename);
+    pub fn write_images<'s>(
+        &mut self,
+        filename: impl IntoNullTerminatedString<'s>,
+        adjoin: c_uint,
+    ) -> crate::Result<&mut Self> {
+        let filename = filename.into_null_terminated_string();
         let status = unsafe { MagickWriteImages(self.wand.as_ptr(), filename.as_ptr(), adjoin) };
         self.check_status(status)
     }
@@ -3916,7 +4001,7 @@ mod tests {
 
     fn new_logo_magick_wand() -> MagickWand<'static> {
         let mut mw = new_magick_wand();
-        mw.read_image(&logo_unicode_path()).unwrap();
+        mw.read_image(logo_unicode_path()).unwrap();
         mw
     }
 
@@ -3928,7 +4013,7 @@ mod tests {
     #[test]
     fn test_magick_wand_read_image() {
         let mut mw = new_magick_wand();
-        mw.read_image(&logo_unicode_path()).unwrap();
+        mw.read_image(logo_unicode_path()).unwrap();
         assert_eq!((mw.get_image_width(), mw.get_image_height()), (311, 177));
     }
 

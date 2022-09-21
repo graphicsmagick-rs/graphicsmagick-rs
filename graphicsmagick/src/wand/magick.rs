@@ -3340,37 +3340,120 @@ impl<'a> MagickWand<'a> {
         let status = unsafe { MagickSetImagePage(self.wand.as_ptr(), width, height, x, y) };
         self.check_status(status)
     }
+}
 
-    // TODO As get_image_pixels
-    //    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagepixels>
-    //    ///
-    //    /// MagickSetImagePixels() accepts pixel data and stores it in the image at the
-    //    ///
-    //    /// location you specify.  The method returns False on success otherwise True
-    //    ///
-    //    /// if an error is encountered.  The pixel data can be either char, short int,
-    //    ///
-    //    /// int, long, float, or double in the order specified by map.
-    //    ///
-    //    /// Suppose your want want to upload the first scanline of a 640x480 image from
-    //    ///
-    //    /// character data in red-green-blue order:
-    //    ///
-    //    /// MagickSetImagePixels(wand,0,0,0,640,1,"RGB",CharPixel,pixels);
-    //    ///
-    //    pub fn set_image_pixels(
-    //        &mut self,
-    //        x_offset: c_long,
-    //        y_offset: c_long,
-    //        columns: c_ulong,
-    //        rows: c_ulong,
-    //        map: &str,
-    //        storage: StorageType,
-    //        pixels: &mut c_uchar,
-    //    ) -> crate::Result<&mut Self> {
-    //        // let status = unsafe { MagickSetImagePixels(self.wand.as_ptr(),  x_offset,  y_offset,  columns,  rows, map,  storage, pixels) };
-    //    }
+#[derive(Debug)]
+pub struct MagickWandImportSlice<'a, T> {
+    columns: c_ulong,
+    rows: c_ulong,
+    map: Cow<'a, NullTerminatedStr>,
+    slice: &'a [T],
+    len: usize,
+}
 
+#[allow(clippy::len_without_is_empty)]
+impl<'a, T> MagickWandImportSlice<'a, T>
+where
+    T: MagickWandExportType,
+{
+    /// Return `Some` if the `slice` is large enough.
+    /// Otherwise return `None`.
+    pub fn new(
+        columns: c_ulong,
+        rows: c_ulong,
+        map: impl IntoNullTerminatedString<'a>,
+        slice: &'a [T],
+    ) -> Option<Self> {
+        let size: usize = (columns * rows).try_into().unwrap();
+        let map = map.into_null_terminated_string();
+        let len = size * map.len();
+
+        if slice.len() >= len {
+            Some(Self {
+                columns,
+                rows,
+                map,
+                slice,
+                len,
+            })
+        } else {
+            None
+        }
+    }
+
+    /// The number of `T` that will be read from `slice`.
+    pub const fn len(&self) -> usize {
+        self.len
+    }
+}
+
+impl MagickWand<'_> {
+    /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimagepixels>
+    ///
+    /// MagickSetImagePixels() accepts pixel data and stores it in the image at the
+    /// location you specify.
+    ///
+    /// The pixel data can be either [`c_uchar`], [`c_ushort`], [`c_uint`],
+    /// [`c_ulong`], [`c_float`], or [`c_double`] in the order specified by
+    /// `map`.
+    ///
+    /// Suppose your want want to upload the first scanline of a 640x480 image from
+    /// character data in red-green-blue order:
+    ///
+    /// MagickSetImagePixels(wand,0,0,0,640,1,"RGB",CharPixel,pixels);
+    ///
+    ///
+    /// ```
+    /// use graphicsmagick::{
+    ///     wand::{MagickWand, magick::MagickWandImportSlice},
+    ///     initialize,
+    /// };
+    ///
+    /// initialize();
+    ///
+    /// let slice = vec![1.1; 640 * 3];
+    ///
+    /// let import = MagickWandImportSlice::new(
+    ///     640,
+    ///     1,
+    ///     "RGB",
+    ///     &slice
+    /// ).unwrap();
+    ///
+    /// MagickWand::new()
+    ///     .set_image_pixels(0, 0, import);
+    /// ```
+    pub fn set_image_pixels<T: MagickWandExportType>(
+        &mut self,
+        x_offset: c_long,
+        y_offset: c_long,
+        input: MagickWandImportSlice<'_, T>,
+    ) -> crate::Result<&mut Self> {
+        let map = input.map.into_null_terminated_string();
+        let columns = input.columns;
+        let rows = input.rows;
+        let slice = input.slice;
+        let storage = T::STORAGE_TYPE;
+
+        let status = unsafe {
+            MagickSetImagePixels(
+                self.wand.as_ptr(),
+                x_offset,
+                y_offset,
+                columns,
+                rows,
+                map.as_ptr(),
+                storage,
+                slice.as_ptr() as *mut c_uchar,
+            )
+        };
+        self.check_status(status)?;
+
+        Ok(self)
+    }
+}
+
+impl MagickWand<'_> {
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magicksetimageprofile>
     ///
     /// MagickSetImageProfile() adds a named profile to the magick wand.  If a
@@ -3986,7 +4069,10 @@ mod tests {
         initialize,
         tests::{logo_path, logo_unicode_path},
         types::*,
-        wand::{magick::MagickWandExportType, DrawingWand, MagickWand, PixelWand},
+        wand::{
+            magick::{MagickWandExportType, MagickWandImportSlice},
+            DrawingWand, MagickWand, PixelWand,
+        },
     };
     use std::{
         fs::File,
@@ -4584,29 +4670,47 @@ mod tests {
         mw.get_image_page().unwrap();
     }
 
-    fn test_magick_wand_get_image_pixels_inner<T>()
+    fn test_magick_wand_get_set_image_pixels_inner<T>()
     where
-        T: MagickWandExportType + std::fmt::Debug,
+        T: MagickWandExportType + std::fmt::Debug + std::cmp::PartialEq,
     {
         let mut mw = new_logo_magick_wand();
 
-        let pixels = mw.get_image_pixels::<T>(0, 0, 0, 0, "RGBA").unwrap();
+        let columns = mw.get_image_width();
+        let rows = mw.get_image_height();
 
+        // Some basic tests tests
+        let pixels = mw.get_image_pixels::<T>(0, 0, 0, 0, "RGBA").unwrap();
         assert!(pixels.is_empty());
 
         let pixels = mw.get_image_pixels::<T>(0, 0, 10, 10, "RGBA").unwrap();
-
         assert!(!pixels.is_empty());
+
+        // Round trip tests
+        for map in ["RGB", "RGBA"] {
+            let pixels = mw.get_image_pixels::<T>(0, 0, columns, rows, map).unwrap();
+
+            let import = MagickWandImportSlice::new(columns, rows, map, &pixels).unwrap();
+
+            let mut wand = new_logo_magick_wand();
+            wand.set_image_pixels(0, 0, import).unwrap();
+
+            let reexported_pixels = wand
+                .get_image_pixels::<T>(0, 0, columns, rows, map)
+                .unwrap();
+
+            assert_eq!(pixels, reexported_pixels);
+        }
     }
 
     #[test]
-    fn test_magick_wand_get_image_pixels() {
-        test_magick_wand_get_image_pixels_inner::<c_uchar>();
-        test_magick_wand_get_image_pixels_inner::<c_ushort>();
-        test_magick_wand_get_image_pixels_inner::<c_uint>();
-        test_magick_wand_get_image_pixels_inner::<c_ulong>();
-        test_magick_wand_get_image_pixels_inner::<c_float>();
-        test_magick_wand_get_image_pixels_inner::<c_double>();
+    fn test_magick_wand_get_set_image_pixels() {
+        test_magick_wand_get_set_image_pixels_inner::<c_uchar>();
+        test_magick_wand_get_set_image_pixels_inner::<c_ushort>();
+        test_magick_wand_get_set_image_pixels_inner::<c_uint>();
+        test_magick_wand_get_set_image_pixels_inner::<c_ulong>();
+        test_magick_wand_get_set_image_pixels_inner::<c_float>();
+        test_magick_wand_get_set_image_pixels_inner::<c_double>();
     }
 
     #[test]

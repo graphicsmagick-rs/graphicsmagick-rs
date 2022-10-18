@@ -82,6 +82,7 @@ fn main() -> anyhow::Result<()> {
     let bindings = bindgen::Builder::default()
         .header("wrapper.h")
         .clang_args(&gmc.include_flags)
+        .size_t_is_usize(false)
         // blacklist for not FFI-safe type u128.
         .blocklist_type("_Float64x")
         .blocklist_function("strtold")

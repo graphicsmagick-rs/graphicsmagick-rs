@@ -18,7 +18,7 @@ fn new_graphicsmagick_config() -> anyhow::Result<GraphicsMagickConfig> {
         env::var(gmw_config_env).unwrap_or_else(|_| "GraphicsMagickWand-config".to_string());
     let mut cmd = Command::new(&cmd_path);
     let output = cmd
-        .args(&["--cppflags", "--ldflags", "--libs"])
+        .args(["--cppflags", "--ldflags", "--libs"])
         .output()
         .context(format!(
             "Run command `{}` failed, please check the `GraphicsMagickWand-config` \

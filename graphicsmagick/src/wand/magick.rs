@@ -4104,7 +4104,7 @@ mod tests {
 
     #[test]
     fn test_magick_wand_read_image_blob() {
-        let mut file = File::open(&logo_path()).unwrap();
+        let mut file = File::open(logo_path()).unwrap();
         let mut content = Vec::new();
         file.read_to_end(&mut content).unwrap();
 

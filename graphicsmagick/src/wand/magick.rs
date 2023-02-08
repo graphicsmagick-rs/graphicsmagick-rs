@@ -1457,7 +1457,7 @@ impl MagickWand<'_> {
         x_offset: c_long,
         y_offset: c_long,
         input: MagickWandExportSlice<'a, T>,
-    ) -> crate::Result<&mut [T]> {
+    ) -> crate::Result<&'a mut [T]> {
         let len = input.len();
         let map = input.map;
         let storage = T::STORAGE_TYPE;

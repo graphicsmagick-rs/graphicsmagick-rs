@@ -97,7 +97,7 @@ fn main() -> anyhow::Result<()> {
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     let binding_path = out_path.join("bindings.rs");
     bindings
-        .write_to_file(&binding_path)
+        .write_to_file(binding_path)
         .context("Couldn't write bindings!")?;
 
     Ok(())

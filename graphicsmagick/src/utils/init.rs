@@ -1,21 +1,12 @@
 use graphicsmagick_sys::InitializeMagick;
-use std::{ptr::null, sync::Once, thread};
+use std::{ptr::null, sync::Once};
 
 static HAS_INITIALIZED: Once = Once::new();
 
 /// Wrapper of `graphicsmagick_sys::InitializeMagick`, call it before any `graphicsmagick` action.
-/// Must be call in the main thread.
 pub fn initialize() {
-    HAS_INITIALIZED.call_once(|| {
-        assert_eq!(
-            thread::current().name(),
-            Some("main"),
-            "You have to call `graphicsmagick::initialize` in main thread"
-        );
-
-        unsafe {
-            InitializeMagick(null());
-        }
+    HAS_INITIALIZED.call_once(|| unsafe {
+        InitializeMagick(null());
     });
 }
 

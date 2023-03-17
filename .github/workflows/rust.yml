@@ -13,8 +13,8 @@ env:
   RUST_BACKTRACE: 1
   RUST_LOG: debug
   RUSTFLAGS: "-D warnings"
-  CARGO_UNSTABLE_SPARSE_REGISTRY: "true"
-  NIGHTLY: nightly-2022-10-12
+  CARGO_REGISTRIES_CRATES_IO_PROTOCOL: "sparse"
+  NIGHTLY: nightly-2023-03-15
 
 jobs:
   all:
@@ -77,6 +77,7 @@ jobs:
 
       - name: Rustup
         run: |
+          rustup show
           rustup component add rustfmt clippy
           rustup toolchain install ${{ env.NIGHTLY }} --allow-downgrade -c rustfmt clippy
 
@@ -118,7 +119,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Generate Cargo.lock
-        run: cargo +${{ env.NIGHTLY }} update
+        run: cargo update
 
       - name: Configure caching for rust
         uses: actions/cache@v3

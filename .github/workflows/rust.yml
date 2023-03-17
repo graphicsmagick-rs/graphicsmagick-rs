@@ -14,7 +14,7 @@ env:
   RUST_LOG: debug
   RUSTFLAGS: "-D warnings"
   CARGO_REGISTRIES_CRATES_IO_PROTOCOL: "sparse"
-  NIGHTLY: nightly-2023-01-15
+  NIGHTLY: nightly-2023-03-15
 
 jobs:
   all:

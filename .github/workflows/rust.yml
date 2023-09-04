@@ -116,7 +116,7 @@ jobs:
           GraphicsMagick-config --cppflags --ldflags --libs
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Generate Cargo.lock
         run: cargo update

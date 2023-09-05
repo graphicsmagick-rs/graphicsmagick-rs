@@ -61,7 +61,7 @@ jobs:
           sudo make install -j $(nproc)
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Rust Stable
         uses: actions-rs/toolchain@v1

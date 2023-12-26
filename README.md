@@ -30,7 +30,7 @@ or specify the environment variable `GRAPHICS_MAGICK_WAND_CONFIG` correctly.
 1. If you want to use higher version functions, you should specify features in `Cargo.toml` like:
 
    ```toml
-   featuers = ["v1_3_36"]
+   features = ["v1_3_36"]
    ```
 
 1. `GraphicsMagick` supports OpenMP if you are compiling with OpenMP-enabled `cc`, you can set the environment variable

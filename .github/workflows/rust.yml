@@ -90,7 +90,7 @@ jobs:
 
       - name: Configure caching for graphicsmagick
         id: cache-graphicsmagick
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: /tmp/graphicsmagick
           key: ${{ matrix.os }}-graphicsmagick-${{ matrix.flag.gm-version }}
@@ -122,7 +122,7 @@ jobs:
         run: cargo +${{ env.NIGHTLY }} -Z minimal-versions update
 
       - name: Configure caching for rust
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cargo/registry/index/

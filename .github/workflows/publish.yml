@@ -41,7 +41,7 @@ jobs:
 
       - name: Configure caching for graphicsmagick
         id: cache-graphicsmagick
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: /tmp/graphicsmagick
           key: ${{ matrix.os }}-graphicsmagick-${{ matrix.flag.gm-version }}

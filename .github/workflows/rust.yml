@@ -72,6 +72,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - uses: ./.github/actions/install-sys-deps
         with:
           version: ${{ matrix.flag.gm-version }}
@@ -81,9 +84,6 @@ jobs:
           rustup show
           rustup component add rustfmt clippy
           rustup toolchain install ${{ env.NIGHTLY }} --allow-downgrade -c rustfmt clippy --no-self-update
-
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: Generate Cargo.lock
         run: cargo +${{ env.NIGHTLY }} -Z minimal-versions update

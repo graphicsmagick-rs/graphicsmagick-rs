@@ -61,7 +61,7 @@ jobs:
       - name: Rustup
         run: |
           rustup toolchain install $NIGHTLY --allow-downgrade --no-self-update
-          rustup default $NIGHTLY
+          rustup override set $NIGHTLY
 
       - name: Generate Cargo.lock
         run: cargo -Z minimal-versions update

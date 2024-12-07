@@ -9,6 +9,10 @@ on:
     branches:
       - "**"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
 env:
   RUST_BACKTRACE: 1
   RUST_LOG: debug
@@ -84,6 +88,10 @@ jobs:
         # - windows-latest
 
         flag:
+          - gm-version: GraphicsMagick-1_3_40
+            feature: v1_3_38
+          - gm-version: GraphicsMagick-1_3_39
+            feature: v1_3_38
           - gm-version: GraphicsMagick-1_3_38
             feature: v1_3_38
           - gm-version: GraphicsMagick-1_3_37

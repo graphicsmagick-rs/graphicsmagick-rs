@@ -15,6 +15,7 @@ runs:
         key: v5-${{ runner.os }}-graphicsmagick-${{ inputs.version }}
 
     - name: Install dependencies
+      shell: bash
       run: |
         set -euxo pipefail
         sudo sed -i '/^#\sdeb-src /s/^#//' "/etc/apt/sources.list"

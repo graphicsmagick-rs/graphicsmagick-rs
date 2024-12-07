@@ -14,51 +14,12 @@ env:
 jobs:
   publish:
     name: Publish
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        os:
-          - ubuntu-20.04
-
-        flag:
-          - gm-version: GraphicsMagick-1_3_20
-            feature: v1_3_20
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-20.04
 
     steps:
-      - name: System info
-        run: cat /etc/apt/sources.list
-
-      - name: Dependencies
-        run: |
-          sudo sed -i '/^#\sdeb-src /s/^#//' "/etc/apt/sources.list"
-          sudo apt-get update
-          sudo apt-get build-dep -y graphicsmagick
-          sudo apt-get install -y llvm-dev libclang-dev clang mercurial libfreetype6-dev
-
-      - name: Configure caching for graphicsmagick
-        id: cache-graphicsmagick
-        uses: actions/cache@v4
+      - uses: ./.github/actions/install-sys-deps
         with:
-          path: /tmp/graphicsmagick
-          key: ${{ matrix.os }}-graphicsmagick-${{ matrix.flag.gm-version }}
-
-      - name: Build GraphicsMagick
-        if: steps.cache-graphicsmagick.outputs.cache-hit != 'true'
-        run: |
-          hg clone http://hg.code.sf.net/p/graphicsmagick/code /tmp/graphicsmagick
-          cd /tmp/graphicsmagick
-          hg update -r ${{ matrix.flag.gm-version }}
-          ./configure
-          make -j $(nproc)
-
-      - name: Install GraphicsMagick
-        run: |
-          cd /tmp/graphicsmagick
-          sudo make install -j $(nproc)
+          version: GraphicsMagick-1_3_20
 
       - name: Checkout
         uses: actions/checkout@v4

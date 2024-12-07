@@ -89,19 +89,22 @@ fn main() -> anyhow::Result<()> {
         .arg("-V")
         .output()
         .map_err(|e| anyhow!("Fail to run 'rustc -V': {}", e))?;
-    
+
     if !status.success() {
         bail!("'rustc -V' returns non-zero status");
     }
 
     let stdout = String::from_utf8_lossy(&stdout);
-    
+
     let mut iter = stdout.split_whitespace();
-    
+
     let rustc_parse_error = || anyhow!("Expected format 'rustc x.y.z (abcabcabc yyyy-mm-dd)'");
     iter.next().ok_or_else(rustc_parse_error)?;
-    let rustc_version = iter.next().ok_or_else(rustc_parse_error)?.trim_end_matches("-nightly");
-    
+    let rustc_version = iter
+        .next()
+        .ok_or_else(rustc_parse_error)?
+        .trim_end_matches("-nightly");
+
     let rust_target: bindgen::RustTarget = rustc_version
         .parse()
         .map_err(|e| anyhow!("rustc version from 'rustc -V' is not a valid semver: {}", e))?;

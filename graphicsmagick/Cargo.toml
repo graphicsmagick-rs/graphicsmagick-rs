@@ -1,6 +1,6 @@
 [package]
 name = "graphicsmagick"
-version = "0.6.0"
+version = "0.6.1"
 authors = ["jmjoy <918734043@qq.com>"]
 edition = "2021"
 rust-version = "1.70"
@@ -37,7 +37,7 @@ v1_3_37 = ["v1_3_36"]
 v1_3_38 = ["v1_3_37"]
 
 [dependencies]
-graphicsmagick-sys = { version = "0.6.0", path = "../graphicsmagick-sys" }
+graphicsmagick-sys = { version = "0.6.1", path = "../graphicsmagick-sys" }
 thiserror = "2.0.0"
 num_enum = "0.7.0"
 null-terminated-str = "0.1.2"

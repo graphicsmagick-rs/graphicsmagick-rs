@@ -11,8 +11,11 @@ runs:
       id: cache-graphicsmagick
       uses: actions/cache@v4
       with:
-        path: /usr/local
-        key: v1-${{ runner.os }}-graphicsmagick-${{ inputs.version }}
+        path: |
+          /usr/local/bin
+          /usr/local/include/GraphicsMagick
+          /usr/local/lib
+        key: v2-${{ runner.os }}-graphicsmagick-${{ inputs.version }}
 
     - name: Build and Install GraphicsMagick
       if: steps.cache-graphicsmagick.outputs.cache-hit != 'true'

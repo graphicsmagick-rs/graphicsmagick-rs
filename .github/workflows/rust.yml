@@ -70,8 +70,8 @@ jobs:
       - name: Doc
         run: cargo +${{ env.NIGHTLY }} rustdoc --manifest-path graphicsmagick/Cargo.toml --features v1_3_38 -- --cfg docsrs
 
-  all:
-    name: All
+  test:
+    name: Run test
 
     strategy:
       fail-fast: false
@@ -134,15 +134,18 @@ jobs:
 
       - name: Rustup
         run: |
-          rustup show
-          rustup component add rustfmt clippy
-          rustup toolchain install ${{ env.NIGHTLY }} --allow-downgrade -c rustfmt clippy --no-self-update
+          rustup toolchain install ${{ env.NIGHTLY }} --allow-downgrade --no-self-update
 
       - name: Generate Cargo.lock
         run: cargo +${{ env.NIGHTLY }} -Z minimal-versions update
 
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest
+
       - uses: Swatinem/rust-cache@v2
 
-
-      - name: Docf
-        run: cargo +${{ env.NIGHTLY }} rustdoc --manifest-path graphicsmagick/Cargo.toml --features ${{ matrix.flag.feature }} -- --cfg docsrs
+      - name: Test
+        run: |
+          cargo nextest --features ${{ matrix.flag.feature }}
+          cargo test --doc --features ${{ matrix.flag.feature }}

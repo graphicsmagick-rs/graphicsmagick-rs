@@ -5416,6 +5416,7 @@ mod tests {
 
     #[test]
     fn test_magick_wand_set_resource_limit() {
+        initialize();
         MagickWand::set_resource_limit(ResourceType::UndefinedResource, 0);
     }
 

@@ -4813,6 +4813,7 @@ mod tests {
 
     #[test]
     fn test_magick_wand_get_resource_limit() {
+        initialize();
         MagickWand::get_resource_limit(ResourceType::UndefinedResource);
     }
 

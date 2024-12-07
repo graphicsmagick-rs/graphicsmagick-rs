@@ -7,39 +7,38 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: System info
-      run: cat /etc/apt/sources.list
-      shell: bash
-
-    - name: Dependencies
-      shell: bash
-      run: |
-        sudo sed -i '/^#\sdeb-src /s/^#//' "/etc/apt/sources.list"
-        sudo apt-get update
-        sudo apt-get build-dep -y graphicsmagick
-        sudo apt-get install -y llvm-dev libclang-dev clang mercurial libfreetype6-dev
-
     - name: Configure caching for graphicsmagick
       id: cache-graphicsmagick
       uses: actions/cache@v4
       with:
-        path: /tmp/graphicsmagick
-        key: ${{ runner.os }}-graphicsmagick-${{ inputs.version }}
+        path: /home/runner/.local/
+        key: v5-${{ runner.os }}-graphicsmagick-${{ inputs.version }}
 
-    - name: Build GraphicsMagick
+    - name: Install dependencies
+      shell: bash
+      run: |
+        set -euxo pipefail
+        sudo sed -i '/^#\sdeb-src /s/^#//' "/etc/apt/sources.list"
+        sudo apt-get update
+        sudo apt-get build-dep -y graphicsmagick
+  
+    - name: Build and Install GraphicsMagick
       if: steps.cache-graphicsmagick.outputs.cache-hit != 'true'
       shell: bash
       run: |
+        set -euxo pipefail
+        sudo apt-get install -y llvm-dev libclang-dev clang mercurial libfreetype6-dev
         hg clone http://hg.code.sf.net/p/graphicsmagick/code /tmp/graphicsmagick
         cd /tmp/graphicsmagick
         hg update -r ${{ inputs.version }}
-        ./configure
-        make -j $(nproc)
+        ./configure --prefix="$HOME/.local"
+        make install -j $(nproc)
 
-    - name: Install GraphicsMagick
+    - name: Add $HOME/.local to PATH
       shell: bash
-      working-directory: /tmp/graphicsmagick
-      run: sudo make install -j $(nproc)
+      run: |
+        echo "$HOME/.local" >> "$GITHUB_PATH"
+        ldconfig -n "$HOME/.local/lib"
 
     - name: Info
       shell: bash

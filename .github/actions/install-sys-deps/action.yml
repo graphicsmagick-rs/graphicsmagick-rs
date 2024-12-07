@@ -14,14 +14,18 @@ runs:
         path: /home/runner/.local/
         key: v5-${{ runner.os }}-graphicsmagick-${{ inputs.version }}
 
-    - name: Build and Install GraphicsMagick
-      if: steps.cache-graphicsmagick.outputs.cache-hit != 'true'
-      shell: bash
+    - name: Install dependencies
       run: |
         set -euxo pipefail
         sudo sed -i '/^#\sdeb-src /s/^#//' "/etc/apt/sources.list"
         sudo apt-get update
         sudo apt-get build-dep -y graphicsmagick
+  
+    - name: Build and Install GraphicsMagick
+      if: steps.cache-graphicsmagick.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        set -euxo pipefail
         sudo apt-get install -y llvm-dev libclang-dev clang mercurial libfreetype6-dev
         hg clone http://hg.code.sf.net/p/graphicsmagick/code /tmp/graphicsmagick
         cd /tmp/graphicsmagick

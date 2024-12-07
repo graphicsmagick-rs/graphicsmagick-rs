@@ -80,7 +80,7 @@ fn main() -> anyhow::Result<()> {
     }
 
     let rustc = env::var_os("RUSTC")
-        .ok_or_else(|| anyhow!("env RUSTC not present")?;
+        .ok_or_else(|| anyhow!("env RUSTC not present"))?;
 
     let Output { stdout, status } = Command::new(rustc)
         .arg("-V")

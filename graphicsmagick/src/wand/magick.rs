@@ -4813,6 +4813,7 @@ mod tests {
 
     #[test]
     fn test_magick_wand_get_resource_limit() {
+        initialize();
         MagickWand::get_resource_limit(ResourceType::UndefinedResource);
     }
 
@@ -5052,11 +5053,13 @@ mod tests {
 
     #[test]
     fn test_magick_wand_query_fonts() {
+        initialize();
         MagickWand::query_fonts("").unwrap();
     }
 
     #[test]
     fn test_magick_wand_query_formats() {
+        initialize();
         MagickWand::query_formats("").unwrap();
     }
 
@@ -5413,6 +5416,7 @@ mod tests {
 
     #[test]
     fn test_magick_wand_set_resource_limit() {
+        initialize();
         MagickWand::set_resource_limit(ResourceType::UndefinedResource, 0);
     }
 

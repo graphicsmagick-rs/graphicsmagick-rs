@@ -13,11 +13,11 @@ runs:
       with:
         path: |
           /usr/local/bin
-          /usr/local/**/GraphicsMagick*/**
+          /usr/local/**/GraphicsMagick*/config
           /usr/local/include/GraphicsMagick
           /usr/local/lib/libGraphicsMagickWand*
           /usr/local/lib/pkgconfig/GraphicsMagick*
-        key: v3-${{ runner.os }}-graphicsmagick-${{ inputs.version }}
+        key: v4-${{ runner.os }}-graphicsmagick-${{ inputs.version }}
 
     - name: Build and Install GraphicsMagick
       if: steps.cache-graphicsmagick.outputs.cache-hit != 'true'

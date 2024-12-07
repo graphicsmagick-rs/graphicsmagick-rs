@@ -5052,11 +5052,13 @@ mod tests {
 
     #[test]
     fn test_magick_wand_query_fonts() {
+        initialize();
         MagickWand::query_fonts("").unwrap();
     }
 
     #[test]
     fn test_magick_wand_query_formats() {
+        initialize();
         MagickWand::query_formats("").unwrap();
     }
 

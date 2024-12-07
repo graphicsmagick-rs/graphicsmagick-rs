@@ -79,25 +79,20 @@ fn main() -> anyhow::Result<()> {
         println!("cargo:rustc-link-lib={}={}", link_kind, lib);
     }
 
-    let rustc = env::var_os("RUSTC")
-        .ok_or_else(|| anyhow!("env RUSTC not present"))?;
+    let rustc = env::var_os("RUSTC").ok_or_else(|| anyhow!("env RUSTC not present"))?;
 
-    let Output { stdout, status } = Command::new(rustc)
+    let Output { stdout, status, .. } = Command::new(rustc)
         .arg("-V")
         .output()
-        .map_err(|e| anyhow("Fail to run 'rustc -V': {}", e))?;
+        .map_err(|e| anyhow!("Fail to run 'rustc -V': {}", e))?;
 
     if !status.success() {
-        bail("'rustc -V' returns non-zero status");
+        bail!("'rustc -V' returns non-zero status");
     }
 
     let stdout = String::from_utf8_lossy(&stdout);
     let mut iter = stdout.split_whitespace();
-    let rustc_parse_error = || {
-        anyhow!(
-            "Expected format 'rustc x.y.z (abcabcabc yyyy-mm-dd)'"
-        )
-    };
+    let rustc_parse_error = || anyhow!("Expected format 'rustc x.y.z (abcabcabc yyyy-mm-dd)'");
     iter.next().ok_or_else(rustc_parse_error)?;
     let rustc_version = iter.next().ok_or_else(rustc_parse_error)?;
     let rust_target: bindgen::RustTarget = rustc_version

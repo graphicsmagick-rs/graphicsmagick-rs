@@ -79,7 +79,7 @@ jobs:
         run: |
           rustup show
           rustup component add rustfmt clippy
-          rustup toolchain install ${{ env.NIGHTLY }} --allow-downgrade -c rustfmt clippy
+          rustup toolchain install ${{ env.NIGHTLY }} --allow-downgrade -c rustfmt clippy --no-self-update
 
       - name: Dependencies
         run: |
@@ -121,15 +121,7 @@ jobs:
       - name: Generate Cargo.lock
         run: cargo +${{ env.NIGHTLY }} -Z minimal-versions update
 
-      - name: Configure caching for rust
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ matrix.os }}-cargo-${{ matrix.flag.gm-version }}-${{ matrix.flag.feature }}-${{ hashFiles('**/Cargo.lock') }}
+      - uses: Swatinem/rust-cache@v2
 
       - name: Fmt
         run: cargo +${{ env.NIGHTLY }} fmt --all -- --check

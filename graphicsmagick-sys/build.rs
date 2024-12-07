@@ -1,7 +1,11 @@
 #![allow(clippy::unreadable_literal)]
 
 use anyhow::{anyhow, bail, Context};
-use std::{env, path::PathBuf, process::{Command, Output}};
+use std::{
+    env,
+    path::PathBuf,
+    process::{Command, Output},
+};
 
 #[derive(Debug)]
 struct GraphicsMagickConfig {

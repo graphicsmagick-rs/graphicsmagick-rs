@@ -3,7 +3,7 @@ name = "graphicsmagick-sys"
 version = "0.6.0"
 authors = ["jmjoy <918734043@qq.com>"]
 edition = "2021"
-rust-version = "1.68"
+rust-version = "1.70"
 license = "MIT"
 description = "GraphicsMagick binding for Rust."
 readme = "README.md"
@@ -19,4 +19,4 @@ static = []
 
 [build-dependencies]
 anyhow = "1.0.53"
-bindgen = { version = "0.69.0", features = ["runtime", "which-rustfmt"], default-features = false }
+bindgen = { version = "0.71.0", features = ["runtime", "which-rustfmt"], default-features = false }

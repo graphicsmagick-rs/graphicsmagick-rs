@@ -14,7 +14,7 @@ env:
   RUST_LOG: debug
   RUSTFLAGS: "-D warnings"
   CARGO_REGISTRIES_CRATES_IO_PROTOCOL: "sparse"
-  NIGHTLY: nightly-2023-03-15
+  NIGHTLY: nightly-2024-12-05
 
 jobs:
   fmt-and-clippy:
@@ -60,15 +60,16 @@ jobs:
 
       - name: Rustup
         run: |
-          rustup toolchain install ${{ env.NIGHTLY }} --allow-downgrade --no-self-update
+          rustup toolchain install $NIGHTLY --allow-downgrade --no-self-update
+          rustup override set $NIGHTLY
 
       - name: Generate Cargo.lock
-        run: cargo +${{ env.NIGHTLY }} -Z minimal-versions update
+        run: cargo -Z minimal-versions update
 
       - uses: Swatinem/rust-cache@v2
 
       - name: Doc
-        run: cargo +${{ env.NIGHTLY }} rustdoc --manifest-path graphicsmagick/Cargo.toml --features v1_3_38 -- --cfg docsrs
+        run: cargo rustdoc --manifest-path graphicsmagick/Cargo.toml --features v1_3_38 -- --cfg docsrs
 
   test:
     name: Run test

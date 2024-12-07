@@ -11,13 +11,8 @@ runs:
       id: cache-graphicsmagick
       uses: actions/cache@v4
       with:
-        path: |
-          /usr/local/bin
-          /usr/local/**/GraphicsMagick*/config
-          /usr/local/include/GraphicsMagick
-          /usr/local/lib/libGraphicsMagickWand*
-          /usr/local/lib/pkgconfig/GraphicsMagick*
-        key: v4-${{ runner.os }}-graphicsmagick-${{ inputs.version }}
+        path: ${{ env.HOME }}/.local
+        key: v5-${{ runner.os }}-graphicsmagick-${{ inputs.version }}
 
     - name: Build and Install GraphicsMagick
       if: steps.cache-graphicsmagick.outputs.cache-hit != 'true'
@@ -31,13 +26,18 @@ runs:
         hg clone http://hg.code.sf.net/p/graphicsmagick/code /tmp/graphicsmagick
         cd /tmp/graphicsmagick
         hg update -r ${{ inputs.version }}
-        ./configure
-        sudo make install -j $(nproc)
+        ./configure --prefix="$HOME/.local"
+        make install -j $(nproc)
+
+    - name: Add $HOME/.local to PATH
+      shell: bash
+      run: |
+        echo "$HOME/.local" >> "$GITHUB_PATH"
+        ldconfig -n "$HOME/.local/lib"
 
     - name: Info
       shell: bash
       run: |
-        ldconfig -n /usr/local/lib
         gm version
         echo
         GraphicsMagick-config --cppflags --ldflags --libs

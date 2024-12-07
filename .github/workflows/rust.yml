@@ -17,15 +17,68 @@ env:
   NIGHTLY: nightly-2023-03-15
 
 jobs:
-  all:
-    name: All
+  fmt-and-clippy:
+    name: formatting and clippy
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/install-sys-deps
+        with:
+          version: GraphicsMagick-1_3_20
+
+      - name: Rustup
+        run: |
+          rustup component add clippy
+          rustup toolchain install $NIGHTLY --allow-downgrade -c rustfmt --no-self-update
+
+      - name: Generate Cargo.lock
+        run: cargo +${{ env.NIGHTLY }} -Z minimal-versions update
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Fmt
+        run: cargo +${{ env.NIGHTLY }} fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --no-deps
+
+  doc:
+    name: Build doc
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/install-sys-deps
+        with:
+          version: GraphicsMagick-1_3_38
+
+      - name: Rustup
+        run: |
+          rustup toolchain install ${{ env.NIGHTLY }} --allow-downgrade --no-self-update
+
+      - name: Generate Cargo.lock
+        run: cargo +${{ env.NIGHTLY }} -Z minimal-versions update
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Doc
+        run: cargo +${{ env.NIGHTLY }} rustdoc --manifest-path graphicsmagick/Cargo.toml --features v1_3_38 -- --cfg docsrs
+
+  test:
+    name: Run test
 
     strategy:
       fail-fast: false
 
       matrix:
         os:
-          - ubuntu-20.04
+          - ubuntu-latest
         # - macos-latest
         # - windows-latest
 
@@ -81,23 +134,18 @@ jobs:
 
       - name: Rustup
         run: |
-          rustup show
-          rustup component add rustfmt clippy
-          rustup toolchain install ${{ env.NIGHTLY }} --allow-downgrade -c rustfmt clippy --no-self-update
+          rustup toolchain install ${{ env.NIGHTLY }} --allow-downgrade --no-self-update
 
       - name: Generate Cargo.lock
         run: cargo +${{ env.NIGHTLY }} -Z minimal-versions update
 
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest
+
       - uses: Swatinem/rust-cache@v2
 
-      - name: Fmt
-        run: cargo +${{ env.NIGHTLY }} fmt --all -- --check
-
-      - name: Clippy
-        run: cargo clippy --verbose
-
       - name: Test
-        run: cargo test --verbose --features ${{ matrix.flag.feature }} -- --test-threads=1 --nocapture
-
-      - name: Doc
-        run: cargo +${{ env.NIGHTLY }} rustdoc --manifest-path graphicsmagick/Cargo.toml --features ${{ matrix.flag.feature }} -- --cfg docsrs
+        run: |
+          cargo nextest run --features ${{ matrix.flag.feature }}
+          cargo test --doc --features ${{ matrix.flag.feature }}

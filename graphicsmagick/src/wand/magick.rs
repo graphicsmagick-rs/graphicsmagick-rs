@@ -103,7 +103,7 @@ impl MagickWand<'_> {
 
             let description = MagickAutoRelinquish::new(description_ptr as *mut c_void)
                 .map(|description_ptr| {
-                    String::from_utf8_lossy(description_ptr.as_c_str().to_bytes()).into_owned()
+                    description_ptr.as_c_str().to_string_lossy().into_owned()
                 })
                 .unwrap_or_else(|| "Unknown exception".to_string());
 

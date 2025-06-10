@@ -3,15 +3,15 @@
 //! <http://www.graphicsmagick.org/wand/magick_wand.html>
 
 use crate::{
+    MagickBoxSlice, MagickCString,
     error::Exception,
     types::{
         ChannelType, ColorspaceType, CompositeOperator, CompressionType, DisposeType, FilterTypes,
         ImageType, InterlaceType, MetricType, MontageMode, NoiseType, PreviewType, Quantum,
         RenderingIntent, ResolutionType, ResourceType, VirtualPixelMethod,
     },
-    utils::{assert_initialized, CStrExt, MagickAutoRelinquish},
+    utils::{CStrExt, MagickAutoRelinquish, assert_initialized},
     wand::{DrawingWand, PixelWand},
-    MagickBoxSlice, MagickCString,
 };
 use graphicsmagick_sys::*;
 use null_terminated_str::{IntoNullTerminatedString, NullTerminatedStr};
@@ -95,18 +95,20 @@ impl MagickWand<'_> {
     }
 
     unsafe fn get_error(&mut self) -> crate::Error {
-        let mut severity: ExceptionType = 0;
+        unsafe {
+            let mut severity: ExceptionType = 0;
 
-        let description_ptr =
-            MagickGetException(self.wand.as_ptr(), &mut severity as *mut ExceptionType);
+            let description_ptr =
+                MagickGetException(self.wand.as_ptr(), &mut severity as *mut ExceptionType);
 
-        let description = MagickAutoRelinquish::new(description_ptr as *mut c_void)
-            .map(|description_ptr| {
-                String::from_utf8_lossy(description_ptr.as_c_str().to_bytes()).into_owned()
-            })
-            .unwrap_or_else(|| "Unknown exception".to_string());
+            let description = MagickAutoRelinquish::new(description_ptr as *mut c_void)
+                .map(|description_ptr| {
+                    String::from_utf8_lossy(description_ptr.as_c_str().to_bytes()).into_owned()
+                })
+                .unwrap_or_else(|| "Unknown exception".to_string());
 
-        Exception::new(severity.into(), description).into()
+            Exception::new(severity.into(), description).into()
+        }
     }
 
     /// # Safety
@@ -4069,8 +4071,8 @@ mod tests {
         tests::{logo_path, logo_unicode_path},
         types::*,
         wand::{
-            magick::{MagickWandExportType, MagickWandImportSlice},
             DrawingWand, MagickWand, PixelWand,
+            magick::{MagickWandExportType, MagickWandImportSlice},
         },
     };
     use std::{
@@ -4252,9 +4254,10 @@ mod tests {
     #[test]
     fn test_magick_wand_color_flood_fill_image() {
         let mut mw = new_logo_magick_wand();
-        assert!(mw
-            .color_floodfill_image(&PixelWand::new(), 0., &PixelWand::new(), 0, 0)
-            .is_err());
+        assert!(
+            mw.color_floodfill_image(&PixelWand::new(), 0., &PixelWand::new(), 0, 0)
+                .is_err()
+        );
     }
 
     #[test]
@@ -4294,14 +4297,15 @@ mod tests {
     #[test]
     fn test_magick_wand_composite_image() {
         let mut mw = new_logo_magick_wand();
-        assert!(mw
-            .composite_image(
+        assert!(
+            mw.composite_image(
                 &new_magick_wand(),
                 CompositeOperator::ClearCompositeOp,
                 0,
                 0,
             )
-            .is_err())
+            .is_err()
+        )
     }
 
     #[test]
@@ -5109,17 +5113,19 @@ mod tests {
     #[test]
     fn test_magick_wand_resample_image() {
         let mut mw = new_logo_magick_wand();
-        assert!(mw
-            .resample_image(0., 0., FilterTypes::UndefinedFilter, 0.)
-            .is_err());
+        assert!(
+            mw.resample_image(0., 0., FilterTypes::UndefinedFilter, 0.)
+                .is_err()
+        );
     }
 
     #[test]
     fn test_magick_wand_resize_image() {
         let mut mw = new_logo_magick_wand();
-        assert!(mw
-            .resize_image(0, 0, FilterTypes::UndefinedFilter, 0.)
-            .is_err());
+        assert!(
+            mw.resize_image(0, 0, FilterTypes::UndefinedFilter, 0.)
+                .is_err()
+        );
     }
 
     #[test]

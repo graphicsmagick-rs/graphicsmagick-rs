@@ -39,7 +39,7 @@ impl MagickAutoRelinquish {
     }
 
     pub(crate) unsafe fn as_c_str(&self) -> &CStr {
-        CStr::from_ptr(self.0.as_ptr() as *const c_char)
+        unsafe { CStr::from_ptr(self.0.as_ptr() as *const c_char) }
     }
 }
 impl Drop for MagickAutoRelinquish {
@@ -61,7 +61,7 @@ impl MagickCString {
 
     /// Return pointer to the underlying data.
     pub fn as_ptr(&self) -> *const c_char {
-        self.0 .0 as *const c_char
+        self.0.0 as *const c_char
     }
 
     /// Convert [`MagickCString`] to [`CStr`].
@@ -95,9 +95,11 @@ impl MagickCString {
 
 pub(crate) trait CStrExt {
     unsafe fn from_ptr_checked_on_debug<'a>(ptr: *const c_char) -> &'a CStr {
-        debug_assert!(!ptr.is_null());
+        unsafe {
+            debug_assert!(!ptr.is_null());
 
-        CStr::from_ptr(ptr)
+            CStr::from_ptr(ptr)
+        }
     }
 }
 
@@ -115,13 +117,15 @@ impl<T> MagickBoxSlice<T> {
     /// of U.
     /// T must be able to deal with all valid representation of U.
     pub(crate) unsafe fn new<U>(a: *mut U, len: usize) -> Option<Self> {
-        assert_eq!(mem::size_of::<U>(), mem::size_of::<T>());
+        unsafe {
+            assert_eq!(mem::size_of::<U>(), mem::size_of::<T>());
 
-        (!a.is_null()).then(|| Self {
-            alloc: MagickAlloc::new(a as *mut c_void),
-            len,
-            phantom: PhantomData,
-        })
+            (!a.is_null()).then(|| Self {
+                alloc: MagickAlloc::new(a as *mut c_void),
+                len,
+                phantom: PhantomData,
+            })
+        }
     }
 
     /// Return pointer to the underlying data

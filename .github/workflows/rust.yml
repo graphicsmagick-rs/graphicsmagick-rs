@@ -17,8 +17,7 @@ env:
   RUST_BACKTRACE: 1
   RUST_LOG: debug
   RUSTFLAGS: "-D warnings"
-  CARGO_REGISTRIES_CRATES_IO_PROTOCOL: "sparse"
-  NIGHTLY: nightly-2024-12-05
+  NIGHTLY: nightly-2025-06-09
 
 jobs:
   fmt-and-clippy:

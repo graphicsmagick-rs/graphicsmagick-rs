@@ -4,7 +4,7 @@
 
 use crate::{
     types::*,
-    utils::{assert_initialized, MagickCString},
+    utils::{MagickCString, assert_initialized},
 };
 use graphicsmagick_sys::*;
 use null_terminated_str::IntoNullTerminatedString;

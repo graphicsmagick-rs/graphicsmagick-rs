@@ -102,9 +102,7 @@ impl MagickWand<'_> {
                 MagickGetException(self.wand.as_ptr(), &mut severity as *mut ExceptionType);
 
             let description = MagickAutoRelinquish::new(description_ptr as *mut c_void)
-                .map(|description_ptr| {
-                    description_ptr.as_c_str().to_string_lossy().into_owned()
-                })
+                .map(|description_ptr| description_ptr.as_c_str().to_string_lossy().into_owned())
                 .unwrap_or_else(|| "Unknown exception".to_string());
 
             Exception::new(severity.into(), description).into()

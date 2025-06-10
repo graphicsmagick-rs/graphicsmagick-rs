@@ -157,7 +157,7 @@ impl Default for MagickWand<'_> {
     }
 }
 
-impl<'a> MagickWand<'a> {
+impl MagickWand<'_> {
     /// <http://www.graphicsmagick.org/wand/magick_wand.html#magickadaptivethresholdimage>
     ///
     /// MagickAdaptiveThresholdImage() selects an individual threshold for each pixel

@@ -68,7 +68,7 @@ impl MagickCString {
     pub fn as_c_str(&self) -> &CStr {
         let ptr = self.as_ptr();
         if ptr.is_null() {
-            unsafe { CStr::from_bytes_with_nul_unchecked(b"\0") }
+            c""
         } else {
             unsafe { CStr::from_ptr(ptr) }
         }

@@ -135,7 +135,7 @@ pub enum CompositeOperator {
     /// The result of abs(composite image - image). This is useful for comparing two very
     /// similar images.
     DifferenceCompositeOp = graphicsmagick_sys::CompositeOperator_DifferenceCompositeOp,
-    ///
+
     MultiplyCompositeOp = graphicsmagick_sys::CompositeOperator_MultiplyCompositeOp,
     /// The result image shaded by composite image.
     BumpmapCompositeOp = graphicsmagick_sys::CompositeOperator_BumpmapCompositeOp,
@@ -156,19 +156,19 @@ pub enum CompositeOperator {
     CopyOpacityCompositeOp = graphicsmagick_sys::CompositeOperator_CopyOpacityCompositeOp,
     /// Pixels in the region are set to Transparent.
     ClearCompositeOp = graphicsmagick_sys::CompositeOperator_ClearCompositeOp,
-    ///
+
     DissolveCompositeOp = graphicsmagick_sys::CompositeOperator_DissolveCompositeOp,
-    ///
+
     DisplaceCompositeOp = graphicsmagick_sys::CompositeOperator_DisplaceCompositeOp,
     /// Modulate brightness in HSL space.
     ModulateCompositeOp = graphicsmagick_sys::CompositeOperator_ModulateCompositeOp,
-    ///
+
     ThresholdCompositeOp = graphicsmagick_sys::CompositeOperator_ThresholdCompositeOp,
     /// Do nothing at all.
     NoCompositeOp = graphicsmagick_sys::CompositeOperator_NoCompositeOp,
-    ///
+
     DarkenCompositeOp = graphicsmagick_sys::CompositeOperator_DarkenCompositeOp,
-    ///
+
     LightenCompositeOp = graphicsmagick_sys::CompositeOperator_LightenCompositeOp,
     /// Copy Hue channel (from HSL colorspace).
     HueCompositeOp = graphicsmagick_sys::CompositeOperator_HueCompositeOp,
@@ -190,29 +190,29 @@ pub enum CompositeOperator {
     CopyYellowCompositeOp = graphicsmagick_sys::CompositeOperator_CopyYellowCompositeOp,
     /// Copy the Black channel.
     CopyBlackCompositeOp = graphicsmagick_sys::CompositeOperator_CopyBlackCompositeOp,
-    ///
+
     DivideCompositeOp = graphicsmagick_sys::CompositeOperator_DivideCompositeOp,
-    ///
+
     HardLightCompositeOp = graphicsmagick_sys::CompositeOperator_HardLightCompositeOp,
-    ///
+
     ExclusionCompositeOp = graphicsmagick_sys::CompositeOperator_ExclusionCompositeOp,
-    ///
+
     ColorDodgeCompositeOp = graphicsmagick_sys::CompositeOperator_ColorDodgeCompositeOp,
-    ///
+
     ColorBurnCompositeOp = graphicsmagick_sys::CompositeOperator_ColorBurnCompositeOp,
-    ///
+
     SoftLightCompositeOp = graphicsmagick_sys::CompositeOperator_SoftLightCompositeOp,
-    ///
+
     LinearBurnCompositeOp = graphicsmagick_sys::CompositeOperator_LinearBurnCompositeOp,
-    ///
+
     LinearDodgeCompositeOp = graphicsmagick_sys::CompositeOperator_LinearDodgeCompositeOp,
-    ///
+
     LinearLightCompositeOp = graphicsmagick_sys::CompositeOperator_LinearLightCompositeOp,
-    ///
+
     VividLightCompositeOp = graphicsmagick_sys::CompositeOperator_VividLightCompositeOp,
-    ///
+
     PinLightCompositeOp = graphicsmagick_sys::CompositeOperator_PinLightCompositeOp,
-    ///
+
     HardMixCompositeOp = graphicsmagick_sys::CompositeOperator_HardMixCompositeOp,
 
     #[num_enum(default)]
@@ -252,23 +252,22 @@ pub enum NoiseType {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum OrientationType {
-    ///
     UndefinedOrientation = graphicsmagick_sys::OrientationType_UndefinedOrientation,
-    ///
+
     TopLeftOrientation = graphicsmagick_sys::OrientationType_TopLeftOrientation,
-    ///
+
     TopRightOrientation = graphicsmagick_sys::OrientationType_TopRightOrientation,
-    ///
+
     BottomRightOrientation = graphicsmagick_sys::OrientationType_BottomRightOrientation,
-    ///
+
     BottomLeftOrientation = graphicsmagick_sys::OrientationType_BottomLeftOrientation,
-    ///
+
     LeftTopOrientation = graphicsmagick_sys::OrientationType_LeftTopOrientation,
-    ///
+
     RightTopOrientation = graphicsmagick_sys::OrientationType_RightTopOrientation,
-    ///
+
     RightBottomOrientation = graphicsmagick_sys::OrientationType_RightBottomOrientation,
-    ///
+
     LeftBottomOrientation = graphicsmagick_sys::OrientationType_LeftBottomOrientation,
 
     #[num_enum(default)]
@@ -279,15 +278,14 @@ pub enum OrientationType {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum MetricType {
-    ///
     MeanAbsoluteErrorMetric = graphicsmagick_sys::MetricType_MeanAbsoluteErrorMetric,
-    ///
+
     MeanSquaredErrorMetric = graphicsmagick_sys::MetricType_MeanSquaredErrorMetric,
-    ///
+
     PeakAbsoluteErrorMetric = graphicsmagick_sys::MetricType_PeakAbsoluteErrorMetric,
-    ///
+
     PeakSignalToNoiseRatioMetric = graphicsmagick_sys::MetricType_PeakSignalToNoiseRatioMetric,
-    ///
+
     RootMeanSquaredErrorMetric = graphicsmagick_sys::MetricType_RootMeanSquaredErrorMetric,
 
     #[num_enum(default)]
@@ -316,15 +314,15 @@ pub enum ColorspaceType {
     GRAYColorspace = graphicsmagick_sys::ColorspaceType_GRAYColorspace,
     /// Similar to Luma (Y) according to ITU-R 601
     TransparentColorspace = graphicsmagick_sys::ColorspaceType_TransparentColorspace,
-    ///
+
     OHTAColorspace = graphicsmagick_sys::ColorspaceType_OHTAColorspace,
     /// CIE XYZ
     XYZColorspace = graphicsmagick_sys::ColorspaceType_XYZColorspace,
     /// Kodak PhotoCD PhotoYCC
     YCCColorspace = graphicsmagick_sys::ColorspaceType_YCCColorspace,
-    ///
+
     YIQColorspace = graphicsmagick_sys::ColorspaceType_YIQColorspace,
-    ///
+
     YPbPrColorspace = graphicsmagick_sys::ColorspaceType_YPbPrColorspace,
     /// YUV colorspace as used for computer video.
     YUVColorspace = graphicsmagick_sys::ColorspaceType_YUVColorspace,
@@ -400,13 +398,12 @@ pub enum CompressionType {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum DisposeType {
-    ///
     UndefinedDispose = graphicsmagick_sys::DisposeType_UndefinedDispose,
-    ///
+
     NoneDispose = graphicsmagick_sys::DisposeType_NoneDispose,
-    ///
+
     BackgroundDispose = graphicsmagick_sys::DisposeType_BackgroundDispose,
-    ///
+
     PreviousDispose = graphicsmagick_sys::DisposeType_PreviousDispose,
 
     #[num_enum(default)]
@@ -443,7 +440,7 @@ pub enum GravityType {
     SouthGravity = graphicsmagick_sys::GravityType_SouthGravity,
     /// Position object at bottom-right of region
     SouthEastGravity = graphicsmagick_sys::GravityType_SouthEastGravity,
-    ///
+
     StaticGravity = graphicsmagick_sys::GravityType_StaticGravity,
 
     #[num_enum(default)]
@@ -482,17 +479,16 @@ pub enum InterlaceType {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum StorageType {
-    ///
     CharPixel = graphicsmagick_sys::StorageType_CharPixel,
-    ///
+
     ShortPixel = graphicsmagick_sys::StorageType_ShortPixel,
-    ///
+
     IntegerPixel = graphicsmagick_sys::StorageType_IntegerPixel,
-    ///
+
     LongPixel = graphicsmagick_sys::StorageType_LongPixel,
-    ///
+
     FloatPixel = graphicsmagick_sys::StorageType_FloatPixel,
-    ///
+
     DoublePixel = graphicsmagick_sys::StorageType_DoublePixel,
 
     #[num_enum(default)]
@@ -553,9 +549,9 @@ pub enum ImageType {
     TrueColorMatteType = graphicsmagick_sys::ImageType_TrueColorMatteType,
     /// Cyan/Yellow/Magenta/Black (CYMK) image
     ColorSeparationType = graphicsmagick_sys::ImageType_ColorSeparationType,
-    ///
+
     ColorSeparationMatteType = graphicsmagick_sys::ImageType_ColorSeparationMatteType,
-    ///
+
     OptimizeType = graphicsmagick_sys::ImageType_OptimizeType,
 
     #[num_enum(default)]
@@ -586,16 +582,15 @@ pub enum ResolutionType {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum VirtualPixelMethod {
-    ///
     UndefinedVirtualPixelMethod =
         graphicsmagick_sys::VirtualPixelMethod_UndefinedVirtualPixelMethod,
-    ///
+
     ConstantVirtualPixelMethod = graphicsmagick_sys::VirtualPixelMethod_ConstantVirtualPixelMethod,
-    ///
+
     EdgeVirtualPixelMethod = graphicsmagick_sys::VirtualPixelMethod_EdgeVirtualPixelMethod,
-    ///
+
     MirrorVirtualPixelMethod = graphicsmagick_sys::VirtualPixelMethod_MirrorVirtualPixelMethod,
-    ///
+
     TileVirtualPixelMethod = graphicsmagick_sys::VirtualPixelMethod_TileVirtualPixelMethod,
 
     #[num_enum(default)]
@@ -639,13 +634,12 @@ pub enum ResourceType {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum MontageMode {
-    ///
     UndefinedMode = graphicsmagick_sys::MontageMode_UndefinedMode,
-    ///
+
     FrameMode = graphicsmagick_sys::MontageMode_FrameMode,
-    ///
+
     UnframeMode = graphicsmagick_sys::MontageMode_UnframeMode,
-    ///
+
     ConcatenateMode = graphicsmagick_sys::MontageMode_ConcatenateMode,
 
     #[num_enum(default)]
@@ -656,65 +650,64 @@ pub enum MontageMode {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum PreviewType {
-    ///
     UndefinedPreview = graphicsmagick_sys::PreviewType_UndefinedPreview,
-    ///
+
     RotatePreview = graphicsmagick_sys::PreviewType_RotatePreview,
-    ///
+
     ShearPreview = graphicsmagick_sys::PreviewType_ShearPreview,
-    ///
+
     RollPreview = graphicsmagick_sys::PreviewType_RollPreview,
-    ///
+
     HuePreview = graphicsmagick_sys::PreviewType_HuePreview,
-    ///
+
     SaturationPreview = graphicsmagick_sys::PreviewType_SaturationPreview,
-    ///
+
     BrightnessPreview = graphicsmagick_sys::PreviewType_BrightnessPreview,
-    ///
+
     GammaPreview = graphicsmagick_sys::PreviewType_GammaPreview,
-    ///
+
     SpiffPreview = graphicsmagick_sys::PreviewType_SpiffPreview,
-    ///
+
     DullPreview = graphicsmagick_sys::PreviewType_DullPreview,
-    ///
+
     GrayscalePreview = graphicsmagick_sys::PreviewType_GrayscalePreview,
-    ///
+
     QuantizePreview = graphicsmagick_sys::PreviewType_QuantizePreview,
-    ///
+
     DespecklePreview = graphicsmagick_sys::PreviewType_DespecklePreview,
-    ///
+
     ReduceNoisePreview = graphicsmagick_sys::PreviewType_ReduceNoisePreview,
-    ///
+
     AddNoisePreview = graphicsmagick_sys::PreviewType_AddNoisePreview,
-    ///
+
     SharpenPreview = graphicsmagick_sys::PreviewType_SharpenPreview,
-    ///
+
     BlurPreview = graphicsmagick_sys::PreviewType_BlurPreview,
-    ///
+
     ThresholdPreview = graphicsmagick_sys::PreviewType_ThresholdPreview,
-    ///
+
     EdgeDetectPreview = graphicsmagick_sys::PreviewType_EdgeDetectPreview,
-    ///
+
     SpreadPreview = graphicsmagick_sys::PreviewType_SpreadPreview,
-    ///
+
     SolarizePreview = graphicsmagick_sys::PreviewType_SolarizePreview,
-    ///
+
     ShadePreview = graphicsmagick_sys::PreviewType_ShadePreview,
-    ///
+
     RaisePreview = graphicsmagick_sys::PreviewType_RaisePreview,
-    ///
+
     SegmentPreview = graphicsmagick_sys::PreviewType_SegmentPreview,
-    ///
+
     SwirlPreview = graphicsmagick_sys::PreviewType_SwirlPreview,
-    ///
+
     ImplodePreview = graphicsmagick_sys::PreviewType_ImplodePreview,
-    ///
+
     WavePreview = graphicsmagick_sys::PreviewType_WavePreview,
-    ///
+
     OilPaintPreview = graphicsmagick_sys::PreviewType_OilPaintPreview,
-    ///
+
     CharcoalDrawingPreview = graphicsmagick_sys::PreviewType_CharcoalDrawingPreview,
-    ///
+
     JPEGPreview = graphicsmagick_sys::PreviewType_JPEGPreview,
 
     #[num_enum(default)]
@@ -725,11 +718,10 @@ pub enum PreviewType {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum FillRule {
-    ///
     UndefinedRule = graphicsmagick_sys::FillRule_UndefinedRule,
-    ///
+
     EvenOddRule = graphicsmagick_sys::FillRule_EvenOddRule,
-    ///
+
     NonZeroRule = graphicsmagick_sys::FillRule_NonZeroRule,
 
     #[num_enum(default)]
@@ -740,11 +732,10 @@ pub enum FillRule {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum ClipPathUnits {
-    ///
     UserSpace = graphicsmagick_sys::ClipPathUnits_UserSpace,
-    ///
+
     UserSpaceOnUse = graphicsmagick_sys::ClipPathUnits_UserSpaceOnUse,
-    ///
+
     ObjectBoundingBox = graphicsmagick_sys::ClipPathUnits_ObjectBoundingBox,
 
     #[num_enum(default)]
@@ -777,25 +768,24 @@ pub enum PaintMethod {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum StretchType {
-    ///
     NormalStretch = graphicsmagick_sys::StretchType_NormalStretch,
-    ///
+
     UltraCondensedStretch = graphicsmagick_sys::StretchType_UltraCondensedStretch,
-    ///
+
     ExtraCondensedStretch = graphicsmagick_sys::StretchType_ExtraCondensedStretch,
-    ///
+
     CondensedStretch = graphicsmagick_sys::StretchType_CondensedStretch,
-    ///
+
     SemiCondensedStretch = graphicsmagick_sys::StretchType_SemiCondensedStretch,
-    ///
+
     SemiExpandedStretch = graphicsmagick_sys::StretchType_SemiExpandedStretch,
-    ///
+
     ExpandedStretch = graphicsmagick_sys::StretchType_ExpandedStretch,
-    ///
+
     ExtraExpandedStretch = graphicsmagick_sys::StretchType_ExtraExpandedStretch,
-    ///
+
     UltraExpandedStretch = graphicsmagick_sys::StretchType_UltraExpandedStretch,
-    ///
+
     AnyStretch = graphicsmagick_sys::StretchType_AnyStretch,
 
     #[num_enum(default)]
@@ -806,13 +796,12 @@ pub enum StretchType {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum StyleType {
-    ///
     NormalStyle = graphicsmagick_sys::StyleType_NormalStyle,
-    ///
+
     ItalicStyle = graphicsmagick_sys::StyleType_ItalicStyle,
-    ///
+
     ObliqueStyle = graphicsmagick_sys::StyleType_ObliqueStyle,
-    ///
+
     AnyStyle = graphicsmagick_sys::StyleType_AnyStyle,
 
     #[num_enum(default)]
@@ -823,13 +812,12 @@ pub enum StyleType {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum LineCap {
-    ///
     UndefinedCap = graphicsmagick_sys::LineCap_UndefinedCap,
-    ///
+
     ButtCap = graphicsmagick_sys::LineCap_ButtCap,
-    ///
+
     RoundCap = graphicsmagick_sys::LineCap_RoundCap,
-    ///
+
     SquareCap = graphicsmagick_sys::LineCap_SquareCap,
 
     #[num_enum(default)]
@@ -840,13 +828,12 @@ pub enum LineCap {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum LineJoin {
-    ///
     UndefinedJoin = graphicsmagick_sys::LineJoin_UndefinedJoin,
-    ///
+
     MiterJoin = graphicsmagick_sys::LineJoin_MiterJoin,
-    ///
+
     RoundJoin = graphicsmagick_sys::LineJoin_RoundJoin,
-    ///
+
     BevelJoin = graphicsmagick_sys::LineJoin_BevelJoin,
 
     #[num_enum(default)]
@@ -857,13 +844,12 @@ pub enum LineJoin {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, IntoPrimitive, FromPrimitive)]
 #[repr(u32)]
 pub enum DecorationType {
-    ///
     NoDecoration = graphicsmagick_sys::DecorationType_NoDecoration,
-    ///
+
     UnderlineDecoration = graphicsmagick_sys::DecorationType_UnderlineDecoration,
-    ///
+
     OverlineDecoration = graphicsmagick_sys::DecorationType_OverlineDecoration,
-    ///
+
     LineThroughDecoration = graphicsmagick_sys::DecorationType_LineThroughDecoration,
 
     #[num_enum(default)]

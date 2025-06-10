@@ -118,7 +118,7 @@ impl<T> MagickBoxSlice<T> {
     /// T must be able to deal with all valid representation of U.
     pub(crate) unsafe fn new<U>(a: *mut U, len: usize) -> Option<Self> {
         unsafe {
-            const { assert_eq!(mem::size_of::<U>(), mem::size_of::<T>()) };
+            const { assert!(mem::size_of::<U>() == mem::size_of::<T>()) };
 
             (!a.is_null()).then(|| Self {
                 alloc: MagickAlloc::new(a as *mut c_void),

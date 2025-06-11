@@ -4099,7 +4099,7 @@ mod tests {
     fn test_magick_wand_read_image() {
         let mut mw = new_magick_wand();
         mw.read_image(logo_unicode_path()).unwrap();
-        assert_eq!((mw.get_image_width(), mw.get_image_height()), (311, 177));
+        assert_eq!((mw.get_image_width(), mw.get_image_height()), (1024, 1024));
     }
 
     #[test]

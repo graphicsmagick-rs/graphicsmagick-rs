@@ -5,7 +5,7 @@
 [![Crate](https://img.shields.io/crates/v/graphicsmagick.svg)](https://crates.io/crates/graphicsmagick)
 [![API](https://docs.rs/graphicsmagick/badge.svg)](https://docs.rs/graphicsmagick)
 
-<img src="https://github.com/jmjoy/graphicsmagick-rs/blob/master/meta/GraphicsMagick-Logo.webp?raw=true" alt="GraphicsMagick-Logo" align="right" />
+<img src="https://avatars.githubusercontent.com/u/113815004?s=200&v=4" alt="GraphicsMagick-Logo" align="right" />
 
 [GraphicsMagick](http://www.graphicsmagick.org/index.html) binding for Rust.
 

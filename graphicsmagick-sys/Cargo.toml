@@ -1,6 +1,6 @@
 [package]
 name = "graphicsmagick-sys"
-version = "0.6.1"
+version = "0.6.2"
 authors = ["jmjoy <918734043@qq.com>"]
 edition = "2024"
 rust-version = "1.85"

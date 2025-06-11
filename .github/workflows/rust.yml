@@ -88,9 +88,9 @@ jobs:
 
         flag:
           - gm-version: GraphicsMagick-1_3_40
-            feature: v1_3_40
+            feature: v1_3_38
           - gm-version: GraphicsMagick-1_3_39
-            feature: v1_3_39
+            feature: v1_3_38
           - gm-version: GraphicsMagick-1_3_38
             feature: v1_3_38
           - gm-version: GraphicsMagick-1_3_37
@@ -155,5 +155,5 @@ jobs:
 
       - name: Test
         run: |
-          cargo nextest run --features ${{ matrix.flag.feature }}
+          cargo nextest run --features ${{ matrix.flag.feature }} -j 1
           cargo test --doc --features ${{ matrix.flag.feature }}

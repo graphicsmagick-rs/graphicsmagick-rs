@@ -48,3 +48,5 @@ runs:
         GraphicsMagick-config --cppflags --ldflags --libs
         echo
         df -h
+        echo
+        free -h

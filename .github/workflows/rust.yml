@@ -155,5 +155,5 @@ jobs:
 
       - name: Test
         run: |
-          cargo nextest run --features ${{ matrix.flag.feature }} -j 1
+          cargo nextest run --features ${{ matrix.flag.feature }}
           cargo test --doc --features ${{ matrix.flag.feature }}

@@ -157,7 +157,7 @@ jobs:
         run: |
           # Enable core dumps
           ulimit -c unlimited
-          sudo sysctl -w kernel.core_pattern='/tmp/core.%e.%p'
+          sudo sysctl -w kernel.core_pattern='/tmp/core.%p'
           cargo nextest run --features ${{ matrix.flag.feature }}
           cargo test --doc --features ${{ matrix.flag.feature }}
 

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.2](https://github.com/graphicsmagick-rs/graphicsmagick-rs/compare/graphicsmagick-v0.6.1...graphicsmagick-v0.6.2) - 2025-06-11
+
+### Other
+
+- update MSRV and toolchain to 1.85 ([#69](https://github.com/graphicsmagick-rs/graphicsmagick-rs/pull/69))
+
 ## [0.6.1](https://github.com/graphicsmagick-rs/graphicsmagick-rs/compare/graphicsmagick-v0.6.0...graphicsmagick-v0.6.1) - 2024-12-07
 
 ### Other

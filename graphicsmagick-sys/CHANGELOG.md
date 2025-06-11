@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.2](https://github.com/graphicsmagick-rs/graphicsmagick-rs/compare/graphicsmagick-sys-v0.6.1...graphicsmagick-sys-v0.6.2) - 2025-06-11
+
+### Other
+
+- Update bindgen requirement from 0.71.0 to 0.72.0 in /graphicsmagick-sys ([#68](https://github.com/graphicsmagick-rs/graphicsmagick-rs/pull/68))
+- update MSRV and toolchain to 1.85 ([#69](https://github.com/graphicsmagick-rs/graphicsmagick-rs/pull/69))
+
 ## [0.6.1](https://github.com/graphicsmagick-rs/graphicsmagick-rs/compare/graphicsmagick-sys-v0.6.0...graphicsmagick-sys-v0.6.1) - 2024-12-07
 
 ### Other

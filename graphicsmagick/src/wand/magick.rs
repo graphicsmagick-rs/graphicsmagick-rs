@@ -5062,7 +5062,7 @@ mod tests {
     #[test]
     fn test_magick_wand_query_formats() {
         initialize();
-        MagickWand::query_formats("").unwrap();
+        MagickWand::query_formats("*").unwrap();
     }
 
     #[test]

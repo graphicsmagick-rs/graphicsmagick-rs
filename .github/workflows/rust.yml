@@ -88,9 +88,9 @@ jobs:
 
         flag:
           - gm-version: GraphicsMagick-1_3_40
-            feature: v1_3_38
+            feature: v1_3_40
           - gm-version: GraphicsMagick-1_3_39
-            feature: v1_3_38
+            feature: v1_3_39
           - gm-version: GraphicsMagick-1_3_38
             feature: v1_3_38
           - gm-version: GraphicsMagick-1_3_37

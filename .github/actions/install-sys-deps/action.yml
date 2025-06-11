@@ -18,7 +18,7 @@ runs:
       shell: bash
       run: |
         set -euxo pipefail
-        sudo sed -i '/^#\sdeb-src /s/^#//' "/etc/apt/sources.list"
+        sudo sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources
         sudo apt-get update
         sudo apt-get build-dep -y graphicsmagick
   
@@ -46,3 +46,7 @@ runs:
         gm version
         echo
         GraphicsMagick-config --cppflags --ldflags --libs
+        echo
+        df -h
+        echo
+        free -h

@@ -3,13 +3,13 @@
 //! <http://www.graphicsmagick.org/wand/drawing_wand.html>
 
 use crate::{
+    MagickBoxSlice, MagickCString,
     types::{
         AffineMatrix, ClipPathUnits, DecorationType, FillRule, GravityType, LineCap, LineJoin,
         PaintMethod, StretchType, StyleType,
     },
     utils::assert_initialized,
     wand::pixel::PixelWand,
-    MagickBoxSlice, MagickCString,
 };
 use graphicsmagick_sys::*;
 use null_terminated_str::IntoNullTerminatedString;

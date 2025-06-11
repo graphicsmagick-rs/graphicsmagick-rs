@@ -17,8 +17,7 @@ env:
   RUST_BACKTRACE: 1
   RUST_LOG: debug
   RUSTFLAGS: "-D warnings"
-  CARGO_REGISTRIES_CRATES_IO_PROTOCOL: "sparse"
-  NIGHTLY: nightly-2024-12-05
+  NIGHTLY: nightly-2025-06-09
 
 jobs:
   fmt-and-clippy:
@@ -156,5 +155,17 @@ jobs:
 
       - name: Test
         run: |
+          # Enable core dumps
+          ulimit -c unlimited
+          sudo sysctl -w kernel.core_pattern='/tmp/core.%p'
           cargo nextest run --features ${{ matrix.flag.feature }}
           cargo test --doc --features ${{ matrix.flag.feature }}
+
+      - name: Upload core dumps on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-dumps-${{ matrix.os }}-${{ matrix.flag.gm-version }}
+          path: /tmp/core.*
+          retention-days: 1
+          if-no-files-found: ignore

@@ -2,8 +2,8 @@
 name = "graphicsmagick"
 version = "0.6.1"
 authors = ["jmjoy <918734043@qq.com>"]
-edition = "2021"
-rust-version = "1.70"
+edition = "2024"
+rust-version = "1.85"
 license = "MIT"
 description = "GraphicsMagick binding for Rust."
 readme = "README.md"

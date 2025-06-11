@@ -13,7 +13,7 @@ pub mod wand;
 
 pub use crate::{
     error::{Error, Result},
-    utils::{has_initialized, initialize, max_rgb, MagickBoxSlice, MagickCString, MaxRGB},
+    utils::{MagickBoxSlice, MagickCString, MaxRGB, has_initialized, initialize, max_rgb},
 };
 
 pub use null_terminated_str;

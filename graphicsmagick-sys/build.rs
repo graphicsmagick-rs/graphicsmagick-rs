@@ -1,6 +1,6 @@
 #![allow(clippy::unreadable_literal)]
 
-use anyhow::{anyhow, bail, Context};
+use anyhow::{Context, anyhow, bail};
 use std::{
     env,
     path::PathBuf,

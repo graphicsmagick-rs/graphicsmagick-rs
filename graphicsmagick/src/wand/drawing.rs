@@ -2012,13 +2012,13 @@ mod tests {
     #[test]
     fn test_drawing_wand_polygon() {
         let mut dw = new_logo_drawing_wand();
-        dw.polygon(0, &PointInfo { x: 0., y: 0. });
+        dw.polygon(0, &[PointInfo { x: 0., y: 0. }]);
     }
 
     #[test]
     fn test_drawing_wand_polyline() {
         let mut dw = new_logo_drawing_wand();
-        dw.polyline(0, &PointInfo { x: 0., y: 0. });
+        dw.polyline(0, &[PointInfo { x: 0., y: 0. }]);
     }
 
     #[test]

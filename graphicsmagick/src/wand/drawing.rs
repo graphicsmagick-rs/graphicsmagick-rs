@@ -1040,7 +1040,11 @@ impl DrawingWand {
     ///
     /// fill color or texture, using the specified array of coordinates.
     ///
-    pub fn polyline(&mut self, number_coordinates: c_ulong, coordinates: &[PointInfo]) -> &mut Self {
+    pub fn polyline(
+        &mut self,
+        number_coordinates: c_ulong,
+        coordinates: &[PointInfo],
+    ) -> &mut Self {
         unsafe { MagickDrawPolyline(self.wand.as_ptr(), number_coordinates, coordinates.as_ptr()) };
         self
     }

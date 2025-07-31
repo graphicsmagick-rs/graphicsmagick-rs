@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.4](https://github.com/graphicsmagick-rs/graphicsmagick-rs/compare/graphicsmagick-v0.6.3...graphicsmagick-v0.6.4) - 2025-07-31
+
+### Fixed
+
+- polygon and polyline arguments ([#73](https://github.com/graphicsmagick-rs/graphicsmagick-rs/pull/73))
+
 ## [0.6.3](https://github.com/graphicsmagick-rs/graphicsmagick-rs/compare/graphicsmagick-v0.6.2...graphicsmagick-v0.6.3) - 2025-06-11
 
 ### Other

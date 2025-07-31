@@ -1029,8 +1029,8 @@ impl DrawingWand {
     ///
     /// fill color or texture, using the specified array of coordinates.
     ///
-    pub fn polygon(&mut self, number_coordinates: c_ulong, coordinates: &PointInfo) -> &mut Self {
-        unsafe { MagickDrawPolygon(self.wand.as_ptr(), number_coordinates, coordinates) };
+    pub fn polygon(&mut self, number_coordinates: c_ulong, coordinates: &[PointInfo]) -> &mut Self {
+        unsafe { MagickDrawPolygon(self.wand.as_ptr(), number_coordinates, coordinates.as_ptr()) };
         self
     }
 
@@ -1040,8 +1040,12 @@ impl DrawingWand {
     ///
     /// fill color or texture, using the specified array of coordinates.
     ///
-    pub fn polyline(&mut self, number_coordinates: c_ulong, coordinates: &PointInfo) -> &mut Self {
-        unsafe { MagickDrawPolyline(self.wand.as_ptr(), number_coordinates, coordinates) };
+    pub fn polyline(
+        &mut self,
+        number_coordinates: c_ulong,
+        coordinates: &[PointInfo],
+    ) -> &mut Self {
+        unsafe { MagickDrawPolyline(self.wand.as_ptr(), number_coordinates, coordinates.as_ptr()) };
         self
     }
 
@@ -2012,13 +2016,13 @@ mod tests {
     #[test]
     fn test_drawing_wand_polygon() {
         let mut dw = new_logo_drawing_wand();
-        dw.polygon(0, &PointInfo { x: 0., y: 0. });
+        dw.polygon(0, &[PointInfo { x: 0., y: 0. }]);
     }
 
     #[test]
     fn test_drawing_wand_polyline() {
         let mut dw = new_logo_drawing_wand();
-        dw.polyline(0, &PointInfo { x: 0., y: 0. });
+        dw.polyline(0, &[PointInfo { x: 0., y: 0. }]);
     }
 
     #[test]

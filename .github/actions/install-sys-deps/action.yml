@@ -30,7 +30,7 @@ runs:
         sudo apt-get install -y llvm-dev libclang-dev clang mercurial libfreetype6-dev
         hg clone https://foss.heptapod.net/graphicsmagick/graphicsmagick /tmp/graphicsmagick
         cd /tmp/graphicsmagick
-        hg update -r ${{ inputs.version }}
+        hg update -r "tag('${{ inputs.version }}')"
         ./configure --prefix="$HOME/.local"
         make install -j $(nproc)
 

@@ -3,6 +3,7 @@
 #![warn(clippy::dbg_macro, clippy::print_stdout)]
 #![allow(clippy::too_many_arguments)]
 #![doc = include_str!("../README.md")]
+#![doc(html_logo_url = "https://avatars.githubusercontent.com/u/113815004?s=200&v=4")]
 
 pub mod error;
 #[cfg(test)]

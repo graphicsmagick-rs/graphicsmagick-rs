@@ -59,7 +59,7 @@ jobs:
 
       - uses: ./.github/actions/install-sys-deps
         with:
-          version: GraphicsMagick-1_3_38
+          version: GraphicsMagick-1_3_40
 
       - name: Rustup
         run: |

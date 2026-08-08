@@ -31,7 +31,7 @@ jobs:
 
       - uses: ./.github/actions/install-sys-deps
         with:
-          version: GraphicsMagick-1_3_20
+          version: 47587edd7953 # GraphicsMagick-1_3_20
 
       - name: Rustup
         run: |
@@ -59,7 +59,7 @@ jobs:
 
       - uses: ./.github/actions/install-sys-deps
         with:
-          version: GraphicsMagick-1_3_38
+          version: 828ffc28c1c6 # GraphicsMagick-1_3_38
 
       - name: Rustup
         run: |
@@ -87,47 +87,47 @@ jobs:
         # - windows-latest
 
         flag:
-          - gm-version: GraphicsMagick-1_3_40
+          - gm-version: c41d8933edef # GraphicsMagick-1_3_40
             feature: v1_3_38
-          - gm-version: GraphicsMagick-1_3_39
+          - gm-version: 78aa63677935 # GraphicsMagick-1_3_39
             feature: v1_3_38
-          - gm-version: GraphicsMagick-1_3_38
+          - gm-version: 828ffc28c1c6 # GraphicsMagick-1_3_38
             feature: v1_3_38
-          - gm-version: GraphicsMagick-1_3_37
+          - gm-version: 9c83dfc1ba6d # GraphicsMagick-1_3_37
             feature: v1_3_37
-          - gm-version: GraphicsMagick-1_3_36
+          - gm-version: 4f73af743b85 # GraphicsMagick-1_3_36
             feature: v1_3_36
-          - gm-version: GraphicsMagick-1_3_35
+          - gm-version: 560875f67e82 # GraphicsMagick-1_3_35
             feature: v1_3_35
-          - gm-version: GraphicsMagick-1_3_34
+          - gm-version: 6d650073850f # GraphicsMagick-1_3_34
             feature: v1_3_34
-          - gm-version: GraphicsMagick-1_3_33
+          - gm-version: c7e811e43123 # GraphicsMagick-1_3_33
             feature: v1_3_33
-          - gm-version: GraphicsMagick-1_3_32
+          - gm-version: 3465dd1a89a5 # GraphicsMagick-1_3_32
             feature: v1_3_32
-          - gm-version: GraphicsMagick-1_3_31
+          - gm-version: 233618f8fe82 # GraphicsMagick-1_3_31
             feature: v1_3_31
-          - gm-version: GraphicsMagick-1_3_30
+          - gm-version: 40a77e57e1b8 # GraphicsMagick-1_3_30
             feature: v1_3_30
-          - gm-version: GraphicsMagick-1_3_29
+          - gm-version: 249c764b62f1 # GraphicsMagick-1_3_29
             feature: v1_3_29
-          - gm-version: GraphicsMagick-1_3_28
+          - gm-version: 8a9c2b403451 # GraphicsMagick-1_3_28
             feature: v1_3_28
-          - gm-version: GraphicsMagick-1_3_27
+          - gm-version: 0a95925f9cd0 # GraphicsMagick-1_3_27
             feature: v1_3_27
-          - gm-version: GraphicsMagick-1_3_26
+          - gm-version: db4eb7f97eeb # GraphicsMagick-1_3_26
             feature: v1_3_26
-          - gm-version: GraphicsMagick-1_3_25
+          - gm-version: 1c07f70e5dd9 # GraphicsMagick-1_3_25
             feature: v1_3_25
-          - gm-version: GraphicsMagick-1_3_24
+          - gm-version: 8711e07cdebe # GraphicsMagick-1_3_24
             feature: v1_3_24
-          - gm-version: GraphicsMagick-1_3_23
+          - gm-version: 4e0a7a93d9a4 # GraphicsMagick-1_3_23
             feature: v1_3_23
-          - gm-version: GraphicsMagick-1_3_22
+          - gm-version: 0c27524abb7d # GraphicsMagick-1_3_22
             feature: v1_3_22
-          - gm-version: GraphicsMagick-1_3_21
+          - gm-version: fc472f96dae7 # GraphicsMagick-1_3_21
             feature: v1_3_21
-          - gm-version: GraphicsMagick-1_3_20
+          - gm-version: 47587edd7953 # GraphicsMagick-1_3_20
             feature: v1_3_20
 
     runs-on: ${{ matrix.os }}

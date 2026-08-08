@@ -29,7 +29,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/install-sys-deps
         with:
-          version: GraphicsMagick-1_3_20
+          version: 47587edd7953 # GraphicsMagick-1_3_20
       - name: Run release-plz
         uses: release-plz/action@v0.5
         with:
@@ -54,7 +54,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/install-sys-deps
         with:
-          version: GraphicsMagick-1_3_20
+          version: 47587edd7953 # GraphicsMagick-1_3_20
       - name: Run release-plz
         uses: release-plz/action@v0.5
         with:

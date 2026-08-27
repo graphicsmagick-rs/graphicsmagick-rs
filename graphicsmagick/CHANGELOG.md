@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.5](https://github.com/graphicsmagick-rs/graphicsmagick-rs/compare/graphicsmagick-v0.6.4...graphicsmagick-v0.6.5) - 2026-08-27
+
+### Other
+
+- use release changeset hashes for GraphicsMagick versions ([#90](https://github.com/graphicsmagick-rs/graphicsmagick-rs/pull/90))
+- Update env_logger requirement from 0.10.0 to 0.11.11 in /graphicsmagick ([#83](https://github.com/graphicsmagick-rs/graphicsmagick-rs/pull/83))
+
 ## [0.6.4](https://github.com/graphicsmagick-rs/graphicsmagick-rs/compare/graphicsmagick-v0.6.3...graphicsmagick-v0.6.4) - 2025-07-31
 
 ### Fixed

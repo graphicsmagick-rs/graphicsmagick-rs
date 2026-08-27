@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.3](https://github.com/graphicsmagick-rs/graphicsmagick-rs/compare/graphicsmagick-sys-v0.6.2...graphicsmagick-sys-v0.6.3) - 2026-08-27
+
+### Other
+
+- use release changeset hashes for GraphicsMagick versions ([#90](https://github.com/graphicsmagick-rs/graphicsmagick-rs/pull/90))
+
 ## [0.6.2](https://github.com/graphicsmagick-rs/graphicsmagick-rs/compare/graphicsmagick-sys-v0.6.1...graphicsmagick-sys-v0.6.2) - 2025-06-11
 
 ### Other

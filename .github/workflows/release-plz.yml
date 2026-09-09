@@ -14,6 +14,7 @@ env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: "1"
   RUSTFLAGS: "-D warnings"
+  RUSTUP_TOOLCHAIN: stable # override rust-toolchain.toml
 
 jobs:
   # Release unpublished packages.

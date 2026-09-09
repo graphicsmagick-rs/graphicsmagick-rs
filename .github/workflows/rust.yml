@@ -17,7 +17,7 @@ env:
   RUST_BACKTRACE: 1
   RUST_LOG: debug
   RUSTFLAGS: "-D warnings"
-  NIGHTLY: nightly-2025-06-09
+  NIGHTLY: nightly-2026-08-08
 
 jobs:
   fmt-and-clippy:

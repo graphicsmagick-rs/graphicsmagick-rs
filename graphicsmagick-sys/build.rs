@@ -121,6 +121,12 @@ fn main() -> anyhow::Result<()> {
         .blocklist_function("qgcvt")
         .blocklist_function("qecvt_r")
         .blocklist_function("qfcvt_r")
+        // exclude stdlib that triggers the
+        // suspicious_runtime_symbol_definitions⁠ lint
+        .blocklist_function("malloc")
+        .blocklist_function("calloc")
+        .blocklist_function("realloc")
+        .blocklist_function("free")
         .rust_target(rust_target)
         .generate()
         .map_err(|e| anyhow!("Unable to generate bindings: {}", e))?;
